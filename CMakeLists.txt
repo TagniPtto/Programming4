@@ -23,11 +23,14 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Renderer.cpp
   Minigin/ResourceManager.cpp
   Minigin/Scene.cpp
+  Minigin/TextComponent.cpp
   Minigin/SceneManager.cpp
-  Minigin/TextObject.cpp
   Minigin/Texture2D.cpp
   Minigin/Transform.cpp
-)
+  Minigin/ObjectComponent.cpp
+  Minigin/RenderComponent.cpp
+  Minigin/FPSComponent.cpp
+ )
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

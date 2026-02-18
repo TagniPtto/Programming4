@@ -1,17 +1,22 @@
 #pragma once
 #include <string>
 #include <memory>
+#include <vector>
+
 #include "Transform.h"
+#include "ObjectComponent.h"
 
 namespace dae
 {
 	class Texture2D;
-	class GameObject 
+	class GameObject final
 	{
 		Transform m_transform{};
 		std::shared_ptr<Texture2D> m_texture{};
+
+		std::vector<ObjectComponent*> m_components{};
 	public:
-		virtual void Update();
+		virtual void Update(float deltaTime);
 		virtual void Render() const;
 
 		void SetTexture(const std::string& filename);
@@ -23,5 +28,55 @@ namespace dae
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
 		GameObject& operator=(GameObject&& other) = delete;
+
+
+		template<typename T, typename... Args>
+		typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, void>::type AddComponent(Args&&... args);
+
+		template<typename T>
+		typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, T*>::type GetComponent();
+
+		template<typename T>
+		typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, void>::type RemoveComponent();
+
+		template<typename T>
+		typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, bool>::type HasComponent();
 	};
+	template <typename T, typename... Args>
+	inline typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, void>::type GameObject::AddComponent(Args&&... args)
+	{
+		m_components.emplace_back(new T(*this, std::forward<Args>(args)...));  // Create unique_ptr to T, not ObjectComponent
+	}
+
+	template<typename T>
+	inline typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, T* >::type GameObject::GetComponent()
+	{
+		for (auto& component : m_components) {
+			if (typeid(*component) == typeid(T))
+			{
+				return dynamic_cast<T*>(component);
+			}
+		}
+		return nullptr;
+	}
+	template<typename T>
+	inline typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, void>::type GameObject::RemoveComponent()
+	{
+		for (auto it = m_components.cbegin(); it != m_components.cend(); it++) {
+			if (typeid(**it) == typeid(T))
+			{
+				delete* it;
+				m_components.erase(it);
+			}
+		}
+
+	}
+	template<typename T>
+	inline typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, bool>::type GameObject::HasComponent()
+	{
+		for (const auto& component : m_components) {
+			if (typeid(*component) == typeid(T))return true;
+		}
+		return false;
+	}
 }
