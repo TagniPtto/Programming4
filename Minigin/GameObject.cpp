@@ -14,16 +14,19 @@ void dae::GameObject::Update(float deltaTime)
 
 void dae::GameObject::Render() const
 {
-	const auto& pos = m_transform.GetPosition();
-	Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
+	for (int i{}; i < (int)m_components.size(); i++) {
+		m_components[i]->Render();
+	}
 }
 
-void dae::GameObject::SetTexture(const std::string& filename)
-{
-	m_texture = ResourceManager::GetInstance().LoadTexture(filename);
-}
 
 void dae::GameObject::SetPosition(float x, float y)
 {
 	m_transform.SetPosition(x, y, 0.0f);
 }
+
+const glm::vec3& dae::GameObject::GetPosition() const
+{
+	return m_transform.GetPosition();
+}
+

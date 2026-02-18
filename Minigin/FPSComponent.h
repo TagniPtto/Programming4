@@ -4,10 +4,8 @@
 
 namespace dae {
 
-    class FPSComponent : public ObjectComponent
+    class FPSComponent : public TextComponent
     {
-    private:
-        dae::TextComponent* m_textRenderer;
     public:
         FPSComponent(GameObject& owner, const std::string& text, std::shared_ptr<Font> font);
 

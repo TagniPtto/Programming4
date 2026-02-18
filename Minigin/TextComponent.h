@@ -10,7 +10,7 @@ namespace dae
 {
 	class Font;
 	class Texture2D;
-	class TextComponent final : public ObjectComponent
+	class TextComponent : public ObjectComponent
 	{
 	public:
 		void Update(float deltaTime) override;

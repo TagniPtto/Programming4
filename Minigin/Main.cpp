@@ -9,6 +9,8 @@
 #include "SceneManager.h"
 #include "ResourceManager.h"
 #include "TextComponent.h"
+#include "FPSComponent.h"
+#include "RenderComponent.h"
 #include "Scene.h"
 
 #include <filesystem>
@@ -19,19 +21,29 @@ static void load()
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
 	auto go = std::make_unique<dae::GameObject>();
-	go->SetTexture("background.png");
+	go->AddComponent<RenderComponent>("background.png");
+	//go->SetTexture("background.png");
 	scene.Add(std::move(go));
 
 	go = std::make_unique<dae::GameObject>();
-	go->SetTexture("logo.png");
+	go->AddComponent<RenderComponent>("logo.png");
+	//go->SetTexture("logo.png");
 	go->SetPosition(358, 180);
 	scene.Add(std::move(go));
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
-	//auto to = std::make_unique<dae::TextObject>("Programming 4 Assignment", font);
-	//to->SetColor({ 255, 255, 0, 255 });
-	//to->SetPosition(292, 20);
-	//scene.Add(std::move(to));
+
+	auto gto = std::make_unique<dae::GameObject>();
+	gto->AddComponent<dae::TextComponent>("Programming 4 Assignment", font);
+	auto component = gto->GetComponent<dae::TextComponent>();
+	component->SetColor({ 255, 255, 0, 255 });
+	component->SetPosition(292, 20);
+	scene.Add(std::move(gto));
+
+	gto = std::make_unique<dae::GameObject>();
+	gto->SetPosition(10, 10);
+	gto->AddComponent<dae::FPSComponent>("FPS",font);
+	scene.Add(std::move(gto));
 }
 
 int main(int, char*[]) {

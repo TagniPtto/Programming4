@@ -8,7 +8,7 @@ class RenderComponent : public ObjectComponent
 private:
 	std::shared_ptr<dae::Texture2D> m_texture;
 public:
-	RenderComponent(dae::GameObject& owner);
+	RenderComponent(dae::GameObject& owner, const std::string& filename);
 	void Render() const override;
 	void SetTexture(const std::string& filename);
 };

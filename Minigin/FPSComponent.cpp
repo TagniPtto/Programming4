@@ -3,13 +3,8 @@
 #include <iomanip>
 #include <sstream>
 dae::FPSComponent::FPSComponent(GameObject& owner,const std::string& text, std::shared_ptr<Font> font) :
-	ObjectComponent(owner), timeCounter(0), frameCount(0)
+	TextComponent(owner,text,font), timeCounter(0), frameCount(0)
 {
-	if (!m_owner->HasComponent<TextComponent>()) {
-		throw std::runtime_error("Cant have an FPS component without a TextComponent");
-	}
-	m_textRenderer = m_owner->GetComponent<TextComponent>();
-	m_textRenderer->SetText(text);
 }
 void dae::FPSComponent::Update(float deltaTime)
 {
@@ -22,13 +17,13 @@ void dae::FPSComponent::Update(float deltaTime)
 		// Get the formatted string
 		std::string formatted_fps = oss.str();
 		
-		m_textRenderer->SetText(formatted_fps);
+		SetText(formatted_fps);
 		timeCounter -= 1;
 		frameCount = 0;
 	}
-	m_textRenderer->Update(deltaTime);
+	TextComponent::Update(deltaTime);
 }
 void dae::FPSComponent::Render() const
 {
-	m_textRenderer->Render();
+	TextComponent::Render();
 }
