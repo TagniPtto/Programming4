@@ -15,14 +15,14 @@ namespace dae
 
 		std::vector<ObjectComponent*> m_components{};
 	public:
-		virtual void Update(float deltaTime);
-		virtual void Render() const;
+		void Update(float deltaTime);
+		void Render() const;
 
 		void SetPosition(float x, float y);
 		const glm::vec3& GetPosition() const;
 
 		GameObject() = default;
-		virtual ~GameObject();
+		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
 		GameObject& operator=(const GameObject& other) = delete;
@@ -61,15 +61,14 @@ namespace dae
 	template<typename T>
 	inline typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, void>::type GameObject::RemoveComponent()
 	{
-		for (auto it = m_components.cbegin(); it != m_components.cend(); it++) {
-			if (typeid(**it) == typeid(T))
-			{
-				delete* it;
-				m_components.erase(it);
+		for (auto& component : m_components) {
+			if (typeid(*component) == typeid(T)) {
+				delete *component;
+				m_components.erase(component);
 			}
 		}
-
 	}
+	
 	template<typename T>
 	inline typename std::enable_if<std::is_base_of<ObjectComponent, T>::value, bool>::type GameObject::HasComponent()
 	{

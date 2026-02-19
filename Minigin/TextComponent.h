@@ -4,6 +4,7 @@
 #include <SDL3/SDL.h>
 
 #include "ObjectComponent.h"
+#include "RenderComponent.h"
 #include "Transform.h"
 
 namespace dae
@@ -12,6 +13,7 @@ namespace dae
 	class Texture2D;
 	class TextComponent : public ObjectComponent
 	{
+
 	public:
 		void Update(float deltaTime) override;
 		void Render() const override;
