@@ -13,7 +13,7 @@ namespace dae
 	class Texture2D;
 	class TextComponent : public ObjectComponent
 	{
-
+		RenderComponent* m_renderComponent{};
 	public:
 		void Update(float deltaTime) override;
 		void Render() const override;
