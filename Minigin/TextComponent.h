@@ -13,7 +13,6 @@ namespace dae
 	class RenderComponent;
 	class TextComponent : public ObjectComponent
 	{
-		RenderComponent* m_renderComponent{};
 	public:
 		void Update() override;
 		void Render() const override;
