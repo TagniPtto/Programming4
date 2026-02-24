@@ -4,7 +4,8 @@
 
 namespace dae {
 
-    class FPSComponent : public TextComponent
+    class TextComponent;
+    class FPSComponent : public ObjectComponent
     {
     public:
         FPSComponent(GameObject& owner, const std::string& text, std::shared_ptr<Font> font);
@@ -16,10 +17,12 @@ namespace dae {
         FPSComponent operator=(FPSComponent&& other) = delete;
         FPSComponent operator=(const FPSComponent& other) = delete;
 
-        void Update(float deltaTime) override;
+        void Update() override;
         void Render()const override;
     private:
         float timeCounter;
         int frameCount;
+
+        TextComponent* textComponent;
     };
 }

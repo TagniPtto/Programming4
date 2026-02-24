@@ -38,7 +38,16 @@ void LogSDLVersion(const std::string& message, int major, int minor, int patch)
 
 void LoopCallback(void* arg)
 {
+	auto lastTime = std::chrono::high_resolution_clock::now();
+
 	static_cast<dae::Minigin*>(arg)->RunOneFrame();
+
+	const auto thisTime = std::chrono::high_resolution_clock::now();
+	const float deltaTime = std::chrono::duration<float>(thisTime - lastTime).count();
+	lastTime = thisTime;
+
+	Time::GetInstance().Update(deltaTime);
+
 }
 #endif
 
@@ -94,6 +103,8 @@ dae::Minigin::~Minigin()
 void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
+
+
 #ifndef __EMSCRIPTEN__
 
 	auto lastTime = std::chrono::high_resolution_clock::now();
@@ -113,6 +124,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		const auto sleeptime = thisTime + std::chrono::milliseconds(msPerFrame) - std::chrono::high_resolution_clock::now();
 		std::this_thread::sleep_for(sleeptime);
 	}
+
 #else
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
 #endif
@@ -125,6 +137,6 @@ void dae::Minigin::RunOneFrame()
 {
 
 	m_quit = !InputManager::GetInstance().ProcessInput();
-	SceneManager::GetInstance().Update(Time::GetInstance().GetDeltaTime());
+	SceneManager::GetInstance().Update();
 	Renderer::GetInstance().Render();
 }

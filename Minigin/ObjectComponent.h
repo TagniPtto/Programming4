@@ -22,7 +22,7 @@ public :
 	ObjectComponent operator=(const ObjectComponent& other) = delete;
 
 	virtual void Render() const {};
-	virtual void Update(float) {};
+	virtual void Update() {};
 	virtual void FixedUpdate(float) {};
 };
 

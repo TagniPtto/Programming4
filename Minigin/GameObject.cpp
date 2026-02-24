@@ -5,10 +5,10 @@
 
 dae::GameObject::~GameObject() = default;
 
-void dae::GameObject::Update(float deltaTime)
+void dae::GameObject::Update()
 {
 	for (int i{}; i < (int)m_components.size(); i++) {
-		m_components[i]->Update(deltaTime);
+		m_components[i]->Update();
 	}
 }
 

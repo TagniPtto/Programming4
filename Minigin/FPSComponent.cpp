@@ -2,13 +2,23 @@
 #include "GameObject.h"
 #include <iomanip>
 #include <sstream>
-dae::FPSComponent::FPSComponent(GameObject& owner,const std::string& text, std::shared_ptr<Font> font) :
-	TextComponent(owner,text,font), timeCounter(0), frameCount(0)
+#include "TimeManager.h"
+dae::FPSComponent::FPSComponent(GameObject& owner, const std::string& text, std::shared_ptr<Font> font) :
+	ObjectComponent(owner), timeCounter(0), frameCount(0)
 {
+	textComponent = owner.GetComponent<TextComponent>();
+	if (textComponent) {
+		textComponent->SetFont(font);
+		textComponent->SetText(text);
+	}
+	else {
+		textComponent = owner.AddComponent<TextComponent>(text, font);
+	}
+
 }
-void dae::FPSComponent::Update(float deltaTime)
+void dae::FPSComponent::Update()
 {
-	timeCounter += deltaTime;
+	timeCounter += Time::GetInstance().GetDeltaTime();
 	frameCount++;
 	if (timeCounter > 1.0f) {
 		float fps = (float(frameCount) / timeCounter) * 1.0f;
@@ -17,13 +27,13 @@ void dae::FPSComponent::Update(float deltaTime)
 		// Get the formatted string
 		std::string formatted_fps = oss.str();
 		
-		SetText(formatted_fps);
+		textComponent->SetText(formatted_fps);
 		timeCounter -= 1;
 		frameCount = 0;
 	}
-	TextComponent::Update(deltaTime);
+	textComponent->Update();
 }
 void dae::FPSComponent::Render() const
 {
-	TextComponent::Render();
+	textComponent->Render();
 }

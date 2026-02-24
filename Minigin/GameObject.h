@@ -22,7 +22,7 @@ namespace dae
 
 
 	public:
-		void Update(float deltaTime);
+		void Update();
 		void Render() const;
 
 		void SetPosition(float x, float y);
@@ -37,8 +37,9 @@ namespace dae
 
 	
 		template<Component T,typename... Args>
-		void AddComponent(Args&&... args) {
+		T* AddComponent(Args&&... args) {
 			m_components.emplace_back(new T(*this, std::forward<Args>(args)...));
+			return dynamic_cast<T*>(m_components.back().get());
 		}
 
 		template<Component T>
