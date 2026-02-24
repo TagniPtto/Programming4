@@ -2,8 +2,9 @@
 #include <sstream>
 #include <iostream>
 
-#if WIN32
-#define WIN32_LEAN_AND_MEAN 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#define NOMINMAX
 #include <windows.h>
 #endif
 
@@ -15,7 +16,10 @@
 #include "SceneManager.h"
 #include "Renderer.h"
 #include "ResourceManager.h"
+#include "TimeManager.h"
 #include <thread>
+
+
 SDL_Window* g_window{};
 
 void LogSDLVersion(const std::string& message, int major, int minor, int patch)
@@ -103,8 +107,8 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		const float deltaTime = std::chrono::duration<float>(thisTime - lastTime).count();
 		lastTime = thisTime;
 
-
-		RunOneFrame(deltaTime);
+		Time::GetInstance().Update(deltaTime);
+		RunOneFrame();
 
 		const auto sleeptime = thisTime + std::chrono::milliseconds(msPerFrame) - std::chrono::high_resolution_clock::now();
 		std::this_thread::sleep_for(sleeptime);
@@ -117,9 +121,10 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 }
 
-void dae::Minigin::RunOneFrame(float deltaTime)
+void dae::Minigin::RunOneFrame()
 {
+
 	m_quit = !InputManager::GetInstance().ProcessInput();
-	SceneManager::GetInstance().Update(deltaTime);
+	SceneManager::GetInstance().Update(Time::GetInstance().GetDeltaTime());
 	Renderer::GetInstance().Render();
 }
