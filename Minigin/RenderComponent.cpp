@@ -6,8 +6,8 @@
 
 
 namespace dae {
-	RenderComponent::RenderComponent(dae::GameObject& owner, const std::string& filename) :
-		ObjectComponent(owner), m_texture(dae::ResourceManager::GetInstance().LoadTexture(filename))
+	RenderComponent::RenderComponent(dae::GameObject& owner, const std::string& filename , float scale) :
+		ObjectComponent(owner), m_texture(dae::ResourceManager::GetInstance().LoadTexture(filename)), m_scale(scale)
 	{
 	}
 
@@ -18,9 +18,9 @@ namespace dae {
 
 	void RenderComponent::Render() const
 	{
-		const auto& pos = m_owner->GetPosition();
+		const auto& transform = m_owner->GetWorldTransform();
 		if (m_texture != nullptr) {
-			dae::Renderer::GetInstance().RenderTexture(*m_texture, pos.x, pos.y);
+			dae::Renderer::GetInstance().RenderTexture(*m_texture, transform.GetPosition().x, transform.GetPosition().y, transform.GetRotation(),m_scale);
 		}
 	}
 

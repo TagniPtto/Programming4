@@ -9,8 +9,9 @@ namespace dae {
 	{
 	private:
 		std::shared_ptr<dae::Texture2D> m_texture;
+		float m_scale{ 1.0f };
 	public:
-		RenderComponent(dae::GameObject& owner, const std::string& filename);
+		RenderComponent(dae::GameObject& owner, const std::string& filename , float scale = 1.0f);
 		RenderComponent(dae::GameObject& owner);
 		void Render() const override;
 		void SetTexture(const std::string& filename);

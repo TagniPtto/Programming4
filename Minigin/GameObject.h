@@ -15,18 +15,43 @@ namespace dae
 	class Texture2D;
 	class GameObject final
 	{
-		Transform m_transform{};
+		Transform m_localtransform{};
+		Transform m_worldTransform{};
 
 		std::vector<std::unique_ptr<ObjectComponent>> m_components{};
+		bool m_markedForDestruction{ false };
 
+		GameObject* m_parent{ nullptr };
+		std::vector<GameObject*> m_children{};
 
+		bool m_transformDirty{ false };
+	private:
+		void RemoveChild(GameObject* child);
+		void AddChild(GameObject* child);
+		bool IsChildOf(GameObject* potentialParent);
 
 	public:
 		void Update();
 		void Render() const;
 
-		void SetPosition(float x, float y);
-		const glm::vec3& GetPosition() const;
+		GameObject* GetParent() const;
+		void SetParent(GameObject* newParent, bool keepWorldPosition = false);
+
+		void SetLocalPosition(float x, float y);
+		void SetLocalPosition(glm::vec3 pos);
+		
+		void SetLocalRotation(float newRotation);
+
+		void SetLocalTransform(const Transform& newTransform);
+
+		glm::vec3 GetWorldPosition();
+		float GetWorldRotation();
+		Transform GetWorldTransform();
+
+		void UpdateWorldTransform();
+
+		bool IsMarkedForDestruction() const;
+		void SetTransformDirty();
 
 		GameObject() = default;
 		~GameObject();

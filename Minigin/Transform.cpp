@@ -11,3 +11,13 @@ void dae::Transform::SetPosition(const glm::vec3& position)
 { 
 	m_position = position; 
 }
+
+void dae::Transform::SetRotation(float newRotation)
+{
+	m_rotation = newRotation;
+}
+
+float dae::Transform::GetRotation() const
+{
+	return m_rotation;
+}

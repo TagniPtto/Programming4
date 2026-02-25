@@ -129,8 +129,6 @@ void dae::Minigin::Run(const std::function<void()>& load)
 	emscripten_set_main_loop_arg(&LoopCallback, this, 0, true);
 #endif
 
-
-
 }
 
 void dae::Minigin::RunOneFrame()

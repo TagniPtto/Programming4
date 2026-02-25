@@ -1,4 +1,5 @@
 #include <algorithm>
+#include "GameObject.h"
 #include "Scene.h"
 
 using namespace dae;
@@ -26,12 +27,25 @@ void Scene::RemoveAll()
 	m_objects.clear();
 }
 
+void dae::Scene::DestroyMarkedObjects()
+{
+	m_objects.erase(
+		std::remove_if(
+			m_objects.begin(),
+			m_objects.end(),
+			[](const auto& ptr) { return ptr->IsMarkedForDestruction(); }
+		),
+		m_objects.end()
+	);
+}
+
 void Scene::Update()
 {
 	for(auto& object : m_objects)
 	{
 		object->Update();
 	}
+	DestroyMarkedObjects();
 }
 
 void Scene::Render() const
