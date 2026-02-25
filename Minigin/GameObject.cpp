@@ -136,9 +136,14 @@ dae::Transform dae::GameObject::GetWorldTransform()
 	return m_worldTransform;
 }
 
+void dae::GameObject::MarkForDestruction()
+{
+	m_markedForDestruction = true;
+}
+
 bool dae::GameObject::IsMarkedForDestruction() const
 {
-	return false;
+	return m_markedForDestruction;
 }
 
 void dae::GameObject::SetTransformDirty()

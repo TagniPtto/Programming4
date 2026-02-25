@@ -50,6 +50,7 @@ namespace dae
 
 		void UpdateWorldTransform();
 
+		void MarkForDestruction();
 		bool IsMarkedForDestruction() const;
 		void SetTransformDirty();
 
