@@ -37,6 +37,20 @@ target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
 
 include(FetchContent)
 
+
+FetchContent_Declare(
+    imgui_plot
+    GIT_REPOSITORY https://github.com/soulthreads/imgui-plot.git
+    GIT_TAG v0.1.0
+    EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(imgui_plot)
+
+
+target_link_libraries(imgui_plot PUBLIC imgui)
+target_include_directories(imgui_plot PUBLIC ${imgui_SOURCE_DIR})
+target_compile_definitions(imgui_plot PUBLIC IMGUI_DEFINE_MATH_OPERATORS)
+
 # Dear ImGui
 FetchContent_Declare(
   imgui
@@ -46,13 +60,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(imgui)
 
-FetchContent_Declare(
-    imgui_plot
-    GIT_REPOSITORY https://github.com/soulthreads/imgui-plot.git
-    GIT_TAG v0.1.0
-    EXCLUDE_FROM_ALL
-)
-FetchContent_MakeAvailable(imgui_plot)
+
 
 add_library(imgui STATIC
   ${imgui_SOURCE_DIR}/imgui.cpp
@@ -159,7 +167,7 @@ target_link_libraries("${TARGET_NAME}" PUBLIC
   SDL3_ttf::SDL3_ttf
   glm::glm
   imgui
-  imgui_plot
+  imgui_plot 
   ${VLD_LIBRARIES}
 )
 
