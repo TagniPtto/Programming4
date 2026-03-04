@@ -1,3 +1,6 @@
+#pragma once
+
+
 #include "ObjectComponent.h"
 #include <glm/glm.hpp>
 
