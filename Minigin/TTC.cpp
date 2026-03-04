@@ -103,7 +103,7 @@ void TTC::Exercise1()
 	{
 		auto start = std::chrono::high_resolution_clock::now();
 
-		for (int i = 0; i < arr.size(); i += stepsize)
+		for (int i = 0; i < int(arr.size()); i += stepsize)
 		{
 			arr[i] *= 2;
 		}
@@ -140,7 +140,7 @@ void TTC::Exercise2()
 	{
 		auto start = std::chrono::high_resolution_clock::now();
 
-		for (int i = 0; i < arr.size(); i += stepsize)
+		for (int i = 0; i < int(arr.size()); i += stepsize)
 		{
 			arr[i].ID *= 2;
 		}
@@ -173,7 +173,7 @@ void TTC::Exercise2Alt()
 	{
 		auto start = std::chrono::high_resolution_clock::now();
 
-		for (int i = 0; i < arr.size(); i += stepsize)
+		for (int i = 0; i < int(arr.size()); i += stepsize)
 		{
 			arr[i].ID *= 2;
 		}
