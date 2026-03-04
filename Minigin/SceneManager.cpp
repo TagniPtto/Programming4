@@ -17,6 +17,12 @@ void dae::SceneManager::Render()
 	}
 }
 
+dae::Scene* dae::SceneManager::GetCurrentScene()
+{
+	assert(m_activeSceneIndex < m_scenes.size() && "Invalid Scene Index");
+	return m_scenes[m_activeSceneIndex].get();
+}
+
 dae::Scene& dae::SceneManager::CreateScene()
 {
 	m_scenes.emplace_back(new Scene());

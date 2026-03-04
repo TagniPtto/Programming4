@@ -109,7 +109,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 	auto lastTime = std::chrono::high_resolution_clock::now();
 
-	const int msPerFrame = 16;
+	const int msPerFrame = int(1000.f/60.f);
 
 	while (!m_quit)
 	{

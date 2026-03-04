@@ -15,19 +15,19 @@ namespace dae
 	class Texture2D;
 	class GameObject final
 	{
-		Transform m_localtransform{};
+		Transform m_localTransform{};
 		Transform m_worldTransform{};
 
 		std::vector<std::unique_ptr<ObjectComponent>> m_components{};
 		bool m_markedForDestruction{ false };
 
+		std::vector<std::unique_ptr<GameObject>> m_children{};
 		GameObject* m_parent{ nullptr };
-		std::vector<GameObject*> m_children{};
 
 		bool m_transformDirty{ false };
 	private:
-		void RemoveChild(GameObject* child);
-		void AddChild(GameObject* child);
+		[[nodiscard]] std::unique_ptr<GameObject> RemoveChild(GameObject* child);
+		void AddChild(std::unique_ptr<GameObject> child);
 		bool IsChildOf(GameObject* potentialParent);
 
 	public:
@@ -35,6 +35,8 @@ namespace dae
 		void Render() const;
 
 		GameObject* GetParent() const;
+
+		void SetChild(std::unique_ptr<GameObject> newChild);
 		void SetParent(GameObject* newParent, bool keepWorldPosition = false);
 
 		void SetLocalPosition(float x, float y);
@@ -46,12 +48,13 @@ namespace dae
 
 		glm::vec3 GetWorldPosition();
 		float GetWorldRotation();
-		Transform GetWorldTransform();
+		[[nodiscard]] const Transform& GetWorldTransform();
 
 		void UpdateWorldTransform();
 
-		void MarkForDestruction();
+		void MarkForDestruction(GameObject&);
 		bool IsMarkedForDestruction() const;
+		void DestroyMarkedChildren();
 		void SetTransformDirty();
 
 		GameObject() = default;
@@ -82,7 +85,7 @@ namespace dae
 			return result;
 		}
 		template<Component T>
-		T* GetComponent()
+		[[nodiscard]] T* GetComponent()
 		{
 			for (const auto& component : m_components)
 			{

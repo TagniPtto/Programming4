@@ -11,5 +11,6 @@ dae::RotationComponent::RotationComponent(GameObject& owner, float frequency):
 void dae::RotationComponent::Update()
 {
 	m_currentAngle += m_frequency * Time::GetInstance().GetDeltaTime();
+	m_currentAngle = std::fmod(m_currentAngle, 360.f);
 	m_owner->SetLocalRotation(m_currentAngle);
 }

@@ -48,18 +48,20 @@ static void load()
 
 	gto = std::make_unique<dae::GameObject>();
 	gto->SetLocalPosition(350 , 250);
-	gto->AddComponent<dae::RotationComponent>(10.f);
+	gto->AddComponent<dae::RotationComponent>(40.f);
 	gto->AddComponent<dae::RenderComponent>("PengoCharacterSprites.png" , .2f);
+	auto ptr1 = gto.get();
+	scene.Add(std::move(gto));
+
 
 	auto child = std::make_unique<dae::GameObject>();
 	child->SetLocalPosition(200, 100);
-	child->AddComponent<dae::RotationComponent>(-15.f);
+	//child->AddComponent<dae::RotationComponent>(-15.f);
 	child->AddComponent<dae::RenderComponent>("Jarvis.png" , .5f);
-
-	child->SetParent(gto.get());
-
+	auto ptr2 = child.get();
 	scene.Add(std::move(child));
-	scene.Add(std::move(gto));
+
+	ptr1->SetParent(ptr2);
 
 
 

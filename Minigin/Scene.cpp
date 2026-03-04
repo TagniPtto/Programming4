@@ -4,54 +4,47 @@
 
 using namespace dae;
 
+
+Scene::Scene():m_rootObject(std::make_unique<GameObject>()){
+
+}
+
 void Scene::Add(std::unique_ptr<GameObject> object)
 {
 	assert(object != nullptr && "Cannot add a null GameObject to the scene.");
-	m_objects.emplace_back(std::move(object));
+	assert(m_rootObject.get() != nullptr && "Root is Null");
+	m_rootObject.get()->SetChild(std::move(object));
 }
 
-void Scene::Remove(const GameObject& object)
+void Scene::Remove(GameObject& object)
 {
-	for (auto& obj : m_objects)
-	{
-		if (obj.get() == &object)
-		{
-			obj->MarkForDestruction();
-		}
-	}
+	m_rootObject->MarkForDestruction(object);
 }
 
 void Scene::RemoveAll()
 {
-	m_objects.clear();
+	m_rootObject.reset();
 }
 
 void dae::Scene::DestroyMarkedObjects()
 {
-	m_objects.erase(
-		std::remove_if(
-			m_objects.begin(),
-			m_objects.end(),
-			[](const auto& ptr) { return ptr->IsMarkedForDestruction(); }
-		),
-		m_objects.end()
-	);
+	m_rootObject->DestroyMarkedChildren();
+}
+
+GameObject* dae::Scene::GetRootObject()
+{
+	return m_rootObject.get();
 }
 
 void Scene::Update()
 {
-	for(auto& object : m_objects)
-	{
-		object->Update();
-	}
+	m_rootObject->Update();
+
 	DestroyMarkedObjects();
 }
 
 void Scene::Render() const
 {
-	for (const auto& object : m_objects)
-	{
-		object->Render();
-	}
+	m_rootObject->Render();
 }
 
