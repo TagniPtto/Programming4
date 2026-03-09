@@ -31,7 +31,8 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/RenderComponent.cpp
   Minigin/FPSComponent.cpp
   Minigin/RotationComponent.cpp
-  Minigin/UIWindow.cpp "Minigin/TTC.cpp")
+  Minigin/UIWindow.cpp
+  Minigin/BenchMarkComponent.cpp)
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

@@ -15,7 +15,7 @@ namespace dae
 	class Texture2D;
 	class GameObject final
 	{
-		Transform m_localtransform{};
+		Transform m_localTransform{};
 		Transform m_worldTransform{};
 
 		std::vector<std::unique_ptr<ObjectComponent>> m_components{};
@@ -33,6 +33,7 @@ namespace dae
 	public:
 		void Update();
 		void Render() const;
+		void RenderUI();
 
 		GameObject* GetParent() const;
 		void SetParent(GameObject* newParent, bool keepWorldPosition = false);

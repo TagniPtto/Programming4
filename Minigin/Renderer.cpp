@@ -5,8 +5,6 @@
 #include "SceneManager.h"
 #include "Texture2D.h"
 
-#include "TTC.h"
-
 #include <imgui.h>
 #include <imgui_plot.h>
 #include <backends/imgui_impl_sdl3.h>
@@ -45,28 +43,6 @@ void dae::Renderer::Render() const
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
-	//static float values[100];
-
-	//// Generate some dummy data
-	//for (int i = 0; i < 100; ++i)
-	//{
-	//	values[i] = sinf(i * 0.1f);
-	//}
-
-	//ImGui::PlotConfig conf;
-	//conf.values.xs = nullptr;           // X axis = index
-	//conf.values.ys = values;            // Y data
-	//conf.values.count = 100;
-	//conf.scale.min = -1.0f;
-	//conf.scale.max = 1.0f;
-	//conf.tooltip.show = true;
-	//conf.frame_size = ImVec2(400, 200);
-
-
-	//ImGui::Plot("plot", conf);
-	TTC::Render();
-
-	ImGui::Render();
 
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
@@ -74,6 +50,7 @@ void dae::Renderer::Render() const
 
 	SceneManager::GetInstance().Render();
 
+	ImGui::Render();
 	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), m_renderer);
 	SDL_RenderPresent(m_renderer);
 }

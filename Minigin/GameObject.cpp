@@ -4,7 +4,12 @@
 #include "ResourceManager.h"
 #include "Renderer.h"
 
-dae::GameObject::~GameObject() = default;
+dae::GameObject::~GameObject() 
+{
+	for (auto& child : m_children) {
+		child->SetParent(nullptr);
+	}
+}
 
 void dae::GameObject::RemoveChild(GameObject* child)
 {
@@ -37,6 +42,13 @@ void dae::GameObject::Render() const
 {
 	for (int i{}; i < (int)m_components.size(); i++) {
 		m_components[i]->Render();
+	}
+}
+
+void dae::GameObject::RenderUI()
+{
+	for (int i{}; i < (int)m_components.size(); i++) {
+		m_components[i]->RenderUI();
 	}
 }
 
@@ -73,19 +85,19 @@ void dae::GameObject::SetLocalPosition(float x, float y)
 void dae::GameObject::SetLocalPosition(glm::vec3 pos)
 {
 	SetTransformDirty();
-	m_localtransform.SetPosition(pos);
+	m_localTransform.SetPosition(pos);
 }
 
 void dae::GameObject::SetLocalRotation(float newRotation)
 {
 	SetTransformDirty();
-	m_localtransform.SetRotation(newRotation);
+	m_localTransform.SetRotation(newRotation);
 }
 
 void dae::GameObject::SetLocalTransform(const Transform& newTransform)
 {
 	SetTransformDirty();
-	m_localtransform = newTransform;
+	m_localTransform = newTransform;
 }
 
 void dae::GameObject::UpdateWorldTransform()
@@ -96,12 +108,12 @@ void dae::GameObject::UpdateWorldTransform()
 		return;
 
 	if (m_parent == nullptr)
-		m_worldTransform = m_localtransform;
+		m_worldTransform = m_localTransform;
 	else {
 		m_parent->UpdateWorldTransform();
 
 		float parentRotation = m_parent->GetWorldRotation();
-		glm::vec3 localPosition = m_localtransform.GetPosition();
+		glm::vec3 localPosition = m_localTransform.GetPosition();
 		float radians = glm::radians(parentRotation);
 
 		float cosA = cosf(radians);
@@ -112,7 +124,7 @@ void dae::GameObject::UpdateWorldTransform()
 		glm::vec2 rotated = right * localPosition.x + up * localPosition.y;
 
 		m_worldTransform.SetPosition(m_parent->GetWorldPosition() + glm::vec3(rotated, localPosition.z));
-		m_worldTransform.SetRotation(parentRotation + m_localtransform.GetRotation());
+		m_worldTransform.SetRotation(parentRotation + m_localTransform.GetRotation());
 	}
 
 

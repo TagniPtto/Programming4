@@ -10,7 +10,7 @@ protected:
 	dae::GameObject* m_owner;
 
 protected:
-	ObjectComponent(dae::GameObject& owner);
+	explicit ObjectComponent(dae::GameObject& owner);
 
 public :
 	virtual ~ObjectComponent() = default;
@@ -22,6 +22,7 @@ public :
 	ObjectComponent operator=(const ObjectComponent& other) = delete;
 
 	virtual void Render() const {};
+	virtual void RenderUI() {};
 	virtual void Update() {};
 	virtual void FixedUpdate(float) {};
 };

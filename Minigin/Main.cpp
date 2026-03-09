@@ -7,6 +7,7 @@
 
 #include "Minigin.h"
 #include "SceneManager.h"
+#include "BenchMarkComponent.h"
 #include "ResourceManager.h"
 #include "TextComponent.h"
 #include "FPSComponent.h"
@@ -57,6 +58,7 @@ static void load()
 	child->AddComponent<dae::RenderComponent>("Jarvis.png" , .5f);
 
 	child->SetParent(gto.get());
+	child->AddComponent<dae::BenchMarkComponent>();
 
 	scene.Add(std::move(child));
 	scene.Add(std::move(gto));
