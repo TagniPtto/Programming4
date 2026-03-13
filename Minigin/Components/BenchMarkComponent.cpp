@@ -12,13 +12,13 @@
 
 
 dae::BenchMarkComponent::BenchMarkComponent(dae::GameObject& owner):
-	ObjectComponent(owner), resultEx1{}, resultEx2{}, resultEx2Alt{}, xData{}
+	ObjectComponent(owner), xData{}, resultEx1{}, resultEx2{}, resultEx2Alt{}
 {
 }
 
 
 void dae::BenchMarkComponent::RenderUI()
-{ 
+{
 	ImGui::Begin("Exercise1");
 	if (ImGui::Button("Thrash the cache with int"))
 	{
@@ -40,7 +40,6 @@ void dae::BenchMarkComponent::RenderUI()
 
 
 	ImGui::Begin("Exercise2", nullptr, ImGuiWindowFlags_AlwaysAutoResize);
-	
 	if (ImGui::Button("Thrash the cach with Gameobject3d"))
 	{
 		SampleExercise(1, 10);
@@ -55,7 +54,7 @@ void dae::BenchMarkComponent::RenderUI()
 	static uint32_t selection_start = 0, selection_length = 0;
 
 
-	// THis shit will suck your fps
+	// Draw first plot with multiple sources
 	ImGui::PlotConfig conf;
 	conf.values.xs = xData.data();
 	conf.values.count = int(xData.size());
