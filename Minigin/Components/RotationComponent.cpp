@@ -1,4 +1,5 @@
 #include "RotationComponent.h"
+#include "TransformComponent.h"
 
 #include "GameObject.h"
 #include "TimeManager.h"
@@ -11,5 +12,5 @@ dae::RotationComponent::RotationComponent(GameObject& owner, float frequency):
 void dae::RotationComponent::Update()
 {
 	m_currentAngle += m_frequency * Time::GetInstance().GetDeltaTime();
-	m_owner->GetTransform().SetLocalRotation(m_currentAngle);
+	m_owner->GetTransform()->SetLocalRotation(m_currentAngle);
 }

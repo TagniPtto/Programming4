@@ -3,28 +3,24 @@
 #include <memory>
 #include <vector>
 
-#include "Transform.h"
-#include "ObjectComponent.h"
+#include "Components/TransformComponent.h"
 
 namespace dae
 {
 
 	template<typename T>
 	concept Component = std::derived_from<T, ObjectComponent>;
-
 	class Texture2D;
 	class GameObject final
 	{
-		Transform m_localTransform{};
-		Transform m_worldTransform{};
-
-		std::vector<std::unique_ptr<ObjectComponent>> m_components{};
-		bool m_markedForDestruction{ false };
-
 		GameObject* m_parent{ nullptr };
 		std::vector<GameObject*> m_children{};
 
-		bool m_transformDirty{ false };
+		std::vector<std::unique_ptr<ObjectComponent>> m_components{};
+		std::unique_ptr<TransformComponent> m_transform;
+
+		bool m_markedForDestruction{ false };
+
 	private:
 		void RemoveChild(GameObject* child);
 		void AddChild(GameObject* child);
@@ -38,24 +34,15 @@ namespace dae
 		GameObject* GetParent() const;
 		void SetParent(GameObject* newParent, bool keepWorldPosition = false);
 
-		void SetLocalPosition(float x, float y);
-		void SetLocalPosition(glm::vec3 pos);
-		
-		void SetLocalRotation(float newRotation);
+		std::vector<GameObject*>& GetChildren();
 
-		void SetLocalTransform(const Transform& newTransform);
-
-		glm::vec3 GetWorldPosition();
-		float GetWorldRotation();
-		Transform GetWorldTransform();
-
-		void UpdateWorldTransform();
+		TransformComponent* GetTransform();
 
 		void MarkForDestruction();
 		bool IsMarkedForDestruction() const;
-		void SetTransformDirty();
+		
 
-		GameObject() = default;
+		GameObject();
 		~GameObject();
 		GameObject(const GameObject& other) = delete;
 		GameObject(GameObject&& other) = delete;
@@ -65,7 +52,7 @@ namespace dae
 	
 		template<Component T,typename... Args>
 		T* AddComponent(Args&&... args) {
-			m_components.emplace_back(new T(*this, std::forward<Args>(args)...));
+			m_components.push_back(std::make_unique<T>(*this, std::forward<Args>(args)...));
 			return dynamic_cast<T*>(m_components.back().get());
 		}
 

@@ -7,12 +7,12 @@
 
 #include "Minigin.h"
 #include "SceneManager.h"
-#include "BenchMarkComponent.h"
 #include "ResourceManager.h"
-#include "TextComponent.h"
-#include "FPSComponent.h"
-#include "RenderComponent.h"
-#include "RotationComponent.h"
+#include "Components/BenchMarkComponent.h"
+#include "Components/TextComponent.h"
+#include "Components/FPSComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/RotationComponent.h"
 #include "Scene.h"
 
 #include <filesystem>
@@ -30,30 +30,30 @@ static void load()
 	go = std::make_unique<dae::GameObject>();
 	go->AddComponent<dae::RenderComponent>("logo.png");
 	//go->SetTexture("logo.png");
-	go->SetLocalPosition(358, 180);
+	go->GetTransform()->SetLocalPosition(358, 180);
 	scene.Add(std::move(go));
 
 	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
 
 	auto gto = std::make_unique<dae::GameObject>();
-	gto->SetLocalPosition(292, 20);
+	gto->GetTransform()->SetLocalPosition(292, 20);
 	gto->AddComponent<dae::TextComponent>("Programming 4 Assignment", font);
 	auto component = gto->GetComponent<dae::TextComponent>();
 	component->SetColor({ 255, 255, 0, 255 });
 	scene.Add(std::move(gto));
 
 	gto = std::make_unique<dae::GameObject>();
-	gto->SetLocalPosition(10, 10);
+	gto->GetTransform()->SetLocalPosition(10, 10);
 	gto->AddComponent<dae::FPSComponent>("FPS",font);
 	scene.Add(std::move(gto));
 
 	gto = std::make_unique<dae::GameObject>();
-	gto->SetLocalPosition(350 , 250);
+	gto->GetTransform()->SetLocalPosition(350 , 250);
 	gto->AddComponent<dae::RotationComponent>(10.f);
 	gto->AddComponent<dae::RenderComponent>("PengoCharacterSprites.png" , .2f);
 
 	auto child = std::make_unique<dae::GameObject>();
-	child->SetLocalPosition(200, 100);
+	child->GetTransform()->SetLocalPosition(200, 100);
 	child->AddComponent<dae::RotationComponent>(-15.f);
 	child->AddComponent<dae::RenderComponent>("Jarvis.png" , .5f);
 

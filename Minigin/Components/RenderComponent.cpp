@@ -1,4 +1,5 @@
 #include "RenderComponent.h"
+#include "TransformComponent.h"
 #include "GameObject.h"
 
 #include "ResourceManager.h"
@@ -19,10 +20,10 @@ namespace dae {
 
 	void RenderComponent::Render() const
 	{
-		const auto& transform = m_owner->GetTransform();
+		auto transform = m_owner->GetTransform();
 
 		if (m_texture != nullptr) {
-			dae::Renderer::GetInstance().RenderTexture(*m_texture, transform.GetWorldPosition().x, transform.GetWorldPosition().y, transform.GetWorldRotation(),m_scale);
+			dae::Renderer::GetInstance().RenderTexture(*m_texture, transform->GetWorldPosition().x, transform->GetWorldPosition().y, transform->GetWorldRotation(),m_scale);
 		}
 	}
 

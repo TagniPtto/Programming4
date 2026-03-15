@@ -1,10 +1,16 @@
 #include <string>
 #include <numbers>
 #include "GameObject.h"
+#include "Components/TransformComponent.h"
 #include "ResourceManager.h"
 #include "Renderer.h"
 
-dae::GameObject::~GameObject() 
+
+dae::GameObject::GameObject():m_transform(std::make_unique<dae::TransformComponent>(*this))
+{
+}
+
+dae::GameObject::~GameObject()
 {
 	for (auto& child : m_children) {
 		child->SetParent(nullptr);
@@ -62,13 +68,14 @@ void dae::GameObject::SetParent(GameObject* newParent , bool keepWorldPosition)
 	if (m_parent == newParent|| IsChildOf(newParent) || newParent->IsChildOf(this))
 		return;
 
-	if (m_parent == nullptr)
-		SetLocalPosition(GetWorldPosition());
+	if (m_parent == nullptr) {
+		m_transform->SetLocalPosition(m_transform->GetWorldPosition());
+	}
 	else
 	{
 		if (keepWorldPosition)
-			SetLocalPosition(GetWorldPosition() - m_parent->GetWorldPosition());
-		SetTransformDirty();
+			m_transform->SetLocalPosition(m_transform->GetWorldPosition() - m_parent->GetTransform()->GetWorldPosition());
+		m_transform->SetTransformDirty();
 	}
 
 	if (m_parent) m_parent->RemoveChild(this);
@@ -76,77 +83,17 @@ void dae::GameObject::SetParent(GameObject* newParent , bool keepWorldPosition)
 	if (newParent) newParent->AddChild(this);
 }
 
-
-void dae::GameObject::SetLocalPosition(float x, float y)
+std::vector<dae::GameObject*>& dae::GameObject::GetChildren()
 {
-	SetLocalPosition(glm::vec3(x, y, 0.0f));
+	return m_children;
 }
 
-void dae::GameObject::SetLocalPosition(glm::vec3 pos)
+dae::TransformComponent* dae::GameObject::GetTransform()
 {
-	SetTransformDirty();
-	m_localTransform.SetPosition(pos);
-}
-
-void dae::GameObject::SetLocalRotation(float newRotation)
-{
-	SetTransformDirty();
-	m_localTransform.SetRotation(newRotation);
-}
-
-void dae::GameObject::SetLocalTransform(const Transform& newTransform)
-{
-	SetTransformDirty();
-	m_localTransform = newTransform;
-}
-
-void dae::GameObject::UpdateWorldTransform()
-{
-
-
-	if (!m_transformDirty)
-		return;
-
-	if (m_parent == nullptr)
-		m_worldTransform = m_localTransform;
-	else {
-		m_parent->UpdateWorldTransform();
-
-		float parentRotation = m_parent->GetWorldRotation();
-		glm::vec3 localPosition = m_localTransform.GetPosition();
-		float radians = glm::radians(parentRotation);
-
-		float cosA = cosf(radians);
-		float sinA = sinf(radians);
-		glm::vec2 right(cosA, sinA);
-		glm::vec2 up(-sinA, cosA);
-
-		glm::vec2 rotated = right * localPosition.x + up * localPosition.y;
-
-		m_worldTransform.SetPosition(m_parent->GetWorldPosition() + glm::vec3(rotated, localPosition.z));
-		m_worldTransform.SetRotation(parentRotation + m_localTransform.GetRotation());
-	}
-
-
-	m_transformDirty = false;
+	return m_transform.get();
 }
 
 
-glm::vec3 dae::GameObject::GetWorldPosition()
-{
-	return 	GetWorldTransform().GetPosition();
-}
-
-float dae::GameObject::GetWorldRotation()
-{
-	return 	GetWorldTransform().GetRotation();
-}
-
-dae::Transform dae::GameObject::GetWorldTransform()
-{
-	UpdateWorldTransform();
-	return m_worldTransform;
-}
 
 void dae::GameObject::MarkForDestruction()
 {
@@ -157,13 +104,3 @@ bool dae::GameObject::IsMarkedForDestruction() const
 {
 	return m_markedForDestruction;
 }
-
-void dae::GameObject::SetTransformDirty()
-{
-	m_transformDirty = true;
-	for (auto& child : m_children)
-	{
-		child->SetTransformDirty();
-	}
-}
-
