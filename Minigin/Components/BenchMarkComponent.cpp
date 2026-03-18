@@ -128,7 +128,7 @@ void dae::BenchMarkComponent::SampleExercise(int index,int amount)
  void dae::BenchMarkComponent::Exercise1()
 {
 	std::vector<int> arr(1000000);
-
+	//TODO make container last throughout all sample for memory allocation efficientcy this is an exercise about cache not memory alloc
 	int index = 0;
 
 	for (int stepsize = 1; stepsize < 1024; stepsize *= 2)

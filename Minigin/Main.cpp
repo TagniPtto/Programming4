@@ -13,13 +13,17 @@
 #include "Components/FPSComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/RotationComponent.h"
+#include "Components/PlayerController.h"
 #include "Scene.h"
+#include "InputManager.h"
+#include "commands.h"
 
 #include <filesystem>
 namespace fs = std::filesystem;
 
 static void load()
 {
+
 	auto& scene = dae::SceneManager::GetInstance().CreateScene();
 
 	auto go = std::make_unique<dae::GameObject>();
@@ -49,17 +53,16 @@ static void load()
 
 	gto = std::make_unique<dae::GameObject>();
 	gto->GetTransform()->SetLocalPosition(350 , 250);
-	gto->AddComponent<dae::RotationComponent>(10.f);
 	gto->AddComponent<dae::RenderComponent>("PengoCharacterSprites.png" , .2f);
+	gto->AddComponent<dae::PlayerController>();
+	//gto->AddComponent<dae::RotationComponent>(10.f);
+	//auto child = std::make_unique<dae::GameObject>();
+	//child->GetTransform()->SetLocalPosition(200, 100);
+	//child->AddComponent<dae::RotationComponent>(-15.f);
+	//child->AddComponent<dae::RenderComponent>("Jarvis.png" , .5f);
+	//child->SetParent(gto.get());
+	//scene.Add(std::move(child));
 
-	auto child = std::make_unique<dae::GameObject>();
-	child->GetTransform()->SetLocalPosition(200, 100);
-	child->AddComponent<dae::RotationComponent>(-15.f);
-	child->AddComponent<dae::RenderComponent>("Jarvis.png" , .5f);
-
-	child->SetParent(gto.get());
-
-	scene.Add(std::move(child));
 	scene.Add(std::move(gto));
 
 

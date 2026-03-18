@@ -17,6 +17,7 @@ endif()
 add_executable(${TARGET_NAME} ${TARGET_PARAM}
   Minigin/Font.cpp
   Minigin/GameObject.cpp
+  Minigin/Gamepad.cpp
   Minigin/InputManager.cpp
   Minigin/Main.cpp
   Minigin/Minigin.cpp
@@ -33,8 +34,7 @@ add_executable(${TARGET_NAME} ${TARGET_PARAM}
   "Minigin/Components/RenderComponent.cpp"
   "Minigin/Components/RotationComponent.cpp"
   "Minigin/Components/TextComponent.cpp"
-
-  )
+  "Minigin/Components/PlayerController.cpp")
 
 # enable c++20 features
 target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)

@@ -12,6 +12,7 @@ dae::GameObject::GameObject():m_transform(std::make_unique<dae::TransformCompone
 
 dae::GameObject::~GameObject()
 {
+	SetParent(nullptr); //remove yourself from parent so they dont try to access you after destruction
 	for (auto& child : m_children) {
 		child->SetParent(nullptr);
 	}
@@ -32,6 +33,8 @@ void dae::GameObject::AddChild(GameObject* child)
 
 bool dae::GameObject::IsChildOf(GameObject* potentialParent)
 {
+	if (potentialParent == nullptr)
+		return false;
 	if (m_parent == potentialParent)
 		return true;
 	return false;
@@ -65,7 +68,7 @@ dae::GameObject* dae::GameObject::GetParent() const
 
 void dae::GameObject::SetParent(GameObject* newParent , bool keepWorldPosition)
 {
-	if (m_parent == newParent|| IsChildOf(newParent) || newParent->IsChildOf(this))
+	if (m_parent == newParent|| IsChildOf(newParent) || (newParent && newParent->IsChildOf(this)))
 		return;
 
 	if (m_parent == nullptr) {

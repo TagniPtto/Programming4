@@ -1,0 +1,19 @@
+#pragma once
+#include "Components/ObjectComponent.h"
+
+
+namespace dae {
+
+	class GameObject;
+	
+	class PlayerController : public ObjectComponent {
+
+	public:
+		explicit PlayerController(dae::GameObject& pawn);
+		~PlayerController();
+
+		virtual void Update() override;
+		virtual void Render() const override;
+
+	};
+}
