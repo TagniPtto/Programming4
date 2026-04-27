@@ -133,7 +133,6 @@ void dae::Minigin::Run(const std::function<void()>& load)
 
 void dae::Minigin::RunOneFrame()
 {
-
 	m_quit = !InputManager::GetInstance().ProcessInput();
 	SceneManager::GetInstance().Update();
 	Renderer::GetInstance().Render();

@@ -3,46 +3,17 @@ project(Minigin)
 
 if(EMSCRIPTEN)
   message("Using Emscripten!")
-  set(TARGET_NAME minigin_web)
-  set(TARGET_PARAM )
+  set(ENGINE_NAME minigin_web)
+  set(APP_NAME pengo_web)
+  set(APP_PARAM)
 else()
-  set(TARGET_NAME minigin)
-  set(TARGET_PARAM WIN32)
+  set(ENGINE_NAME minigin)
+  set(APP_NAME pengo)
+  set(APP_PARAM WIN32)
 endif()
 
-# list source files here
-add_executable(${TARGET_NAME} ${TARGET_PARAM}
-  Minigin/Font.cpp
-  Minigin/GameObject.cpp
-  Minigin/Gamepad.cpp
-  Minigin/InputManager.cpp
-  Minigin/Main.cpp
-  Minigin/Minigin.cpp
-  Minigin/Renderer.cpp
-  Minigin/ResourceManager.cpp
-  Minigin/Scene.cpp
-  
-  Minigin/SceneManager.cpp
-  Minigin/Texture2D.cpp
-  "Minigin/Components/TransformComponent.cpp"
-  "Minigin/Components/ObjectComponent.cpp"
-  "Minigin/Components/BenchMarkComponent.cpp"
-  "Minigin/Components/FPSComponent.cpp"
-  "Minigin/Components/RenderComponent.cpp"
-  "Minigin/Components/RotationComponent.cpp"
-  "Minigin/Components/TextComponent.cpp"
-  "Minigin/Components/PlayerController.cpp" 
-  "Minigin/Components/AnimationComponent.cpp"
-  "Minigin/Components/HealthComponent.cpp" 
-  "Minigin/EventSystem/Subject.cpp" 
-  "Minigin/EventSystem/EventManager.cpp")
 
-# enable c++20 features
-target_compile_features(${TARGET_NAME} PUBLIC cxx_std_20)
-
-
-
-
+#=======================DEPENDENCIES======================
 include(FetchContent)
 
 FetchContent_Declare(
@@ -73,7 +44,6 @@ add_library(imgui STATIC
 )
 target_include_directories(imgui PUBLIC ${imgui_SOURCE_DIR} ${sdl3_SOURCE_DIR}/include)
 target_link_libraries(imgui PUBLIC SDL3::SDL3)
-# enable c++20 features
 target_compile_features(imgui PUBLIC cxx_std_20)
 
 target_link_libraries(imgui_plot PUBLIC imgui)
@@ -156,15 +126,46 @@ if (WIN32)
   # Add VLD (Visual Leak Detector) for memory leak detection on Windows
   find_package(VLD CONFIG)
 endif()
+#========================DEPENDENCIES====================
 
 
-target_include_directories("${TARGET_NAME}" PUBLIC
+
+
+
+#_____________________ENGINE_____________________________
+add_library(${ENGINE_NAME} STATIC  
+  Minigin/Font.cpp
+  Minigin/GameObject.cpp
+  Minigin/Gamepad.cpp
+  Minigin/InputManager.cpp
+  Minigin/Minigin.cpp
+  Minigin/Renderer.cpp
+  Minigin/ResourceManager.cpp
+  Minigin/Scene.cpp
+  Minigin/SceneManager.cpp
+  Minigin/Texture2D.cpp
+
+  "Minigin/Components/TransformComponent.cpp"
+  "Minigin/Components/ObjectComponent.cpp"
+  "Minigin/Components/BenchMarkComponent.cpp"
+  "Minigin/Components/FPSComponent.cpp"
+  "Minigin/Components/RenderComponent.cpp"
+  "Minigin/Components/RotationComponent.cpp"
+  "Minigin/Components/TextComponent.cpp"
+  "Minigin/Components/PlayerController.cpp" 
+  "Minigin/Components/AnimationComponent.cpp"
+  "Minigin/Components/HealthComponent.cpp" 
+
+  "Minigin/EventSystem/Subject.cpp" 
+  "Minigin/EventSystem/EventManager.cpp")
+
+
+target_include_directories("${ENGINE_NAME}" PUBLIC
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${VLD_INCLUDE_DIR}
   ${imgui_SOURCE_DIR}
 )
-
-target_link_libraries("${TARGET_NAME}" PUBLIC
+target_link_libraries("${ENGINE_NAME}" PUBLIC
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
   glm::glm
@@ -172,13 +173,40 @@ target_link_libraries("${TARGET_NAME}" PUBLIC
   imgui_plot 
   ${VLD_LIBRARIES}
 )
+#________________________________________________________
 
+
+
+
+#_______________________EXECUTABLE_______________________
+add_executable(${APP_NAME} ${APP_PARAM}
+  "Pengo/Main.cpp"
+  "Pengo/GridComponent.cpp")
+target_link_libraries(${APP_NAME} PRIVATE ${ENGINE_NAME})
+#________________________________________________________
+
+
+
+#______________________COMPILER SETTINGS____________________
+  target_compile_features(${APP_NAME} PUBLIC cxx_std_20)
+  target_compile_features(${ENGINE_NAME} PUBLIC cxx_std_20)
 if(MSVC)
   # compile at warning level 4 + treat warnings as errors
-  target_compile_options(${TARGET_NAME} PRIVATE /W4 /WX)
+  target_compile_options(${APP_NAME} PRIVATE /W4 /WX)
+  target_compile_options(${ENGINE_NAME} PRIVATE /W4 /WX)
 else()
-  target_compile_options(${TARGET_NAME} PRIVATE -Wall -Wextra -Werror)
+  target_compile_options(${APP_NAME} PRIVATE -Wall -Wextra -Werror)
+  target_compile_options(${ENGINE_NAME} PRIVATE -Wall -Wextra -Werror)
+
 endif()
+#________________________________________________________
+
+
+
+
+
+
+#_____________________PLATFORM SETTINGS____________________
 
 if(EMSCRIPTEN)
   set(EMSCRIPTEN_COMPILE_FLAGS "${EMSCRIPTEN_LINK_FLAGS} -g")
@@ -188,13 +216,13 @@ if(EMSCRIPTEN)
   set(CMAKE_TOOLCHAIN_FILE ${CMAKE_CURRENT_SOURCE_DIR}/cmake/EmscriptenToolchain.cmake)
 
   # Additional settings for Emscripten build
-  set_target_properties(${TARGET_NAME} PROPERTIES
+  set_target_properties(${APP_NAME} PROPERTIES
       COMPILE_FLAGS "${EMSCRIPTEN_COMPILE_FLAGS}"
       LINK_FLAGS "${EMSCRIPTEN_LINK_FLAGS}"
   )
 
-  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/web" "$<TARGET_FILE_DIR:${TARGET_NAME}>/"
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/web" "$<TARGET_FILE_DIR:${APP_NAME}>/"
   )
 
   # Have emscripten generate a html page too.
@@ -202,9 +230,9 @@ if(EMSCRIPTEN)
 
 elseif(WIN32)
   # Set minigin as the default startup project
-  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${TARGET_NAME})
+  set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT ${APP_NAME})
   # Set working directory to output folder
-  set_target_properties(${TARGET_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${TARGET_NAME}>")
+  set_target_properties(${APP_NAME} PROPERTIES VS_DEBUGGER_WORKING_DIRECTORY "$<TARGET_FILE_DIR:${APP_NAME}>")
 
   # Copy SDL dlls to output folder
   set(SDL_RUNTIME_DLLS
@@ -214,39 +242,39 @@ elseif(WIN32)
 
   foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)
     add_custom_command(
-      TARGET ${TARGET_NAME} POST_BUILD
+      TARGET ${APP_NAME} POST_BUILD
       COMMAND ${CMAKE_COMMAND} -E copy_if_different
           "$<TARGET_FILE:${dllTarget}>"
-          "$<TARGET_FILE_DIR:${TARGET_NAME}>"
+          "$<TARGET_FILE_DIR:${APP_NAME}>"
       VERBATIM
     )
   endforeach()
 
 
-  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${APP_NAME}>/Data"
   )
 elseif(APPLE)
-  set_target_properties(${TARGET_NAME} PROPERTIES
+  set_target_properties(${APP_NAME} PROPERTIES
     MACOSX_BUNDLE TRUE
     INSTALL_RPATH "@executable_path/../Frameworks"
     BUILD_WITH_INSTALL_RPATH TRUE
   )
-  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E make_directory "$<TARGET_BUNDLE_DIR:${TARGET_NAME}>/Contents/Frameworks"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3::SDL3-shared>" "$<TARGET_BUNDLE_DIR:${TARGET_NAME}>/Contents/Frameworks/"
-    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3_ttf::SDL3_ttf-shared>" "$<TARGET_BUNDLE_DIR:${TARGET_NAME}>/Contents/Frameworks/"
-    COMMAND install_name_tool -change "@rpath/libSDL3_ttf.0.dylib" "@executable_path/../Frameworks/libSDL3_ttf.0.2.2.dylib" "$<TARGET_FILE:${TARGET_NAME}>"
-    COMMAND install_name_tool -change "@rpath/libSDL3.0.dylib" "@executable_path/../Frameworks/libSDL3.0.dylib" "$<TARGET_FILE:${TARGET_NAME}>"
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E make_directory "$<TARGET_BUNDLE_DIR:${APP_NAME}>/Contents/Frameworks"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3::SDL3-shared>" "$<TARGET_BUNDLE_DIR:${APP_NAME}>/Contents/Frameworks/"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3_ttf::SDL3_ttf-shared>" "$<TARGET_BUNDLE_DIR:${APP_NAME}>/Contents/Frameworks/"
+    COMMAND install_name_tool -change "@rpath/libSDL3_ttf.0.dylib" "@executable_path/../Frameworks/libSDL3_ttf.0.2.2.dylib" "$<TARGET_FILE:${APP_NAME}>"
+    COMMAND install_name_tool -change "@rpath/libSDL3.0.dylib" "@executable_path/../Frameworks/libSDL3.0.dylib" "$<TARGET_FILE:${APP_NAME}>"
   )
 
   # Copy Data folder to output directory after build
-  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${APP_NAME}>/Data"
   )
 else()
   # Copy Data folder to output directory after build
-  add_custom_command(TARGET ${TARGET_NAME} POST_BUILD
-    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${TARGET_NAME}>/Data"
+  add_custom_command(TARGET ${APP_NAME} POST_BUILD
+    COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${APP_NAME}>/Data"
   )
 endif()
