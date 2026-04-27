@@ -8,6 +8,16 @@
 
 #include <chrono>
 namespace dae {
+	void RenderComponent::SetSourceRectangle(int x, int y, int width, int height)
+	{
+		m_sourceX = x;
+		m_sourceY = y;
+		m_sourceWidth = width;
+		m_sourceHeight = height;
+	}
+	//void RenderComponent::SetPivot(int x, int y)
+	//{
+	//}
 	RenderComponent::RenderComponent(dae::GameObject& owner, const std::string& filename , float scale) :
 		ObjectComponent(owner), m_texture(dae::ResourceManager::GetInstance().LoadTexture(filename)), m_scale(scale)
 	{

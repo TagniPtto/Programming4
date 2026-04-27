@@ -150,12 +150,12 @@ namespace dae {
 								x = gamepad->GetLeftThumbX();
 								y = -gamepad->GetLeftThumbY();
 								break;
-								case unsigned int(GamepadInputType::RightThumb) : // Right Thumb
-									x = gamepad->GetRightThumbX();
-									y = -gamepad->GetRightThumbY();
-									break;
-								default:
-									break;
+							case unsigned int(GamepadInputType::RightThumb) : // Right Thumb
+								x = gamepad->GetRightThumbX();
+								y = -gamepad->GetRightThumbY();
+								break;
+							default:
+								break;
 						}
 						if (glm::length(glm::vec2(x, y)) > 0.5f) {
 							binding.command->Execute(glm::vec2(x, y));

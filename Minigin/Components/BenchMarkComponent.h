@@ -35,9 +35,8 @@ namespace dae {
 		{
 
 		public:
-			~GameObject3DAlt() { delete transform; };
-			GameObject3DAlt() :transform(new Transform()), ID{} {}
-			Transform* transform;
+			GameObject3DAlt() :transform(std::make_unique<Transform>()), ID{} {}
+			std::unique_ptr<Transform> transform;
 			int ID;
 
 		};

@@ -4,9 +4,7 @@
 #include "ObjectComponent.h"
 #include <glm/glm.hpp>
 
-
 namespace dae {
-	class GameObject;
 	class RotationComponent : public ObjectComponent {
 
 	private:

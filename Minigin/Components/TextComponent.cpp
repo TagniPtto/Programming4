@@ -42,9 +42,6 @@ void dae::TextComponent::Update()
 
 void dae::TextComponent::Render() const
 {
-	if (renderComponent) {
-		renderComponent->Render();
-	}
 }
 
 void dae::TextComponent::SetText(const std::string& text)

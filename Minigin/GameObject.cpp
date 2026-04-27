@@ -40,6 +40,7 @@ bool dae::GameObject::IsChildOf(GameObject* potentialParent)
 	return false;
 }
 
+
 void dae::GameObject::Update()
 {
 	for (int i{}; i < (int)m_components.size(); i++) {
@@ -95,7 +96,6 @@ dae::TransformComponent* dae::GameObject::GetTransform()
 {
 	return m_transform.get();
 }
-
 
 
 void dae::GameObject::MarkForDestruction()

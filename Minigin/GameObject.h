@@ -3,6 +3,7 @@
 #include <memory>
 #include <vector>
 
+#include "EventSystem/Subject.h"
 #include "Components/TransformComponent.h"
 
 namespace dae
@@ -11,7 +12,7 @@ namespace dae
 	template<typename T>
 	concept Component = std::derived_from<T, ObjectComponent>;
 	class Texture2D;
-	class GameObject final
+	class GameObject final : public Subject
 	{
 		GameObject* m_parent{ nullptr };
 		std::vector<GameObject*> m_children{};
@@ -37,6 +38,7 @@ namespace dae
 		std::vector<GameObject*>& GetChildren();
 
 		TransformComponent* GetTransform();
+
 
 		void MarkForDestruction();
 		bool IsMarkedForDestruction() const;
