@@ -16,6 +16,9 @@ endif()
 #=======================DEPENDENCIES======================
 include(FetchContent)
 
+
+
+
 FetchContent_Declare(
     imgui_plot
     GIT_REPOSITORY https://github.com/soulthreads/imgui-plot.git
@@ -88,6 +91,16 @@ if(NOT SDL3_FOUND)
   endif()
 endif()
 
+
+FetchContent_Declare(
+    sdlmixer
+    GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+    GIT_TAG release-3.2.0
+    GIT_SHALLOW TRUE
+    EXCLUDE_FROM_ALL
+)
+FetchContent_MakeAvailable(sdlmixer)
+
 # Add SDL3_ttf
 find_package(SDL3_ttf 3.2.2 CONFIG QUIET)
 if(NOT SDL3_ttf_FOUND)
@@ -157,7 +170,11 @@ add_library(${ENGINE_NAME} STATIC
   "Minigin/Components/HealthComponent.cpp" 
 
   "Minigin/EventSystem/Subject.cpp" 
-  "Minigin/EventSystem/EventManager.cpp" "Minigin/InputSystem/XBoxControllerImpl.cpp" "Minigin/InputSystem/SDLControllerImpl.cpp" "Minigin/InputSystem/Gamepad.cpp")
+  "Minigin/EventSystem/EventManager.cpp"
+  "Minigin/InputSystem/XBoxControllerImpl.cpp"
+  "Minigin/InputSystem/SDLControllerImpl.cpp"
+  "Minigin/InputSystem/Gamepad.cpp"
+   "Minigin/SoundSystem/SDLSoundSystem.cpp" "Minigin/ServiceLocator.cpp")
 
 
 target_include_directories("${ENGINE_NAME}" PUBLIC
@@ -168,6 +185,7 @@ target_include_directories("${ENGINE_NAME}" PUBLIC
 target_link_libraries("${ENGINE_NAME}" PUBLIC
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
+  SDL3_mixer::SDL3_mixer
   glm::glm
   imgui
   imgui_plot 

@@ -169,7 +169,13 @@ namespace dae {
 	}
 }
 dae::InputManager::~InputManager() = default;
-dae::InputManager::InputManager():m_pImpl(std::make_unique<dae::InputManagerImpl>()) {
+
+
+
+
+dae::InputManager::InputManager():
+	m_pImpl(std::make_unique<dae::InputManagerImpl>())
+{
 }
 
 bool dae::InputManager::ProcessInput()

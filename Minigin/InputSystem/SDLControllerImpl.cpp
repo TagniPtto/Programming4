@@ -4,17 +4,17 @@
 
 bool dae::SDLControllerImpl::IsHeld(unsigned int button) const
 {
-	return false;
+	return button;
 }
 
 bool dae::SDLControllerImpl::IsReleasedThisFrame(unsigned int button) const
 {
-	return false;
+	return button;
 }
 
 bool dae::SDLControllerImpl::IsPressedThisFrame(unsigned int button) const
 {
-	return false;
+	return button;
 }
 
 void dae::SDLControllerImpl::ProcessInput()
@@ -56,6 +56,7 @@ unsigned int dae::SDLControllerImpl::GetId() const
 	return 0;
 }
 
-dae::SDLControllerImpl::SDLControllerImpl(unsigned int id)
+dae::SDLControllerImpl::SDLControllerImpl(unsigned int id):
+	m_id(id)
 {
 }

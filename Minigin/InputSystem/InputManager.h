@@ -19,7 +19,7 @@ namespace dae
 		Held,
 	};
 	struct InputBinding {
-		unsigned int controllerId; //only used for gamepad input, ignored for other types of input
+		unsigned int controllerId;
 		InputType type;
 		TriggerType trigger;
 		unsigned int code;

@@ -8,7 +8,6 @@ namespace dae {
 	class SDLControllerImpl final : public IGamepadImpl {
 
 	private:
-
 		unsigned int m_id;
 	public:
 		bool IsHeld(unsigned int button) const;
