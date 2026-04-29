@@ -14,5 +14,5 @@ public:
 
 
 
-	void Initialize() override;
+	void Initialize();
 };

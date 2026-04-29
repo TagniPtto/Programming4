@@ -1,9 +1,9 @@
 #include "playercontroller.h"
 
 #include <SDL3/SDL.h>
-#include "inputmanager.h"
+#include "InputSystem/InputManager.h"
+#include "InputSystem/gamepad.h"
 #include "Commands.h"
-#include "gamepad.h"
 
 dae::PlayerController::PlayerController(dae::GameObject& pawn):
 	ObjectComponent(pawn)

@@ -3,7 +3,7 @@
 #include <vector>
 #include <unordered_map>
 
-#include "Observer.h"
+#include "IObserver.h"
 #include "Event.h"
 
 namespace dae {

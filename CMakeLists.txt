@@ -136,8 +136,8 @@ endif()
 add_library(${ENGINE_NAME} STATIC  
   Minigin/Font.cpp
   Minigin/GameObject.cpp
-  Minigin/Gamepad.cpp
-  Minigin/InputManager.cpp
+  
+  "Minigin/InputSystem/InputManager.cpp"
   Minigin/Minigin.cpp
   Minigin/Renderer.cpp
   Minigin/ResourceManager.cpp
@@ -157,7 +157,7 @@ add_library(${ENGINE_NAME} STATIC
   "Minigin/Components/HealthComponent.cpp" 
 
   "Minigin/EventSystem/Subject.cpp" 
-  "Minigin/EventSystem/EventManager.cpp")
+  "Minigin/EventSystem/EventManager.cpp" "Minigin/InputSystem/XBoxControllerImpl.cpp" "Minigin/InputSystem/SDLControllerImpl.cpp" "Minigin/InputSystem/Gamepad.cpp")
 
 
 target_include_directories("${ENGINE_NAME}" PUBLIC
