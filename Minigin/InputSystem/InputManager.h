@@ -5,7 +5,7 @@
 namespace dae
 {
 
-	class Command;
+	class ICommand;
 	enum class InputType {
 		Key,
 		MouseButton,
@@ -24,7 +24,7 @@ namespace dae
 		TriggerType trigger;
 		unsigned int code;
 
-		std::unique_ptr<Command> command;
+		std::unique_ptr<ICommand> command;
 	};
 
 	class InputManagerImpl;
@@ -46,7 +46,7 @@ namespace dae
 		bool ProcessInput();
 
 		void BindCommand(InputBinding binding);
-		void BindCommand(std::unique_ptr<Command> command,InputType inputType, unsigned int code, TriggerType triggerType , unsigned int id = 0);
+		void BindCommand(std::unique_ptr<ICommand> command,InputType inputType, unsigned int code, TriggerType triggerType , unsigned int id = 0);
 
 	private:
 		std::unique_ptr<InputManagerImpl> m_pImpl;

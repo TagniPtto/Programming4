@@ -1,6 +1,6 @@
 #pragma once
  
-#include "ObjectComponent.h"
+#include "Components/ObjectComponent.h"
 
 namespace dae {
 	class GameObject;

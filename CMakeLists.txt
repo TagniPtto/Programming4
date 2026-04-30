@@ -165,9 +165,9 @@ add_library(${ENGINE_NAME} STATIC
   "Minigin/Components/RenderComponent.cpp"
   "Minigin/Components/RotationComponent.cpp"
   "Minigin/Components/TextComponent.cpp"
-  "Minigin/Components/PlayerController.cpp" 
+  "Pengo/PlayerController.cpp" 
   "Minigin/Components/AnimationComponent.cpp"
-  "Minigin/Components/HealthComponent.cpp" 
+  "Pengo/HealthComponent.cpp" 
 
   "Minigin/EventSystem/Subject.cpp" 
   "Minigin/EventSystem/EventManager.cpp"
@@ -183,9 +183,9 @@ target_include_directories("${ENGINE_NAME}" PUBLIC
   ${imgui_SOURCE_DIR}
 )
 target_link_libraries("${ENGINE_NAME}" PUBLIC
+  SDL3_mixer::SDL3_mixer
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
-  SDL3_mixer::SDL3_mixer
   glm::glm
   imgui
   imgui_plot 
@@ -256,6 +256,7 @@ elseif(WIN32)
   set(SDL_RUNTIME_DLLS
     SDL3::SDL3
     SDL3_ttf::SDL3_ttf
+    SDL3_mixer::SDL3_mixer
   )
 
   foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)
@@ -280,9 +281,12 @@ elseif(APPLE)
   )
   add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E make_directory "$<TARGET_BUNDLE_DIR:${APP_NAME}>/Contents/Frameworks"
+
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3::SDL3-shared>" "$<TARGET_BUNDLE_DIR:${APP_NAME}>/Contents/Frameworks/"
     COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3_ttf::SDL3_ttf-shared>" "$<TARGET_BUNDLE_DIR:${APP_NAME}>/Contents/Frameworks/"
+    COMMAND "${CMAKE_COMMAND}" -E copy_if_different "$<TARGET_FILE:SDL3_mixer::SDL3_mixer-shared>" "$<TARGET_BUNDLE_DIR:${APP_NAME}>/Contents/Frameworks/"
     COMMAND install_name_tool -change "@rpath/libSDL3_ttf.0.dylib" "@executable_path/../Frameworks/libSDL3_ttf.0.2.2.dylib" "$<TARGET_FILE:${APP_NAME}>"
+    COMMAND install_name_tool -change "@rpath/libSDL3_mixer.0.dylib" "@executable_path/../Frameworks/libSDL3_mixer.0.dylib" "$<TARGET_FILE:${APP_NAME}>"
     COMMAND install_name_tool -change "@rpath/libSDL3.0.dylib" "@executable_path/../Frameworks/libSDL3.0.dylib" "$<TARGET_FILE:${APP_NAME}>"
   )
 

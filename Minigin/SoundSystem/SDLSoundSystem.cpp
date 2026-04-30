@@ -4,7 +4,7 @@ void dae::SDLSoundSystem::LoadAudio(std::string fname)
 {
     char* path = NULL;
     MIX_Audio* audio;
-    SDL_asprintf(&path, "%s%s", SDL_GetBasePath(), fname);
+    SDL_asprintf(&path, "%s%s", SDL_GetBasePath(), fname.c_str());
     audio = MIX_LoadAudio(m_pMixer, path, false);
     if (!audio) {
         SDL_Log("Couldn't load %s: %s", path, SDL_GetError());
@@ -21,7 +21,11 @@ void dae::SDLSoundSystem::LoadAudio(std::string fname)
     SDL_free(path); 
 }
 
-void dae::SDLSoundSystem::play(const sound_id id, const float volume)
+void dae::SDLSoundSystem::UnloadAudio(const sound_id)
+{
+}
+
+void dae::SDLSoundSystem::play(const sound_id id, const float)
 {
     MIX_SetTrackAudio(m_pTrack, loadedAudio[id]);
     MIX_PlayTrack(m_pTrack, 0);

@@ -13,7 +13,7 @@
 #include "Components/FPSComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/RotationComponent.h"
-#include "Components/PlayerController.h"
+#include "PlayerController.h"
 #include "Scene.h"
 
 

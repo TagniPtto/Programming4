@@ -8,6 +8,7 @@ namespace dae
 	{
 	public:
 		virtual void LoadAudio(std::string fname) = 0;
+		virtual void UnloadAudio(const sound_id id) = 0;
 		virtual void play(const sound_id id, const float volume) = 0;
 
 		ISoundSystem() = default;

@@ -16,6 +16,7 @@ namespace dae
 	public:
 		
 		void LoadAudio(std::string path) override;
+		void UnloadAudio(const sound_id id) override;
 		void play(const sound_id id, const float volume)  override;
 		SDLSoundSystem();
 		~SDLSoundSystem() override;

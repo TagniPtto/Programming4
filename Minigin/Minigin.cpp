@@ -1,6 +1,7 @@
 ﻿#include <stdexcept>
 #include <sstream>
 #include <iostream>
+#include <thread>
 
 #ifdef _WIN32
 #define WIN32_LEAN_AND_MEAN
@@ -19,8 +20,9 @@
 #include "Renderer.h"
 #include "ResourceManager.h"
 #include "TimeManager.h"
-#include <thread>
 
+#include "ServiceLocator.h"
+#include "SoundSystem/SDLSoundSystem.h"
 
 SDL_Window* g_window{};
 
@@ -92,6 +94,7 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 
 	Renderer::GetInstance().Init(g_window);
 	ResourceManager::GetInstance().Init(dataPath);
+	ServiceLocator::register_sound_system(std::move(std::make_unique<SDLSoundSystem>()));
 }
 
 dae::Minigin::~Minigin()
@@ -105,7 +108,7 @@ dae::Minigin::~Minigin()
 void dae::Minigin::Run(const std::function<void()>& load)
 {
 	load();
-
+	
 
 #ifndef __EMSCRIPTEN__
 

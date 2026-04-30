@@ -1,4 +1,6 @@
 #include "Gamepad.h"
+
+#include "IGamepadImpl.h"
 #include "XBoxControllerImpl.h"
 #include "SDLControllerImpl.h"
 
@@ -14,8 +16,6 @@ dae::Gamepad::Gamepad(unsigned int id) :
 }
 #endif
 
-
-dae::Gamepad::~Gamepad() = default;
 
 bool dae::Gamepad::IsHeld(unsigned int button) const
 {
@@ -61,6 +61,8 @@ void dae::Gamepad::ProcessInput()
 {
 	return m_pImpl->ProcessInput();
 }
+
+dae::Gamepad::~Gamepad() = default;
 
 
 

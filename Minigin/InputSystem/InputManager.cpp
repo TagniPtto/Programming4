@@ -31,7 +31,7 @@ namespace dae {
 		InputManagerImpl();
 
 		void BindCommand(InputBinding binding);
-		void BindCommand(std::unique_ptr<Command>  command, InputType inputType, unsigned int code, TriggerType triggerType, unsigned int id);
+		void BindCommand(std::unique_ptr<ICommand>  command, InputType inputType, unsigned int code, TriggerType triggerType, unsigned int id);
 		bool ProcessInput();
 	};
 
@@ -49,7 +49,7 @@ namespace dae {
 		m_bindings.push_back(std::move(binding));
 	}
 
-	void InputManagerImpl::BindCommand(std::unique_ptr<Command>  command, InputType inputType, unsigned int code, TriggerType triggerType, unsigned int id)
+	void InputManagerImpl::BindCommand(std::unique_ptr<ICommand>  command, InputType inputType, unsigned int code, TriggerType triggerType, unsigned int id)
 	{
 		BindCommand({ .controllerId = id,.type = inputType, .trigger = triggerType ,.code = code, .command = std::move(command) });
 	}
@@ -70,14 +70,6 @@ namespace dae {
 						binding.command->Execute(glm::vec2(1.0f, 0.f));
 					}
 					break;
-					//case InputType::GamepadButton:
-					//	break;
-					//case InputType::GamepadValue:
-					//	break;
-					//case InputType::GamepadVector:
-					//	break;
-					//default:
-					//	break;
 				}
 			}
 			ImGui_ImplSDL3_ProcessEvent(&e);
@@ -188,7 +180,7 @@ void dae::InputManager::BindCommand(InputBinding binding)
 	return m_pImpl->BindCommand(std::move(binding));
 }
 
-void dae::InputManager::BindCommand(std::unique_ptr<Command> command, InputType inputType, unsigned int code, TriggerType triggerType , unsigned int id)
+void dae::InputManager::BindCommand(std::unique_ptr<ICommand> command, InputType inputType, unsigned int code, TriggerType triggerType , unsigned int id)
 {
 	return m_pImpl->BindCommand(std::move(command), inputType,code,triggerType , id);
 }

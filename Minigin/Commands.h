@@ -5,13 +5,13 @@
 #include <glm/vec2.hpp>
 
 namespace dae{
-	class Command {
+	class ICommand {
 	public:
-		virtual ~Command() = default;
+		virtual ~ICommand() = default;
 		virtual void Execute(glm::vec2 input) = 0;
 	};
 
-	class GameObjectCommand : public Command{
+	class GameObjectCommand : public ICommand{
 	private:
 		GameObject* m_pObject;
 	protected:
@@ -24,7 +24,7 @@ namespace dae{
 		}
 	};
 
-	class EditorCommand : public Command {
+	class EditorCommand : public ICommand {
 	public:
 		virtual ~EditorCommand() = default;
 		virtual void Undo() = 0;
