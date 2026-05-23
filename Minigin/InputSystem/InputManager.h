@@ -1,17 +1,21 @@
 #pragma once
-#include <glm/vec3.hpp>
 #include <memory>
 
 namespace dae
 {
 
 	class ICommand;
-	enum class InputType {
-		Key,
-		MouseButton,
-		GamepadInputType,
-		GamepadValue,
-		GamepadVector,
+	enum class InputType
+	{
+		Keyboard,
+		Mouse,
+		Gamepad
+	};
+	enum class InputValueType
+	{
+		Boolean,
+		Float,
+		Vector2,
 	};
 	enum class TriggerType {
 		Released,
@@ -20,11 +24,12 @@ namespace dae
 	};
 	struct InputBinding {
 		unsigned int controllerId;
-		InputType type;
-		TriggerType trigger;
+
 		unsigned int code;
 
-		std::unique_ptr<ICommand> command;
+		InputType type;
+		InputValueType valueType;
+ 		TriggerType trigger;
 	};
 
 	class InputManagerImpl;
@@ -33,6 +38,8 @@ namespace dae
 	private:
 		InputManager();
 		~InputManager();
+
+
 	public:
 		static InputManager& GetInstance() {
 			static InputManager instance{};
@@ -45,7 +52,7 @@ namespace dae
 
 		bool ProcessInput();
 
-		void BindCommand(InputBinding binding);
+		void BindCommand(std::unique_ptr<ICommand> command,InputBinding binding);
 		void BindCommand(std::unique_ptr<ICommand> command,InputType inputType, unsigned int code, TriggerType triggerType , unsigned int id = 0);
 
 	private:

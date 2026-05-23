@@ -43,6 +43,34 @@
 		m_buttonsReleasedThisFrame = buttonsChanged & m_previousState.Gamepad.wButtons;
 	}
 
+	float dae::XBoxControllerImpl::GetLeftThumbX() const
+	{
+		return m_currentState.Gamepad.sThumbLX; 
+	}
+	float dae::XBoxControllerImpl::GetLeftThumbY() const 
+	{
+		return m_currentState.Gamepad.sThumbLY;
+	}
+	float dae::XBoxControllerImpl::GetRightThumbX() const
+	{
+		return m_currentState.Gamepad.sThumbRY;
+	}
+
+	float dae::XBoxControllerImpl::GetRightThumbY() const
+	{ 
+		return m_currentState.Gamepad.sThumbRY;
+	}
+
+	float dae::XBoxControllerImpl::GetLeftTrigger() const
+	{
+		return m_currentState.Gamepad.bLeftTrigger;
+	}
+
+	float dae::XBoxControllerImpl::GetRightTrigger() const
+	{
+		m_currentState.Gamepad.bRightTrigger;
+	}
+
 	unsigned int dae::XBoxControllerImpl::GetId() const
 	{
 		return m_id;

@@ -23,16 +23,17 @@ namespace dae {
 
 		unsigned int m_id;
 	public:
+		void ProcessInput();
+
 		bool IsHeld(unsigned int button) const;
 		bool IsReleasedThisFrame(unsigned int button) const;
 		bool IsPressedThisFrame(unsigned int button) const;
-		void ProcessInput();
-		float GetLeftThumbX() const { return m_currentState.Gamepad.sThumbLX; }
-		float GetLeftThumbY() const { return m_currentState.Gamepad.sThumbLY; }
-		float GetRightThumbX() const { return m_currentState.Gamepad.sThumbRX; }
-		float GetRightThumbY() const { return m_currentState.Gamepad.sThumbRY; }
-		float GetLeftTrigger() const { return m_currentState.Gamepad.bLeftTrigger; }
-		float GetRightTrigger() const { return m_currentState.Gamepad.bRightTrigger; }
+		float GetLeftThumbX() const;
+		float GetLeftThumbY() const;
+		float GetRightThumbX() const;
+		float GetRightThumbY() const;
+		float GetLeftTrigger() const;
+		float GetRightTrigger() const;
 
 		unsigned int GetId() const;
 

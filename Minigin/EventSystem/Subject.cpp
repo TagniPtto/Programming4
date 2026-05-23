@@ -6,7 +6,6 @@ void dae::Subject::AddObserver(IObserver* observer)
 {
 	m_observers.push_back(observer);
 }
-
 void dae::Subject::RemoveObserver(IObserver* observer)
 {
 	m_observers.erase(
@@ -14,7 +13,7 @@ void dae::Subject::RemoveObserver(IObserver* observer)
 		m_observers.end()
 	);
 }
-void dae::Subject::NotifyObservers(Event event)
+void dae::Subject::NotifyObservers(Event& event)
 {
 	for (auto& observer : m_observers) {
 		observer->Notify(event);

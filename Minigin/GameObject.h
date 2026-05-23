@@ -11,7 +11,6 @@ namespace dae
 
 	template<typename T>
 	concept Component = std::derived_from<T, ObjectComponent>;
-	class Texture2D;
 	class GameObject final : public Subject
 	{
 		GameObject* m_parent{ nullptr };

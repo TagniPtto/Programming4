@@ -2,165 +2,209 @@
 #include "InputManager.h"
 
 
+#include <glm/vec3.hpp>
 #include <SDL3/SDL.h>
 #include <backends/imgui_impl_sdl3.h>
 
 #include <vector>
-#include "Gamepad.h"
+
+
+#include "Gamepad/Gamepad.h"
+#include "Mouse.h"
+#include "Keyboard.h"
 #include "Commands.h"
 
 
 
+#define MAX_CONTROLLERS 4
 namespace dae {
 
 	class InputManagerImpl final {
 
 	private:
 		std::vector<std::unique_ptr<Gamepad>> m_gamepads;
-		std::vector<InputBinding> m_bindings;
+		std::vector< std::pair<InputBinding, std::unique_ptr<ICommand>>> m_bindings;
 
-		std::unordered_map<int, int> m_triggerMappings{
-			{SDL_EVENT_KEY_DOWN,			int(TriggerType::Pressed)},
-			{SDL_EVENT_KEY_UP,				int(TriggerType::Released)},
-			{SDL_EVENT_MOUSE_BUTTON_DOWN,	int(TriggerType::Pressed)},
-			{SDL_EVENT_MOUSE_BUTTON_UP,		int(TriggerType::Released)},
-			{SDL_EVENT_GAMEPAD_BUTTON_UP,	int(TriggerType::Released)},
-			{SDL_EVENT_GAMEPAD_BUTTON_DOWN,	int(TriggerType::Pressed)},
+		std::unique_ptr<Mouse> m_mouse;
+		std::unique_ptr<Keyboard> m_keyboard;
+
+
+		std::unordered_map<int, TriggerType> m_triggerMappings{
+			{SDL_EVENT_KEY_DOWN,			TriggerType::Pressed},
+			{SDL_EVENT_KEY_UP,				TriggerType::Released},
+			{SDL_EVENT_MOUSE_BUTTON_DOWN,	TriggerType::Pressed},
+			{SDL_EVENT_MOUSE_BUTTON_UP,		TriggerType::Released},
+			{SDL_EVENT_GAMEPAD_BUTTON_UP,	TriggerType::Released},
+			{SDL_EVENT_GAMEPAD_BUTTON_DOWN,	TriggerType::Pressed},
 		};
+
 	public:
 		InputManagerImpl();
 
-		void BindCommand(InputBinding binding);
+		void BindCommand(std::unique_ptr<ICommand>  command, InputBinding binding);
 		void BindCommand(std::unique_ptr<ICommand>  command, InputType inputType, unsigned int code, TriggerType triggerType, unsigned int id);
 		bool ProcessInput();
+	private:
+		void ProcessGamepadBinding	(const InputBinding& binding, ICommand* command);
+		void ProcessKeyboardBinding	(const InputBinding& binding, ICommand* command);
+		void ProcessMouseBinding	(const InputBinding& binding, ICommand* command);
+		void ProcessBindings();
 	};
 
-	InputManagerImpl::InputManagerImpl()
+
+
+
+	InputManagerImpl::InputManagerImpl():
+		m_mouse(std::make_unique<Mouse>()),
+		m_keyboard(std::make_unique<Keyboard>())
 	{
-		m_gamepads.emplace_back(std::make_unique<dae::Gamepad>(0));
-		m_gamepads.emplace_back(std::make_unique<dae::Gamepad>(1));
-		m_gamepads.emplace_back(std::make_unique<dae::Gamepad>(2));
-		m_gamepads.emplace_back(std::make_unique<dae::Gamepad>(3));
+		for (unsigned int i = 0; i < MAX_CONTROLLERS; ++i)
+		{
+			m_gamepads.emplace_back(std::make_unique<dae::Gamepad>(i));
+		}
 	}
 
 
-	void InputManagerImpl::BindCommand(InputBinding binding)
+	void InputManagerImpl::BindCommand(std::unique_ptr<ICommand>  command, InputBinding binding)
 	{
-		m_bindings.push_back(std::move(binding));
+		m_bindings.emplace_back(binding, command);
 	}
 
 	void InputManagerImpl::BindCommand(std::unique_ptr<ICommand>  command, InputType inputType, unsigned int code, TriggerType triggerType, unsigned int id)
 	{
-		BindCommand({ .controllerId = id,.type = inputType, .trigger = triggerType ,.code = code, .command = std::move(command) });
+		InputBinding binding{ .controllerId = id,.type = inputType, .trigger = triggerType ,.code = code};
+		BindCommand(std::move(command), binding);
+	}
+	void InputManagerImpl::ProcessGamepadBinding(const InputBinding& binding, ICommand* command)
+	{
+		if (!(binding.controllerId < m_gamepads.size())) {
+			return;
+		}
+		auto& gamepad = m_gamepads[binding.controllerId];
+		if (binding.valueType == InputValueType::Boolean) {
+			if ((binding.trigger == TriggerType::Held		&&	gamepad->IsHeld(binding.code))||
+				(binding.trigger == TriggerType::Released	&&	gamepad->IsReleasedThisFrame(binding.code))||
+				(binding.trigger == TriggerType::Pressed	&&	gamepad->IsPressedThisFrame(binding.code)))
+			{
+				command->Execute(glm::vec2(1.0f, 0.f));
+			}
+		}
+		if (binding.valueType == InputValueType::Float) {
+			float value = 0.f;
+
+			if (binding.code == unsigned int(GamepadInputType::LeftShoulder)) {
+				value = gamepad->GetLeftTrigger();
+
+				if (value > 0.f) {
+					command->Execute(glm::vec2(value, 0.f));
+				}
+			}
+
+			if (binding.code == unsigned int(GamepadInputType::RightShoulder)) {
+				value = gamepad->GetRightTrigger();
+
+				if (value > 0.f) {
+					command->Execute(glm::vec2(value, 0.f));
+				}
+			}
+
+		}
+		if (binding.valueType == InputValueType::Vector2) {
+
+
+			if (binding.code == unsigned int(GamepadInputType::LeftThumb)) {
+				float x = gamepad->GetLeftThumbX();
+				float y = -gamepad->GetLeftThumbY();
+				if (x || y) {
+					command->Execute(glm::vec2(x, y));
+				}
+			}
+			if(binding.code == unsigned int(GamepadInputType::RightThumb)) {
+				
+				float x = gamepad->GetRightThumbX();
+				float y = -gamepad->GetRightThumbY();
+				if (x || y) {
+					command->Execute(glm::vec2(x, y));
+				}
+			}
+
+		}
+	}
+
+	void InputManagerImpl::ProcessKeyboardBinding(const InputBinding& binding, ICommand* command)
+	{
+		if (m_triggerMappings.contains(e.type) &&
+			m_triggerMappings[e.type] == binding.trigger &&
+			unsigned int(e.key.scancode) == binding.code)
+		{
+			command->Execute(glm::vec2(1.0f, 0.f));
+		}
+		if (binding.type == InputType::Keyboard &&
+			binding.trigger == TriggerType::Held)
+		{
+			command->Execute(glm::vec2(1.0f, 0.f));
+		}
+	}							
+
+	void InputManagerImpl::ProcessMouseBinding(const InputBinding& binding, ICommand* command)
+	{
+		if (binding.trigger == TriggerType::Held) {
+
+			float x, y;
+			auto buttons = SDL_GetMouseState(&x, &y);
+			if (buttons & SDL_BUTTON_MASK(binding.code)) {
+				command->Execute(glm::vec2(x, y));
+			}
+		}
+	}								
+
+	void InputManagerImpl::ProcessBindings()
+	{
+
+		for (auto& [binding, command] : m_bindings) {
+			switch (binding.type)
+			{
+			case InputType::Keyboard:
+				ProcessKeyboardBinding(binding, command.get());
+				break;
+			case InputType::Gamepad:
+				ProcessGamepadBinding(binding, command.get());
+				break;
+			case InputType::Mouse:
+				ProcessMouseBinding(binding, command.get());
+				break;
+			}
+		}
 	}
 
 	bool InputManagerImpl::ProcessInput()
 	{
-		SDL_Event e;
-		while (SDL_PollEvent(&e)) {
-			if (e.type == SDL_EVENT_QUIT) {
-				return false;
-			}
-			for (auto& binding : m_bindings) {
-				switch (binding.type)
-				{
-				case InputType::Key:
-				case InputType::MouseButton:
-					if (m_triggerMappings.contains(e.type) && m_triggerMappings[e.type] == int(binding.trigger) && unsigned int(e.key.scancode) == binding.code) {
-						binding.command->Execute(glm::vec2(1.0f, 0.f));
-					}
-					break;
-				}
-			}
-			ImGui_ImplSDL3_ProcessEvent(&e);
-		}
 
 		for (auto& gamepad : m_gamepads) {
 			gamepad->ProcessInput();
 		}
 
-		int numberOfKeys;
-		const bool* keys = SDL_GetKeyboardState(&numberOfKeys);
-		for (auto& binding : m_bindings) {
-			if (binding.type == InputType::Key && binding.trigger == TriggerType::Held && unsigned int(binding.code) < unsigned int(numberOfKeys) && keys[binding.code]) {
-				binding.command->Execute(glm::vec2(1.0f, 0.f));
-			}
-			if (binding.type == InputType::MouseButton && binding.trigger == TriggerType::Held) {
-				float x, y;
-				auto buttons = SDL_GetMouseState(&x, &y);
-				if (buttons & SDL_BUTTON_MASK(binding.code)) {
-					binding.command->Execute(glm::vec2(x, y));
-				}
-			}
 
-			for (auto& gamepad : m_gamepads)
-			{
-				if (gamepad->GetId() == binding.controllerId) {
-					if (binding.type == InputType::GamepadInputType) {
-						switch (binding.trigger) {
-						case TriggerType::Held:
-							if (gamepad->IsHeld(binding.code)) {
-								binding.command->Execute(glm::vec2(1.0f, 0.f));
-							}
-							break;
-						case TriggerType::Released:
-							if (gamepad->IsReleasedThisFrame(binding.code)) {
-								binding.command->Execute(glm::vec2(1.0f, 0.f));
-							}
-							break;
-						case TriggerType::Pressed:
-							if (gamepad->IsPressedThisFrame(binding.code)) {
-								binding.command->Execute(glm::vec2(1.0f, 0.f));
-							}
-							break;
-						default:
-							break;
-						}
-					}
-					if (binding.type == InputType::GamepadValue) {
-						float value = 0.f;
-						switch (binding.code)
-						{
-							case unsigned int(GamepadInputType::LeftShoulder) :
-								value = gamepad->IsHeld(binding.code) ? 1.f : 0.f;
-								break;
-								case unsigned int(GamepadInputType::RightShoulder) :
-									value = gamepad->IsHeld(binding.code) ? 1.f : 0.f;
-									break;
-								default:
-									break;
-						}
-						if (value > 0.f) {
-							binding.command->Execute(glm::vec2(value, 0.f));
-						}
-					}
-					if (binding.type == InputType::GamepadVector) {
-						float x = 0.f, y = 0.f;
-						switch (binding.code)
-						{
-							case unsigned int(GamepadInputType::LeftThumb) : // Left Thumb
-								x = gamepad->GetLeftThumbX();
-								y = -gamepad->GetLeftThumbY();
-								break;
-							case unsigned int(GamepadInputType::RightThumb) : // Right Thumb
-								x = gamepad->GetRightThumbX();
-								y = -gamepad->GetRightThumbY();
-								break;
-							default:
-								break;
-						}
-						if (glm::length(glm::vec2(x, y)) > 0.5f) {
-							binding.command->Execute(glm::vec2(x, y));
-						}
-					}
-				}
+		SDL_Event e;
+		while (SDL_PollEvent(&e)) {
+			if (e.type == SDL_EVENT_QUIT) {
+				return false;
 			}
-
+			ImGui_ImplSDL3_ProcessEvent(&e);
 		}
+
+
+		ProcessBindings();
 		return true;
 	}
 }
-dae::InputManager::~InputManager() = default;
+
+
+
+
+
+
+
 
 
 
@@ -175,12 +219,13 @@ bool dae::InputManager::ProcessInput()
 	return m_pImpl->ProcessInput();
 }
 
-void dae::InputManager::BindCommand(InputBinding binding)
+void dae::InputManager::BindCommand(std::unique_ptr<ICommand> command,InputBinding binding)
 {
-	return m_pImpl->BindCommand(std::move(binding));
+	return m_pImpl->BindCommand(std::move(command), binding);
 }
 
 void dae::InputManager::BindCommand(std::unique_ptr<ICommand> command, InputType inputType, unsigned int code, TriggerType triggerType , unsigned int id)
 {
 	return m_pImpl->BindCommand(std::move(command), inputType,code,triggerType , id);
 }
+dae::InputManager::~InputManager() = default;

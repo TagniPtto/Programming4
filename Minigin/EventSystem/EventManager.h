@@ -1,10 +1,12 @@
 #pragma once
 #include <string>
+#include <queue>
 #include <vector>
 #include <unordered_map>
+#include <memory>
 
 #include "IObserver.h"
-#include "Event.h"
+#include "Events/Event.h"
 
 namespace dae {
 
@@ -12,7 +14,7 @@ namespace dae {
 //synchronous eventManager
 	class EventManager final {
 	private:
-		std::vector<Event> EventQueue;
+		std::queue<std::unique_ptr<Event>> EventQueue;
 		std::unordered_map<EventId,std::vector<IObserver*>> Subscribers;
 
 	private:
@@ -25,7 +27,7 @@ namespace dae {
 
 		void SubscribeEvent(EventId type, IObserver* subscriber);
 		void UnsubscribeEvent(EventId type,IObserver* subscriber);
-		void SentEvent(Event event);
+		void SendEvent(std::unique_ptr<Event> event);
 
 		void DispatchEvents();
 		

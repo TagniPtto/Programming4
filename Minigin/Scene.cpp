@@ -4,6 +4,14 @@
 
 using namespace dae;
 
+
+GameObject* Scene::CreateGameObject() {
+	auto obj = std::make_unique<dae::GameObject>();
+	auto objPtr = obj.get();
+	Add(std::move(obj));
+	return objPtr;
+}
+
 void Scene::Add(std::unique_ptr<GameObject> object)
 {
 	assert(object != nullptr && "Cannot add a null GameObject to the scene.");

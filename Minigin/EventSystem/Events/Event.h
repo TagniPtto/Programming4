@@ -23,17 +23,23 @@ namespace dae
 		return sdbm_hash<N - 1>::calculate(text);
 	}
 
-	struct EventArg {};
 	using EventId = unsigned int;
 
+
+
+
+#define DEFINE_EVENT_CLASS_TYPE(x)\
+	static constexpr EventId GetStaticType() { return make_sdbm_hash(#x);}\
+	virtual EventId GetType() const override { return GetStaticType(); }
+
 	struct Event {
-		explicit Event(EventId _id) : id{ _id } {}
+		virtual ~Event() = default;
 
-		const EventId id;
+		static constexpr EventId GetStaticType() { return make_sdbm_hash("default_event"); };
+		virtual EventId GetType() const { return GetStaticType(); };
 
-		static const uint8_t MAX_ARGS = 8;
-		uint8_t nbArgs;
-		EventArg args[MAX_ARGS];
 	};
+
+
 
 }

@@ -92,14 +92,32 @@ if(NOT SDL3_FOUND)
 endif()
 
 
-FetchContent_Declare(
-    sdlmixer
-    GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
-    GIT_TAG release-3.2.0
-    GIT_SHALLOW TRUE
-    EXCLUDE_FROM_ALL
-)
-FetchContent_MakeAvailable(sdlmixer)
+
+# Add SDL3_mixer
+find_package(SDL3_mixer 3.2.2 CONFIG QUIET)
+if(NOT SDL3_mixer_FOUND)
+  if (WIN32)
+    FetchContent_Declare(
+      SDL3_mixer
+      URL https://github.com/libsdl-org/SDL_mixer/releases/download/release-3.2.0/SDL3_mixer-devel-3.2.0-VC.zip
+      DOWNLOAD_NO_PROGRESS ON
+      DOWNLOAD_DIR ${CMAKE_BINARY_DIR}/downloads
+    )
+    FetchContent_MakeAvailable(SDL3_mixer)
+    list(PREPEND CMAKE_PREFIX_PATH "${sdl3_mixer_SOURCE_DIR}")
+    find_package(SDL3_mixer CONFIG REQUIRED)
+  else()
+    FetchContent_Declare(
+      SDL3_mixer
+      GIT_REPOSITORY https://github.com/libsdl-org/SDL_mixer.git
+      GIT_TAG release-3.2.0
+      GIT_SHALLOW TRUE
+      GIT_PROGRESS TRUE
+    )
+    FetchContent_MakeAvailable(SDL3_mixer)
+  endif()
+endif()
+
 
 # Add SDL3_ttf
 find_package(SDL3_ttf 3.2.2 CONFIG QUIET)
@@ -171,10 +189,13 @@ add_library(${ENGINE_NAME} STATIC
 
   "Minigin/EventSystem/Subject.cpp" 
   "Minigin/EventSystem/EventManager.cpp"
-  "Minigin/InputSystem/XBoxControllerImpl.cpp"
-  "Minigin/InputSystem/SDLControllerImpl.cpp"
-  "Minigin/InputSystem/Gamepad.cpp"
-   "Minigin/SoundSystem/SDLSoundSystem.cpp" "Minigin/ServiceLocator.cpp")
+  "Minigin/InputSystem/Gamepad/XBoxControllerImpl.cpp"
+  "Minigin/InputSystem/Gamepad/SDLControllerImpl.cpp"
+  "Minigin/InputSystem/Gamepad/Gamepad.cpp"
+   "Minigin/SoundSystem/SDLSoundSystem.cpp"
+   "Minigin/ServiceLocator.cpp" 
+   "Minigin/InputSystem/Keyboard.cpp"
+   "Minigin/InputSystem/Mouse.cpp")
 
 
 target_include_directories("${ENGINE_NAME}" PUBLIC
@@ -183,9 +204,9 @@ target_include_directories("${ENGINE_NAME}" PUBLIC
   ${imgui_SOURCE_DIR}
 )
 target_link_libraries("${ENGINE_NAME}" PUBLIC
-  SDL3_mixer::SDL3_mixer
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
+  SDL3_mixer::SDL3_mixer-shared
   glm::glm
   imgui
   imgui_plot 
@@ -206,6 +227,9 @@ target_link_libraries(${APP_NAME} PRIVATE ${ENGINE_NAME})
 
 
 #______________________COMPILER SETTINGS____________________
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
   target_compile_features(${APP_NAME} PUBLIC cxx_std_20)
   target_compile_features(${ENGINE_NAME} PUBLIC cxx_std_20)
 if(MSVC)
@@ -256,7 +280,7 @@ elseif(WIN32)
   set(SDL_RUNTIME_DLLS
     SDL3::SDL3
     SDL3_ttf::SDL3_ttf
-    SDL3_mixer::SDL3_mixer
+    SDL3_mixer::SDL3_mixer-shared
   )
 
   foreach(dllTarget IN LISTS SDL_RUNTIME_DLLS)
@@ -268,7 +292,6 @@ elseif(WIN32)
       VERBATIM
     )
   endforeach()
-
 
   add_custom_command(TARGET ${APP_NAME} POST_BUILD
     COMMAND "${CMAKE_COMMAND}" -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/Data" "$<TARGET_FILE_DIR:${APP_NAME}>/Data"

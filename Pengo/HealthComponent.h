@@ -2,7 +2,7 @@
  
 #include "Components/ObjectComponent.h"
 
-namespace dae {
+namespace Pengo {
 	class GameObject;
 	class HealthComponent : public ObjectComponent {
 		int m_health;

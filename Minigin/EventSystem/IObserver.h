@@ -7,6 +7,6 @@ namespace dae {
 	{
 	public:
 		virtual ~IObserver() = default;
-		virtual void Notify(Event event) = 0;
+		virtual void Notify(Event& event) = 0;
 	};
 }

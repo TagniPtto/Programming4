@@ -9,6 +9,7 @@ namespace dae
 	class Scene final
 	{
 	public:
+		GameObject* CreateGameObject();
 		void Add(std::unique_ptr<GameObject> object);
 		void Remove(const GameObject& object);
 		void RemoveAll();

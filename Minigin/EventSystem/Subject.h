@@ -10,7 +10,7 @@ namespace dae {
 		std::vector<IObserver*> m_observers{};
 	public:
 		virtual ~Subject() = default;
-		virtual void NotifyObservers(Event event);
+		virtual void NotifyObservers(Event& event);
 
 		void AddObserver(IObserver* observer);
 		void RemoveObserver(IObserver* observer);
