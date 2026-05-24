@@ -4,24 +4,24 @@
 
 
 
-bool dae::SDLControllerImpl::IsHeld(unsigned int button) const
+bool dae::SDLControllerImpl::IsButtonHeld(uint32_t code) const
 {
 	return m_currentButtonState[button];
 }
 
-bool dae::SDLControllerImpl::IsReleasedThisFrame(unsigned int button) const
+bool dae::SDLControllerImpl::IsButtonReleased(uint32_t code) const
 {
 	return !m_currentButtonState[button] && m_previousButtonState[button];
 }
 
-bool dae::SDLControllerImpl::IsPressedThisFrame(unsigned int button) const
+bool dae::SDLControllerImpl::IsButtonPressed(uint32_t code) const
 {
 	return m_currentButtonState[button] && !m_previousButtonState[button];;
 }
 
 void dae::SDLControllerImpl::ProcessInput()
 {
-	constexpr static float AXIS_MAX = static_cast<float>(std::numeric_limits<Sint16>::max());
+
 	m_previousButtonState = m_currentButtonState;
 
 	for (int i{}; i < SDL_GAMEPAD_BUTTON_COUNT; ++i)
@@ -29,6 +29,11 @@ void dae::SDLControllerImpl::ProcessInput()
 		m_currentButtonState[i] = SDL_GetGamepadButton(m_gamepad,static_cast<SDL_GamepadButton>(i));
 	}
 
+	constexpr static float AXIS_MAX = static_cast<float>(std::numeric_limits<Sint16>::max());
+	
+	SDL_GameControllerGetButton();
+	
+	
 	leftThumbX	= SDL_GetGamepadAxis(m_gamepad,SDL_GAMEPAD_AXIS_LEFTX) / AXIS_MAX;
 	leftThumbY	= SDL_GetGamepadAxis(m_gamepad,SDL_GAMEPAD_AXIS_LEFTY) / AXIS_MAX;
 	
@@ -84,13 +89,11 @@ dae::SDLControllerImpl::SDLControllerImpl(unsigned int id):
 
 		if (m_gamepad)
 		{
-			SDL_Log("Opened Gamepad: %s",
-				SDL_GetGamepadName(m_gamepad));
+			SDL_Log("Opened Gamepad: %s",SDL_GetGamepadName(m_gamepad));
 		}
 		else
 		{
-			SDL_Log("Failed to open gamepad: %s",
-				SDL_GetError());
+			SDL_Log("Failed to open gamepad: %s",SDL_GetError());
 		}
 	}
 }

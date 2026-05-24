@@ -15,27 +15,35 @@ void dae::Mouse::ProcessInput()
 	m_buttonsPressedThisFrame = buttonsChanged & m_currentButtonState;
 }
 
-bool dae::Mouse::IsButtonHeldThisFrame(unsigned int code) const
+
+bool dae::Mouse::GetButtonHeld(uint32_t code) const
 {
 	return m_currentButtonState & code;
 }
 
-bool dae::Mouse::IsButtonReleasedThisFrame(unsigned int code) const
-{
-	return m_buttonsReleasedThisFrame & code;
-}
-
-bool dae::Mouse::IsButtonPressedThisFrame(unsigned int code) const
+bool dae::Mouse::GetButtonPressed(uint32_t code) const
 {
 	return m_buttonsPressedThisFrame & code;
 }
 
-float dae::Mouse::GetMouseX() const
+bool dae::Mouse::GetButtonReleased(uint32_t code) const
 {
-	return  m_x;
+	return m_buttonsReleasedThisFrame & code;
 }
 
-float dae::Mouse::GetMouseY() const
+float dae::Mouse::GetAxis1D(uint32_t code) const
 {
-	return m_y;
+	switch (code) {
+	case:
+		return m_x;
+	case:
+		return m_y;
+	}
+	return 0.0f;
+}
+
+glm::vec2 dae::Mouse::GetAxis2D(uint32_t code) const
+{
+
+	return glm::vec2();
 }

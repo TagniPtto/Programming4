@@ -5,7 +5,8 @@
 using namespace dae;
 
 
-GameObject* Scene::CreateGameObject() {
+GameObject* Scene::CreateGameObject() 
+{
 	auto obj = std::make_unique<dae::GameObject>();
 	auto objPtr = obj.get();
 	Add(std::move(obj));

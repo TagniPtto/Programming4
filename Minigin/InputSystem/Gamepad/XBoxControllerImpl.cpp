@@ -7,17 +7,17 @@
 #include "cmath"
 
 
-	bool dae::XBoxControllerImpl::IsHeld(unsigned int button) const
+	bool dae::XBoxControllerImpl::IsButtonHeld(uint32_t code) const
 	{
 		return m_currentState.Gamepad.wButtons & button;
 	}
 
-	bool dae::XBoxControllerImpl::IsReleasedThisFrame(unsigned int button)const
+	bool dae::XBoxControllerImpl::IsButtonReleased(uint32_t code)const
 	{
 		return m_buttonsReleasedThisFrame & button;
 	}
 
-	bool dae::XBoxControllerImpl::IsPressedThisFrame(unsigned int button)const
+	bool dae::XBoxControllerImpl::IsButtonPressed(uint32_t code)const
 	{
 		return m_buttonsPressedThisFrame & button;
 	}

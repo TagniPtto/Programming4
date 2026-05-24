@@ -1,12 +1,15 @@
 #pragma once 
 
-#include <array>
+#include "IInputDevice.h"
+
 #include "SDL3/SDL_scancode.h"
 
-namespace dae {
-	class Keyboard final {
-		friend class InputManager;
+#include <array>
+#include <unordered_map>
 
+namespace dae {
+	class Keyboard final : public IInputDevice{
+		friend class InputManager;
 	private:
 		std::array<uint8_t, SDL_SCANCODE_COUNT> m_currentState{};
 		std::array<uint8_t, SDL_SCANCODE_COUNT> m_previousState{};
@@ -14,10 +17,15 @@ namespace dae {
 		Keyboard();
 
 	public:
-		void ProcessInput();
-		bool IsKeyHeldThisFrame(unsigned int code) const;
-		bool IsKeyReleasedThisFrame(unsigned int code) const;
-		bool IsKeyPressedThisFrame(unsigned int code) const;
+
+		void ProcessInput() override;
+
+		bool GetButtonHeld(uint32_t code) const override;
+		bool GetButtonReleased(uint32_t code) const override;
+		bool GetButtonPressed(uint32_t code) const override;
+
+		float GetAxis1D(uint32_t code) const override;
+		glm::vec2 GetAxis2D(uint32_t code) const override;
 
 		~Keyboard() = default;
 		Keyboard(const Keyboard&) = delete;

@@ -3,8 +3,6 @@
 
 namespace dae
 {
-
-	class ICommand;
 	enum class InputType
 	{
 		Keyboard,
@@ -17,28 +15,29 @@ namespace dae
 		Float,
 		Vector2,
 	};
-	enum class TriggerType {
+	enum class InputTriggerType {
 		Released,
 		Pressed,
 		Held,
 	};
 	struct InputBinding {
-		unsigned int controllerId;
+		uint32_t code;
 
-		unsigned int code;
+		uint32_t deviceIndex;
+		InputType deviceType;
 
-		InputType type;
-		InputValueType valueType;
- 		TriggerType trigger;
+		InputValueType deviceValue;
+ 		InputTriggerType trigger;
 	};
 
+
+	class ICommand;
 	class InputManagerImpl;
 	class InputManager final
 	{
 	private:
 		InputManager();
 		~InputManager();
-
 
 	public:
 		static InputManager& GetInstance() {
@@ -53,7 +52,7 @@ namespace dae
 		bool ProcessInput();
 
 		void BindCommand(std::unique_ptr<ICommand> command,InputBinding binding);
-		void BindCommand(std::unique_ptr<ICommand> command,InputType inputType, unsigned int code, TriggerType triggerType , unsigned int id = 0);
+		void BindCommand(std::unique_ptr<ICommand> command,InputType inputType, unsigned int code, InputTriggerType triggerType , unsigned int id = 0);
 
 	private:
 		std::unique_ptr<InputManagerImpl> m_pImpl;

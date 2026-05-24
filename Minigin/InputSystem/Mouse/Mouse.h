@@ -1,9 +1,11 @@
 #pragma once
 
 
+#include "IInputDevice.h"
+
 namespace dae 
 {
-	class Mouse final
+	class Mouse final : public IInputDevice
 	{
 		friend class InputManager;
 	private:
@@ -17,12 +19,15 @@ namespace dae
 		Uint32 m_buttonsReleasedThisFrame{};
 	public:
 
-		void ProcessInput();
-		bool IsButtonHeldThisFrame(unsigned int code) const;
-		bool IsButtonReleasedThisFrame(unsigned int code) const;
-		bool IsButtonPressedThisFrame(unsigned int code) const;
-		float GetMouseX() const;
-		float GetMouseY() const;
+		void ProcessInput() override;
+		bool GetButtonHeld(uint32_t code) const override;
+		bool GetButtonPressed(uint32_t code) const override;
+		bool GetButtonReleased(uint32_t code) const override;
+
+		float GetAxis1D(uint32_t code) const override;
+		glm::vec2 GetAxis2D(uint32_t code) const override;
+
+
 		~Mouse() = default;
 		Mouse(const Mouse&) = delete;
 		Mouse(Mouse&&) = delete;

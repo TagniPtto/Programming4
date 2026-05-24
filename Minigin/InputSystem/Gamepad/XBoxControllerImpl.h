@@ -23,23 +23,22 @@ namespace dae {
 
 		unsigned int m_id;
 	public:
-		void ProcessInput();
-
-		bool IsHeld(unsigned int button) const;
-		bool IsReleasedThisFrame(unsigned int button) const;
-		bool IsPressedThisFrame(unsigned int button) const;
-		float GetLeftThumbX() const;
-		float GetLeftThumbY() const;
-		float GetRightThumbX() const;
-		float GetRightThumbY() const;
-		float GetLeftTrigger() const;
-		float GetRightTrigger() const;
-
-		unsigned int GetId() const;
-
 		XBoxControllerImpl(unsigned int id);
 		~XBoxControllerImpl() = default;
+		
+		void ProcessInput() override;
+		unsigned int GetId() const override;
 
+		bool IsButtonHeld(uint32_t code) const override;
+		bool IsButtonReleased(uint32_t code) const override;
+		bool IsButtonPressed(uint32_t code) const override;
+		float GetLeftThumbX() const	override;
+		float GetLeftThumbY() const	override;
+		float GetRightThumbX() const override;
+		float GetRightThumbY() const override;
+		float GetLeftTrigger() const override;
+		float GetRightTrigger() const override;
+		
 
 	};
 }
