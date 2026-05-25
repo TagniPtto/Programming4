@@ -114,12 +114,7 @@ if(NOT SDL3_mixer_FOUND)
       GIT_SHALLOW TRUE
       GIT_PROGRESS TRUE
     )
-    
-    set(SDL3MIXER_INSTALL OFF)
-
-    if(EMSCRIPTEN)
-      set(SDL3MIXER_VENDORED OFF)
-    endif()
+   
     FetchContent_MakeAvailable(SDL3_mixer)
   endif()
 endif()
@@ -205,12 +200,11 @@ add_library(${ENGINE_NAME} STATIC
 target_include_directories("${ENGINE_NAME}" PUBLIC
   ${CMAKE_SOURCE_DIR}/Minigin/
   ${VLD_INCLUDE_DIR}
-  ${imgui_SOURCE_DIR}
 )
 target_link_libraries("${ENGINE_NAME}" PUBLIC
   SDL3::SDL3
   SDL3_ttf::SDL3_ttf
-  SDL3_mixer::SDL3_mixer-shared
+  SDL3_mixer::SDL3_mixer
   glm::glm
   imgui
   imgui_plot 
