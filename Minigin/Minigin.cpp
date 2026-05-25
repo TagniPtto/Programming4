@@ -94,7 +94,7 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath)
 
 	Renderer::GetInstance().Init(g_window);
 	ResourceManager::GetInstance().Init(dataPath);
-	ServiceLocator::register_sound_system(std::move(std::make_unique<SDLSoundSystem>()));
+	ServiceLocator::register_sound_system(std::make_unique<SDLSoundSystem>());
 }
 
 dae::Minigin::~Minigin()
