@@ -4,7 +4,7 @@
 
 namespace Pengo {
 	class GameObject;
-	class HealthComponent : public ObjectComponent {
+	class HealthComponent : public dae::ObjectComponent {
 		int m_health;
 	public:
 		explicit HealthComponent(dae::GameObject& owner, int health);

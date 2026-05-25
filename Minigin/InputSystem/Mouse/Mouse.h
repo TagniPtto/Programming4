@@ -1,13 +1,13 @@
 #pragma once
 
 
-#include "IInputDevice.h"
+#include "../IInputDevice.h"
 
 namespace dae 
 {
 	class Mouse final : public IInputDevice
 	{
-		friend class InputManager;
+		friend class InputManagerImpl;
 	private:
 		Mouse() = default;
 		float m_x{};

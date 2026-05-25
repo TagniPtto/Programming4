@@ -9,17 +9,17 @@
 
 	bool dae::XBoxControllerImpl::IsButtonHeld(uint32_t code) const
 	{
-		return m_currentState.Gamepad.wButtons & button;
+		return m_currentState.Gamepad.wButtons & code;
 	}
 
 	bool dae::XBoxControllerImpl::IsButtonReleased(uint32_t code)const
 	{
-		return m_buttonsReleasedThisFrame & button;
+		return m_buttonsReleasedThisFrame & code;
 	}
 
 	bool dae::XBoxControllerImpl::IsButtonPressed(uint32_t code)const
 	{
-		return m_buttonsPressedThisFrame & button;
+		return m_buttonsPressedThisFrame & code;
 	}
 
 	void dae::XBoxControllerImpl::ProcessInput()
@@ -68,7 +68,7 @@
 
 	float dae::XBoxControllerImpl::GetRightTrigger() const
 	{
-		m_currentState.Gamepad.bRightTrigger;
+		return m_currentState.Gamepad.bRightTrigger;
 	}
 
 	unsigned int dae::XBoxControllerImpl::GetId() const

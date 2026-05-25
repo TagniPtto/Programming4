@@ -1,24 +1,21 @@
 #pragma once
 #include "Event.h"
 
-
-
-
 namespace dae 
 {
+	struct SoundEvent : public Event
+	{
+		DEFINE_EVENT_CLASS_TYPE(sound_event);
 
-
-	struct SoundEvent : public Event {
-		virtual ~SoundEvent() = default;
-		SoundEvent(unsigned short i, float v)
-			: id(i), volume(v)
+		SoundEvent(std::string n, float v)
+			: name(std::move(n)), volume(v)
 		{
 		}
 
-		DEFINE_EVENT_CLASS_TYPE(sound_event);
+		virtual ~SoundEvent() = default;
 
-		unsigned short id{};
-		float volume{};
+		std::string name;
+		float volume;
 	};
 
 }

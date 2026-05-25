@@ -2,7 +2,7 @@
 #include "SDL3/SDL_mouse.h"
 
 #include "Mouse.h"
-
+#include "../InputTypes.h"
 
 
 void dae::Mouse::ProcessInput()
@@ -33,16 +33,16 @@ bool dae::Mouse::GetButtonReleased(uint32_t code) const
 
 float dae::Mouse::GetAxis1D(uint32_t code) const
 {
-	switch (code) {
-	case:
+	switch (MouseInput(code)) {
+	case MouseInput::MoveX :
 		return m_x;
-	case:
+	case MouseInput::MoveY:
 		return m_y;
 	}
 	return 0.0f;
 }
 
-glm::vec2 dae::Mouse::GetAxis2D(uint32_t code) const
+glm::vec2 dae::Mouse::GetAxis2D(uint32_t) const
 {
 
 	return glm::vec2();

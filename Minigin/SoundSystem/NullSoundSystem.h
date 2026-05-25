@@ -4,9 +4,9 @@
 
 namespace dae {
 	class NullSoundSystem final : public ISoundSystem {
-		virtual void UnloadAudio(const sound_id id) {};
-		void LoadAudio(std::string fname) override {};
-		void Play(const sound_id id, const float volume) override {};
+		virtual void UnloadAudio(const std::string& name) {};
+		void LoadAudio(const std::string& fname, const std::string& name) override {};
+		void Play(const std::string& name, const float volume) override {};
 		~NullSoundSystem() override = default;
 	};
 }

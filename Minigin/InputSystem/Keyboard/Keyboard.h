@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "IInputDevice.h"
+#include "../IInputDevice.h"
 
 #include "SDL3/SDL_scancode.h"
 
@@ -9,7 +9,7 @@
 
 namespace dae {
 	class Keyboard final : public IInputDevice{
-		friend class InputManager;
+		friend class InputManagerImpl;
 	private:
 		std::array<uint8_t, SDL_SCANCODE_COUNT> m_currentState{};
 		std::array<uint8_t, SDL_SCANCODE_COUNT> m_previousState{};

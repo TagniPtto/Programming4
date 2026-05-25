@@ -4,7 +4,7 @@
 #include "XBoxControllerImpl.h"
 #include "SDLControllerImpl.h"
 
-#include "InputTypes.h"
+#include "../InputTypes.h"
 
 #ifdef WIN32
 dae::Gamepad::Gamepad(unsigned int id) :
@@ -19,7 +19,7 @@ dae::Gamepad::Gamepad(unsigned int id) :
 #endif
 dae::Gamepad::~Gamepad() = default;
 
-unsigned int dae::Gamepad::GetId()
+unsigned int dae::Gamepad::GetId() const
 {
 	return m_pImpl->GetId();
 }
@@ -30,22 +30,22 @@ void dae::Gamepad::ProcessInput()
 
 bool dae::Gamepad::GetButtonHeld(uint32_t code) const
 {
-	return m_pImpl->GetButtonHeld(button);
+	return m_pImpl->IsButtonHeld(code);
 }
 
 bool dae::Gamepad::GetButtonReleased(uint32_t code) const
 {
-	return m_pImpl->GetButtonReleased(button);
+	return m_pImpl->IsButtonReleased(code);
 }
 
 bool dae::Gamepad::GetButtonPressed(uint32_t code) const
 {
-	return m_pImpl->GetButtonPressed(button);
+	return m_pImpl->IsButtonPressed(code);
 }
 
 float dae::Gamepad::GetAxis1D(uint32_t code) const
 {
-	switch (code) {
+	switch (GamepadInput(code)) {
 		case GamepadInput::LeftTrigger:
 			return m_pImpl->GetLeftTrigger();
 		case GamepadInput::RightTrigger:
@@ -56,7 +56,7 @@ float dae::Gamepad::GetAxis1D(uint32_t code) const
 
 glm::vec2 dae::Gamepad::GetAxis2D(uint32_t code) const
 {
-	switch (code) {
+	switch (GamepadInput(code)) {
 	case GamepadInput::LeftThumb:
 		return glm::vec2{ m_pImpl->GetLeftThumbX(),m_pImpl->GetLeftThumbY() };
 	case GamepadInput::RightThumb:

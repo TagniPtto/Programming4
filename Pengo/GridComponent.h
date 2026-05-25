@@ -10,13 +10,13 @@ namespace pengo {
 		int m_cellYCount{};
 
 		int m_cellSize{};
-		std::vector<> cells;
+		//std::vector<> cells;
 
 
 	public:
 
 
-		GridComponent(int cellXCount, int cellYCount, int cellsize);
+		explicit GridComponent(dae::GameObject& owner , int cellXCount, int cellYCount, int cellsize);
 		~GridComponent() = default;
 
 		GridComponent(const GridComponent& other) = delete;

@@ -183,19 +183,17 @@ add_library(${ENGINE_NAME} STATIC
   "Minigin/Components/RenderComponent.cpp"
   "Minigin/Components/RotationComponent.cpp"
   "Minigin/Components/TextComponent.cpp"
-  "Pengo/PlayerController.cpp" 
   "Minigin/Components/AnimationComponent.cpp"
-  "Pengo/HealthComponent.cpp" 
 
   "Minigin/EventSystem/Subject.cpp" 
   "Minigin/EventSystem/EventManager.cpp"
   "Minigin/InputSystem/Gamepad/XBoxControllerImpl.cpp"
   "Minigin/InputSystem/Gamepad/SDLControllerImpl.cpp"
   "Minigin/InputSystem/Gamepad/Gamepad.cpp"
-   "Minigin/SoundSystem/SDLSoundSystem.cpp"
-   "Minigin/ServiceLocator.cpp" 
-   "Minigin/InputSystem/Keyboard.cpp"
-   "Minigin/InputSystem/Mouse.cpp")
+  "Minigin/InputSystem/Keyboard/Keyboard.cpp"
+  "Minigin/InputSystem/Mouse/Mouse.cpp"    
+  "Minigin/SoundSystem/SDLSoundSystem.cpp"
+  "Minigin/ServiceLocator.cpp" )
 
 
 target_include_directories("${ENGINE_NAME}" PUBLIC
@@ -219,8 +217,12 @@ target_link_libraries("${ENGINE_NAME}" PUBLIC
 
 #_______________________EXECUTABLE_______________________
 add_executable(${APP_NAME} ${APP_PARAM}
-  "Pengo/Main.cpp"
-  "Pengo/GridComponent.cpp")
+    "Pengo/Main.cpp"
+    "Pengo/GridComponent.cpp"
+    "Pengo/PlayerController.cpp"
+    "Pengo/HealthComponent.cpp"
+    "Pengo/BlockComponent.cpp"
+    )
 target_link_libraries(${APP_NAME} PRIVATE ${ENGINE_NAME})
 #________________________________________________________
 

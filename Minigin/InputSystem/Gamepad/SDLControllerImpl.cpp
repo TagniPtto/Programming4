@@ -2,21 +2,25 @@
 
 #include <limits>
 
+#include "../InputTypes.h"
+
+
+SDL_GamepadButton ToSDLButton(dae::GamepadInput input);
 
 
 bool dae::SDLControllerImpl::IsButtonHeld(uint32_t code) const
 {
-	return m_currentButtonState[button];
+	return m_currentButtonState[ToSDLButton(GamepadInput(code))];
 }
 
 bool dae::SDLControllerImpl::IsButtonReleased(uint32_t code) const
 {
-	return !m_currentButtonState[button] && m_previousButtonState[button];
+	return !m_currentButtonState[ToSDLButton(GamepadInput(code))] && m_previousButtonState[ToSDLButton(GamepadInput(code))];
 }
 
 bool dae::SDLControllerImpl::IsButtonPressed(uint32_t code) const
 {
-	return m_currentButtonState[button] && !m_previousButtonState[button];;
+	return m_currentButtonState[ToSDLButton(GamepadInput(code))] && !m_previousButtonState[ToSDLButton(GamepadInput(code))];;
 }
 
 void dae::SDLControllerImpl::ProcessInput()
@@ -30,8 +34,7 @@ void dae::SDLControllerImpl::ProcessInput()
 	}
 
 	constexpr static float AXIS_MAX = static_cast<float>(std::numeric_limits<Sint16>::max());
-	
-	SDL_GameControllerGetButton();
+
 	
 	
 	leftThumbX	= SDL_GetGamepadAxis(m_gamepad,SDL_GAMEPAD_AXIS_LEFTX) / AXIS_MAX;
@@ -95,5 +98,26 @@ dae::SDLControllerImpl::SDLControllerImpl(unsigned int id):
 		{
 			SDL_Log("Failed to open gamepad: %s",SDL_GetError());
 		}
+	}
+}
+SDL_GamepadButton ToSDLButton(dae::GamepadInput input)
+{
+	switch (input)
+	{
+	case dae::GamepadInput::ButtonA:			return SDL_GAMEPAD_BUTTON_SOUTH;
+	case dae::GamepadInput::ButtonB:			return SDL_GAMEPAD_BUTTON_EAST;
+	case dae::GamepadInput::ButtonX:			return SDL_GAMEPAD_BUTTON_WEST;
+	case dae::GamepadInput::ButtonY:			return SDL_GAMEPAD_BUTTON_NORTH;
+	case dae::GamepadInput::LeftShoulder:		return SDL_GAMEPAD_BUTTON_LEFT_SHOULDER;
+	case dae::GamepadInput::RightShoulder:		return SDL_GAMEPAD_BUTTON_RIGHT_SHOULDER;
+	case dae::GamepadInput::Start:				return SDL_GAMEPAD_BUTTON_START;
+	case dae::GamepadInput::Back:				return SDL_GAMEPAD_BUTTON_BACK;
+	case dae::GamepadInput::LeftThumb:			return SDL_GAMEPAD_BUTTON_LEFT_STICK;
+	case dae::GamepadInput::RightThumb:			return SDL_GAMEPAD_BUTTON_RIGHT_STICK;
+	case dae::GamepadInput::DPadUp:				return SDL_GAMEPAD_BUTTON_DPAD_UP;
+	case dae::GamepadInput::DPadDown:			return SDL_GAMEPAD_BUTTON_DPAD_DOWN;
+	case dae::GamepadInput::DPadLeft:			return SDL_GAMEPAD_BUTTON_DPAD_LEFT;
+	case dae::GamepadInput::DPadRight:			return SDL_GAMEPAD_BUTTON_DPAD_RIGHT;
+	default:									return SDL_GAMEPAD_BUTTON_INVALID;
 	}
 }

@@ -1,8 +1,13 @@
 #pragma once
 
+
+#include <cstdint>
+
+
 namespace dae {
 	class IGamepadImpl {
 	public:
+		IGamepadImpl() = default;
 		virtual ~IGamepadImpl() = default;
 		IGamepadImpl(const IGamepadImpl& gp) = delete;
 		IGamepadImpl(IGamepadImpl&& gp) = delete;

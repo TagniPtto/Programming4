@@ -53,7 +53,7 @@ static void load()
 	gto = std::make_unique<dae::GameObject>();
 	gto->GetTransform()->SetLocalPosition(350, 250);
 	gto->AddComponent<dae::RenderComponent>("PengoCharacterSprites.png", .2f);
-	gto->AddComponent<dae::PlayerController>();
+	gto->AddComponent<Pengo::PlayerController>();
 
 	scene.Add(std::move(gto));
 

@@ -2,7 +2,7 @@
 
 #include <memory>
 
-#include "IInputDevice.h"
+#include "../IInputDevice.h"
 
 namespace dae {
 	class IGamepadImpl;
@@ -28,8 +28,6 @@ namespace dae {
 		bool GetButtonPressed(uint32_t code) const override;
 		float GetAxis1D(uint32_t code) const override;
 		glm::vec2 GetAxis2D(uint32_t code) const override;
-
-
 
 	};
 }

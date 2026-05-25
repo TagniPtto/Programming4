@@ -1,17 +1,18 @@
 #include "playercontroller.h"
 
-#include <SDL3/SDL.h>
 #include "InputSystem/InputManager.h"
-#include "InputSystem/gamepad.h"
+#include "InputSystem/InputTypes.h"
 #include "Commands.h"
 #include "ServiceLocator.h"
 
 namespace Pengo {
 
-	class PlaySoundCommand : public ICommand {
+	class PlaySoundCommand : public dae::ICommand {
+	public:
+		~PlaySoundCommand() = default;
 		void Execute(glm::vec2) override
 		{
-			ServiceLocator::get_sound_system().Play(0 , 1);
+			dae::ServiceLocator::get_sound_system().Play("PushIce", .1f);
 		}
 	};
 }	
@@ -19,15 +20,24 @@ namespace Pengo {
 Pengo::PlayerController::PlayerController(dae::GameObject& pawn):
 	ObjectComponent(pawn)
 {
-	auto command = std::make_unique<dae::MoveCommand>(&pawn);
+	std::unique_ptr<dae::MoveCommand> command = std::make_unique<dae::MoveCommand>(&pawn);
 	command->SetMovementSpeed(250.f);
-	InputManager::GetInstance().BindCommand(std::move(command), InputType::GamepadVector,unsigned int (GamepadInputType::LeftThumb), TriggerType::Held);
+	dae::InputManager::GetInstance().BindCommand(
+		std::move(command),
+		0,
+		dae::InputValueType::Vector2,
+		dae::GamepadInput::LeftThumb,
+		dae::InputTriggerType::Held);
 
 
-	ServiceLocator::get_sound_system().LoadAudio("Data/SFX/Push_Ice_Block.mp3");
+	dae::ServiceLocator::get_sound_system().LoadAudio("Data/SFX/Push_Ice_Block.mp3","PushIce");
 
-	auto command2 = std::make_unique<dae::PlaySoundCommand>();
-	InputManager::GetInstance().BindCommand(std::move(command2), InputType::Keyboard,unsigned int (SDL_SCANCODE_A), TriggerType::Pressed);
+	auto command2 = std::make_unique<Pengo::PlaySoundCommand>();
+	dae::InputManager::GetInstance().BindCommand(
+		std::move(command2), 
+		dae::InputValueType::Boolean, 
+		dae::KeyboardInput::KeyA, 
+		dae::InputTriggerType::Pressed);
 }
 
 Pengo::PlayerController::~PlayerController()

@@ -5,14 +5,12 @@
 namespace dae 
 {
 
-	using sound_id = unsigned short;
-
 	class ISoundSystem 
 	{
 	public:
-		virtual void LoadAudio(std::string fname) = 0;
-		virtual void UnloadAudio(const sound_id id) = 0;
-		virtual void Play(const sound_id id, const float volume) = 0;
+		virtual void LoadAudio(const std::string& fname, const std::string& name) = 0;
+		virtual void UnloadAudio(const std::string& name) = 0;
+		virtual void Play(const std::string& name, const float volume) = 0;
 
 		ISoundSystem() = default;
 		virtual ~ISoundSystem() = default;

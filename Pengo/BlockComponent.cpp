@@ -1,6 +1,7 @@
-#include "Block.h"
+#include "BlockComponent.h"
 
-Pengo::BlockComponent::BlockComponent(dae::GameObject& owner)
+Pengo::BlockComponent::BlockComponent(dae::GameObject& owner):
+	ObjectComponent(owner)
 {
 }
 

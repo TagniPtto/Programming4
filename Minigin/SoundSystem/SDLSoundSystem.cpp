@@ -1,40 +1,72 @@
 #include "SDLSoundSystem.h"
 
 
-void dae::SDLSoundSystem::Play(const sound_id id, const float volume)
+void dae::SDLSoundSystem::Play(const std::string& name, const float volume)
 {
+    {
     std::scoped_lock lock(m_mutex);
-    m_eventQueue.push({id,volume});
-}
-
-void dae::SDLSoundSystem::Update()
-{
-    m_conditional_variable.notify_all();
+    m_eventQueue.push(SoundEvent(name, volume));
+    }
+    m_conditional_variable.notify_one();
 }
 
 void dae::SDLSoundSystem::ThreadProcess()
 {
-    while (!(!threadIsRunning && m_eventQueue.empty()))
+    //while (true)
+    //{
+    //    std::unique_lock<std::mutex> lock(m_mutex);
+    //    m_conditional_variable.wait(lock, [&]() { return !threadIsRunning.load() || !m_eventQueue.empty(); });
+
+
+    //    if (!threadIsRunning.load() && m_eventQueue.empty())
+    //    {
+    //        break;
+    //    }
+
+    //    const dae::SoundEvent event = m_eventQueue.front();
+    //    m_eventQueue.pop();
+    //    MIX_Audio* audio = m_loadedAudio[event.name];
+
+    //    if (audio) {
+    //        MIX_StopTrack(m_pTrack, 0);
+    //        MIX_SetTrackAudio(m_pTrack, audio);
+    //        MIX_SetTrackGain(m_pTrack, event.volume);
+    //        MIX_PlayTrack(m_pTrack, 0);
+    //    }
+
+    //}
+    while (true)
     {
+        SoundEvent event{ "", 0.0f };
+        MIX_Audio* audio = nullptr;
+        {
+            std::unique_lock<std::mutex> lock(m_mutex);
+            m_conditional_variable.wait(lock, [&]() {
+                return !threadIsRunning.load() || !m_eventQueue.empty();
+                });
+            if (!threadIsRunning.load() && m_eventQueue.empty())
+                break;
+            event = m_eventQueue.front();
+            m_eventQueue.pop();
 
-        std::unique_lock<std::mutex> lock(m_mutex);
-        m_conditional_variable.wait(lock, [&]() { return !m_eventQueue.empty() || !threadIsRunning; });
-
-        while (!m_eventQueue.empty()) {
-
-            dae::SoundEvent event = m_eventQueue.front();
-            MIX_SetTrackAudio(m_pTrack, m_loadedAudio[event.id]);
+            auto it = m_loadedAudio.find(event.name);
+            if (it != m_loadedAudio.end())
+                audio = it->second;
+        }
+        // Lock released here
+        if (audio) {
+            MIX_StopTrack(m_pTrack, 0);
+            MIX_SetTrackAudio(m_pTrack, audio);
             MIX_SetTrackGain(m_pTrack, event.volume);
             MIX_PlayTrack(m_pTrack, 0);
-
-            m_eventQueue.pop();
-          
         }
     }
 }
 
-void dae::SDLSoundSystem::LoadAudio(std::string fname)
+void dae::SDLSoundSystem::LoadAudio(const std::string& fname, const std::string& name)
 {
+    std::scoped_lock lock(m_mutex);
+
     char* path = NULL;
     MIX_Audio* audio;
     SDL_asprintf(&path, "%s%s", SDL_GetBasePath(), fname.c_str());
@@ -42,15 +74,18 @@ void dae::SDLSoundSystem::LoadAudio(std::string fname)
     if (!audio) {
         SDL_Log("Couldn't load %s: %s", path, SDL_GetError());
     }
-    m_loadedAudio.push_back(audio);
-
+    m_loadedAudio.insert({ name ,audio });
     SDL_free(path); 
 }
 
-void dae::SDLSoundSystem::UnloadAudio(const sound_id)
+void dae::SDLSoundSystem::UnloadAudio(const std::string& name)
 {
-    std::erase(std::remove_if(m_loadedAudio.begin(), m_loadedAudio.end(), []() {}));
-    MIX_DestroyAudio();
+    std::scoped_lock lock(m_mutex);
+    auto audio = m_loadedAudio[name];
+    if (audio) {
+        MIX_DestroyAudio(audio);
+        m_loadedAudio.erase(name);
+    }
 }
 
 
@@ -71,18 +106,35 @@ dae::SDLSoundSystem::SDLSoundSystem()
         SDL_Log("Couldn't create a mixer track: %s", SDL_GetError());
     }
     
-    m_worker = std::jthread(&SDLSoundSystem::ThreadProcess,this);
+    m_worker = std::thread(&SDLSoundSystem::ThreadProcess,this);
 }
 
 dae::SDLSoundSystem::~SDLSoundSystem()
 {
-    threadIsRunning = false;
+    threadIsRunning.store(false);
     m_conditional_variable.notify_all();
+    m_worker.join();
 
-    for (auto& audio : m_loadedAudio) {
-        MIX_DestroyAudio(audio);
+    MIX_StopTrack(m_pTrack,0);
+
+    for (auto& [name, audio] : m_loadedAudio)
+    {
+        if (audio) MIX_DestroyAudio(audio);
     }
-    MIX_DestroyMixer(m_pMixer);
-    MIX_DestroyTrack(m_pTrack);
+
+    m_loadedAudio.clear();
+
+    if (m_pTrack)
+    {
+        MIX_DestroyTrack(m_pTrack);
+    }
+
+
+    if (m_pMixer)
+    {
+        MIX_DestroyMixer(m_pMixer);
+    }
+
+    
     MIX_Quit();
 }

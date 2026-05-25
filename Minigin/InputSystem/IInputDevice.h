@@ -1,6 +1,8 @@
 #pragma once
 
 #include "glm/vec2.hpp"
+#include <cstdint>
+
 namespace dae {
 
 	class IInputDevice
@@ -15,7 +17,7 @@ namespace dae {
 
 		virtual void ProcessInput() = 0;
 
-
+		IInputDevice() = default;
 		virtual ~IInputDevice() = default;
 
 		IInputDevice(IInputDevice&&) = delete;

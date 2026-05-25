@@ -6,7 +6,7 @@ namespace Pengo {
 
 	class GameObject;
 	
-	class PlayerController : public ObjectComponent {
+	class PlayerController : public dae::ObjectComponent {
 
 	public:
 		explicit PlayerController(dae::GameObject& pawn);
