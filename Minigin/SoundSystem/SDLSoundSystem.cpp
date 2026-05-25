@@ -12,54 +12,28 @@ void dae::SDLSoundSystem::Play(const std::string& name, const float volume)
 
 void dae::SDLSoundSystem::ThreadProcess()
 {
-    //while (true)
-    //{
-    //    std::unique_lock<std::mutex> lock(m_mutex);
-    //    m_conditional_variable.wait(lock, [&]() { return !threadIsRunning.load() || !m_eventQueue.empty(); });
-
-
-    //    if (!threadIsRunning.load() && m_eventQueue.empty())
-    //    {
-    //        break;
-    //    }
-
-    //    const dae::SoundEvent event = m_eventQueue.front();
-    //    m_eventQueue.pop();
-    //    MIX_Audio* audio = m_loadedAudio[event.name];
-
-    //    if (audio) {
-    //        MIX_StopTrack(m_pTrack, 0);
-    //        MIX_SetTrackAudio(m_pTrack, audio);
-    //        MIX_SetTrackGain(m_pTrack, event.volume);
-    //        MIX_PlayTrack(m_pTrack, 0);
-    //    }
-
-    //}
     while (true)
     {
-        SoundEvent event{ "", 0.0f };
-        MIX_Audio* audio = nullptr;
-        {
-            std::unique_lock<std::mutex> lock(m_mutex);
-            m_conditional_variable.wait(lock, [&]() {
-                return !threadIsRunning.load() || !m_eventQueue.empty();
-                });
-            if (!threadIsRunning.load() && m_eventQueue.empty())
-                break;
-            event = m_eventQueue.front();
-            m_eventQueue.pop();
+        std::unique_lock<std::mutex> lock(m_mutex);
+        m_conditional_variable.wait(lock, [&]() { return !threadIsRunning.load() || !m_eventQueue.empty(); });
 
-            auto it = m_loadedAudio.find(event.name);
-            if (it != m_loadedAudio.end())
-                audio = it->second;
+
+        if (!threadIsRunning.load() && m_eventQueue.empty())
+        {
+            break;
         }
-        // Lock released here
+
+        const dae::SoundEvent event = m_eventQueue.front();
+        m_eventQueue.pop();
+        MIX_Audio* audio = m_loadedAudio[event.name];
+
         if (audio) {
             MIX_StopTrack(m_pTrack, 0);
             MIX_SetTrackAudio(m_pTrack, audio);
             MIX_SetTrackGain(m_pTrack, event.volume);
             MIX_PlayTrack(m_pTrack, 0);
         }
+
     }
 }
 
@@ -115,25 +89,23 @@ dae::SDLSoundSystem::~SDLSoundSystem()
     m_conditional_variable.notify_all();
     m_worker.join();
 
-    MIX_StopTrack(m_pTrack,0);
+    //for (auto& [name, audio] : m_loadedAudio)
+    //{
+    //    if (audio) MIX_DestroyAudio(audio);
+    //}
 
-    for (auto& [name, audio] : m_loadedAudio)
-    {
-        if (audio) MIX_DestroyAudio(audio);
-    }
+    //m_loadedAudio.clear();
 
-    m_loadedAudio.clear();
-
-    if (m_pTrack)
-    {
-        MIX_DestroyTrack(m_pTrack);
-    }
+    //if (m_pTrack)
+    //{
+    //    MIX_DestroyTrack(m_pTrack);
+    //}
 
 
-    if (m_pMixer)
-    {
-        MIX_DestroyMixer(m_pMixer);
-    }
+    //if (m_pMixer)
+    //{
+    //    MIX_DestroyMixer(m_pMixer);
+    //}
 
     
     MIX_Quit();
