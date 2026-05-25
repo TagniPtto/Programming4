@@ -114,14 +114,11 @@ if(NOT SDL3_mixer_FOUND)
       GIT_SHALLOW TRUE
       GIT_PROGRESS TRUE
     )
+    
     set(SDL3MIXER_INSTALL OFF)
+
     if(EMSCRIPTEN)
-      list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cmake/emscripten")
-      set(SDL3MIXER_USE_SYSTEM_FREETYPE ON)
       set(SDL3MIXER_VENDORED OFF)
-      set(SDLMIXER_PLUTOSVG OFF)
-      add_compile_options(-sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1)
-      add_link_options(-sUSE_FREETYPE=1 -sUSE_HARFBUZZ=1)
     endif()
     FetchContent_MakeAvailable(SDL3_mixer)
   endif()
