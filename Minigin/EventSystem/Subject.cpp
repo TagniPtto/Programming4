@@ -1,5 +1,4 @@
-#include "subject.h"
-
+#include "Subject.h"
 #include "EventManager.h"
 
 void dae::Subject::AddObserver(IObserver* observer)
