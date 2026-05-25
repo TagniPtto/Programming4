@@ -50,6 +50,8 @@ float dae::Gamepad::GetAxis1D(uint32_t code) const
 			return m_pImpl->GetLeftTrigger();
 		case GamepadInput::RightTrigger:
 			return m_pImpl->GetRightTrigger();
+		default:
+			break;
 	}
 	return 0;
 }
@@ -61,6 +63,8 @@ glm::vec2 dae::Gamepad::GetAxis2D(uint32_t code) const
 		return glm::vec2{ m_pImpl->GetLeftThumbX(),m_pImpl->GetLeftThumbY() };
 	case GamepadInput::RightThumb:
 		return glm::vec2{ m_pImpl->GetRightThumbX(),m_pImpl->GetRightThumbY() };
+	default:
+		break;
 	}
 	return glm::vec2{};
 }

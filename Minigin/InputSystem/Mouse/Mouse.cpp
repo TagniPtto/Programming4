@@ -38,6 +38,8 @@ float dae::Mouse::GetAxis1D(uint32_t code) const
 		return m_x;
 	case MouseInput::MoveY:
 		return m_y;
+	default:
+		break;
 	}
 	return 0.0f;
 }
