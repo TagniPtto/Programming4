@@ -5,9 +5,10 @@
 
 #include "TextComponent.h"
 #include "RenderComponent.h"
+#include "../ServiceLocator.h"
 #include "Renderer.h"
-#include "Font.h"
-#include "Texture2D.h"
+#include "ResourceSystem/Font.h"
+#include "ResourceSystem/Texture2D.h"
 #include "GameObject.h"
 
 
@@ -29,7 +30,7 @@ void dae::TextComponent::Update()
 		{
 			throw std::runtime_error(std::string("Render text failed: ") + SDL_GetError());
 		}
-		auto texture = SDL_CreateTextureFromSurface(Renderer::GetInstance().GetSDLRenderer(), surf);
+		auto texture = SDL_CreateTextureFromSurface(ServiceLocator<Renderer>::Get().GetSDLRenderer(), surf);
 		if (texture == nullptr)
 		{
 			throw std::runtime_error(std::string("Create text texture from surface failed: ") + SDL_GetError());

@@ -7,12 +7,15 @@ namespace dae
 
 	class ISoundSystem 
 	{
+	protected:
+		friend class Minigin;
+		ISoundSystem() = default;
+
 	public:
 		virtual void LoadAudio(const std::string& fname, const std::string& name) = 0;
 		virtual void UnloadAudio(const std::string& name) = 0;
 		virtual void Play(const std::string& name, const float volume) = 0;
 
-		ISoundSystem() = default;
 		virtual ~ISoundSystem() = default;
 
 		ISoundSystem(const ISoundSystem& other) = delete;

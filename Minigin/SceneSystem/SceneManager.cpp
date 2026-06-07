@@ -23,3 +23,12 @@ dae::Scene& dae::SceneManager::CreateScene()
 	m_scenes.emplace_back(new Scene());
 	return *m_scenes.back();
 }
+
+dae::Scene* dae::SceneManager::GetScene(int index) const
+{
+	if (index < m_scenes.size())
+	{
+		return m_scenes[index].get();
+	}
+	return nullptr;
+}

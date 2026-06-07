@@ -2,15 +2,23 @@
 #include <cstring>
 #include <iostream>
 #include "Renderer.h"
-#include "SceneManager.h"
-#include "Texture2D.h"
+
+
+#include "ServiceLocator.h"
+#include "SceneSystem/SceneManager.h"
+#include "ResourceSystem/Texture2D.h"
+#include "LoggingSystem/Logger.h"
 
 
 
 #include <imgui.h>
+#include <imgui_internal.h>
+
 #include <imgui_plot.h>
 #include <backends/imgui_impl_sdl3.h>
 #include <backends/imgui_impl_sdlrenderer3.h>
+
+#include <SDL3/SDL.h>
 
 void dae::Renderer::Init(SDL_Window* window)
 {
@@ -26,11 +34,13 @@ void dae::Renderer::Init(SDL_Window* window)
 	IMGUI_CHECKVERSION();
 	ImGui::CreateContext();
 	ImGuiIO& io = ImGui::GetIO(); (void)io;
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	//io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;		 
+
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+	io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
+
 #if __EMSCRIPTEN__
-	// For an Emscripten build we are disabling file-system access, so let's not attempt to do a fopen() of the imgui.ini file.
-	// You may manually call LoadIniSettingsFromMemory() to load settings from your own storage.
 	io.IniFilename = NULL;
 #endif
 
@@ -45,12 +55,17 @@ void dae::Renderer::Render() const
 	ImGui_ImplSDL3_NewFrame();
 	ImGui::NewFrame();
 
+	ImGuiID dockspace_id = ImGui::GetID("My Dockspace");
+	ImGuiViewport* viewport = ImGui::GetMainViewport();
+
+	ImGui::DockSpaceOverViewport(dockspace_id, viewport, ImGuiDockNodeFlags_PassthruCentralNode);
 
 	const auto& color = GetBackgroundColor();
 	SDL_SetRenderDrawColor(m_renderer, color.r, color.g, color.b, color.a);
 	SDL_RenderClear(m_renderer);
 
-	SceneManager::GetInstance().Render();
+	ServiceLocator<SceneManager>::Get().Render();
+	ServiceLocator<Logger>::Get().RenderUI();
 
 	ImGui::Render();
 	ImGui_ImplSDLRenderer3_RenderDrawData(ImGui::GetDrawData(), m_renderer);
@@ -70,27 +85,47 @@ void dae::Renderer::Destroy()
 	}
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, const float x, const float y, const float width, const float height, float angle) const
+void dae::Renderer::RenderTexture(const Texture2D& texture, 
+	const float srcX, 
+	const float srcY, 
+	const float srcWidth, 
+	const float srcHeight, 
+	const float dstX,
+	const float dstY,
+	const float dstWidth,
+	const float dstHeight,
+	const float angle) const
 {
 	SDL_FRect dst{};
-	dst.x = x;// - width * 0.5f;
-	dst.y = y;// - height * 0.5f;
-	dst.h = height;
-	dst.w = width;
+	dst.x = dstX;
+	dst.y = dstY;
+	dst.w = dstWidth;
+	dst.h = dstHeight;
+
+	SDL_FRect src{};
+	src.x = srcX;
+	src.y = srcY;
+	src.h = srcHeight;
+	src.w = srcWidth;
 
 	SDL_FPoint center{};
-	center.x = 0;//width * 0.5f;
-	center.y = 0;//height * 0.5f;
+	center.x = 0;
+	center.y = 0;
 
-	SDL_RenderTextureRotated(GetSDLRenderer(), texture.GetSDLTexture(), nullptr, &dst, angle, &center, SDL_FLIP_NONE);
+	SDL_RenderTextureRotated(GetSDLRenderer(), texture.GetSDLTexture(), &src, &dst, angle, &center, SDL_FLIP_NONE);
 }
 
-void dae::Renderer::RenderTexture(const Texture2D& texture, float x, float y, float angle, float scale) const
+void dae::Renderer::RenderTexture(
+	const Texture2D& texture, 
+	const float dstX, 
+	const float dstY, 
+	const float dstWidth,
+	const float dstHeight, 
+	const float angle) const
 {
 	float width, height;
 	SDL_GetTextureSize(texture.GetSDLTexture(), &width, &height);
-
-	RenderTexture(texture, x, y, width * scale, height * scale, angle);	
+	RenderTexture(texture,0,0,width,height,dstX,dstY,dstWidth,dstHeight,angle);
 }
 
 

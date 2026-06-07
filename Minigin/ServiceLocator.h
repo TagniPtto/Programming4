@@ -1,16 +1,31 @@
 #pragma once
-#include <memory>
-#include "SoundSystem/ISoundSystem.h"
 
 
 namespace dae {
 
+	template<typename T>
 	class ServiceLocator final
 	{
-		static std::unique_ptr<ISoundSystem> _ss_instance;
+		static T* m_pInstance;
 	public:
-		static ISoundSystem& get_sound_system() { return *_ss_instance; }
-		static void register_sound_system(std::unique_ptr<ISoundSystem>&& ss) { _ss_instance = std::move(ss); };
-
+		static T& Get();
+		static void Register(T* instance);
+	public:
+		ServiceLocator() = delete;
 	};
+	
+
+	template<typename T>
+	T& ServiceLocator<T>::Get() {
+		return *m_pInstance;
+	}
+	template<typename T>
+	void ServiceLocator<T>::Register(T* instance) {
+		if (instance)
+		{
+			m_pInstance = instance;
+		}
+	}
+	template<typename T>
+	T* ServiceLocator<T>::m_pInstance = nullptr;
 }

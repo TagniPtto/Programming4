@@ -166,16 +166,17 @@ endif()
 
 #_____________________ENGINE_____________________________
 add_library(${ENGINE_NAME} STATIC  
-  Minigin/Font.cpp
   Minigin/GameObject.cpp
-  
-  "Minigin/InputSystem/InputManager.cpp"
+ 
   Minigin/Minigin.cpp
   Minigin/Renderer.cpp
-  Minigin/ResourceManager.cpp
-  Minigin/Scene.cpp
-  Minigin/SceneManager.cpp
-  Minigin/Texture2D.cpp
+  
+  "Minigin/ResourceSystem/ResourceManager.cpp"
+  "Minigin/ResourceSystem/Texture2D.cpp"
+  "Minigin/ResourceSystem/Font.cpp"
+  
+  "Minigin/SceneSystem/Scene.cpp"
+  "Minigin/SceneSystem/SceneManager.cpp"
 
   "Minigin/Components/TransformComponent.cpp"
   "Minigin/Components/ObjectComponent.cpp"
@@ -187,14 +188,22 @@ add_library(${ENGINE_NAME} STATIC
   "Minigin/Components/AnimationComponent.cpp"
 
   "Minigin/EventSystem/Subject.cpp" 
-  "Minigin/EventSystem/EventManager.cpp"
+  "Minigin/EventSystem/EventQueue.cpp"
+  
+  "Minigin/InputSystem/InputManager.cpp"
   "Minigin/InputSystem/Gamepad/XBoxControllerImpl.cpp"
   "Minigin/InputSystem/Gamepad/SDLControllerImpl.cpp"
   "Minigin/InputSystem/Gamepad/Gamepad.cpp"
   "Minigin/InputSystem/Keyboard/Keyboard.cpp"
   "Minigin/InputSystem/Mouse/Mouse.cpp"    
+  
   "Minigin/SoundSystem/SDLSoundSystem.cpp"
-  "Minigin/ServiceLocator.cpp" )
+  "Minigin/SoundSystem/SDLLoggingSoundSystem.cpp"
+  
+  "Minigin/LoggingSystem/Logger.cpp"
+  "Minigin/LoggingSystem/FileSink.cpp"
+  "Minigin/LoggingSystem/UISink.cpp"
+)
 
 
 target_include_directories("${ENGINE_NAME}" PUBLIC
@@ -219,10 +228,10 @@ target_link_libraries("${ENGINE_NAME}" PUBLIC
 add_executable(${APP_NAME} ${APP_PARAM}
     "Pengo/Main.cpp"
     "Pengo/GridComponent.cpp"
-    "Pengo/PlayerController.cpp"
+    "Pengo/PlayerControllerComponent.cpp"
     "Pengo/HealthComponent.cpp"
     "Pengo/BlockComponent.cpp"
-    )
+     "Pengo/PengoStates/PlayerStates/PlayerState.cpp")
 target_link_libraries(${APP_NAME} PRIVATE ${ENGINE_NAME})
 #________________________________________________________
 

@@ -38,14 +38,12 @@ namespace dae
 	class InputManager final
 	{
 	private:
+		friend class Minigin;
 		InputManager();
-		~InputManager();
 
 	public:
-		static InputManager& GetInstance() {
-			static InputManager instance{};
-			return instance;
-		}
+		~InputManager();
+
 		InputManager(const InputManager& other) = delete;
 		InputManager(InputManager&& other) = delete;
 		InputManager& operator=(const InputManager& other) = delete;
@@ -53,7 +51,7 @@ namespace dae
 
 		bool ProcessInput();
 
-		void BindCommand(std::unique_ptr<ICommand> command,InputBinding binding);
+		void BindCommand(std::unique_ptr<ICommand> command, InputBinding binding);
 		void BindCommand(std::unique_ptr<ICommand> command, InputType inputType, uint32_t deviceId, InputValueType valueType, uint32_t code, InputTriggerType triggerType);
 		
 		void BindCommand(std::unique_ptr<ICommand> command, uint32_t deviceId,	InputValueType valueType, GamepadInput code, InputTriggerType triggerType);

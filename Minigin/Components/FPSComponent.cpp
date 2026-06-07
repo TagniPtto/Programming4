@@ -35,5 +35,4 @@ void dae::FPSComponent::Update()
 }
 void dae::FPSComponent::Render() const
 {
-	textComponent->Render();
 }

@@ -2,25 +2,51 @@
 #include "TransformComponent.h"
 #include "GameObject.h"
 
-#include "ResourceManager.h"
-#include "Renderer.h"
+
+#include "../ServiceLocator.h"
+#include "../ResourceSystem/ResourceManager.h"
+#include "../Renderer.h"
 
 
 #include <chrono>
 namespace dae {
-	void RenderComponent::SetSourceRectangle(int x, int y, int width, int height)
+	void RenderComponent::SetSourceRectangle(float x, float y, float width, float height)
 	{
-		m_sourceX = x;
-		m_sourceY = y;
-		m_sourceWidth = width;
-		m_sourceHeight = height;
+		m_srcRectangle.x = x;
+		m_srcRectangle.y = y;
+		m_srcRectangle.width = width;
+		m_srcRectangle.height = height;
 	}
-	//void RenderComponent::SetPivot(int x, int y)
-	//{
-	//}
-	RenderComponent::RenderComponent(dae::GameObject& owner, const std::string& filename , float scale) :
-		ObjectComponent(owner), m_texture(dae::ResourceManager::GetInstance().LoadTexture(filename)), m_scale(scale)
+
+	void RenderComponent::SetDestinationRectangle(float x, float y, float width, float height)
 	{
+		m_dstRectangle.x = x;
+		m_dstRectangle.y = y;
+		m_dstRectangle.width = width;
+		m_dstRectangle.height = height;
+	}
+
+	void RenderComponent::SetSourceRectangle(Rect src)
+	{
+		m_srcRectangle = src;
+	}
+
+	void RenderComponent::SetDestinationRectangle(Rect dst)
+	{
+		m_dstRectangle = dst;
+	}
+
+	RenderComponent::RenderComponent(dae::GameObject& owner, const std::string& filename) :
+		ObjectComponent(owner), 
+		m_texture(ServiceLocator<ResourceManager>::Get().LoadTexture(filename))
+	{
+		if (m_texture) {
+			float width, height;
+			SDL_GetTextureSize(m_texture->GetSDLTexture(), &width, &height);
+			m_srcRectangle = { 0,0,width,height };
+			m_dstRectangle = { 0,0,width,height };
+		}
+
 	}
 
 	RenderComponent::RenderComponent(dae::GameObject& owner):
@@ -33,13 +59,25 @@ namespace dae {
 		auto transform = m_owner->GetTransform();
 
 		if (m_texture != nullptr) {
-			dae::Renderer::GetInstance().RenderTexture(*m_texture, transform->GetWorldPosition().x, transform->GetWorldPosition().y, transform->GetWorldRotation(),m_scale);
+			ServiceLocator<Renderer>::Get().RenderTexture(
+				*m_texture, 
+				m_srcRectangle.x,
+				m_srcRectangle.y,
+				m_srcRectangle.width,
+				m_srcRectangle.height,
+
+				m_dstRectangle.x + transform->GetWorldPosition().x,
+				m_dstRectangle.y + transform->GetWorldPosition().y,
+				m_dstRectangle.width,
+				m_dstRectangle.height,
+
+				transform->GetWorldRotation());
 		}
 	}
 
 	void RenderComponent::SetTexture(const std::string& filename)
 	{
-		m_texture = dae::ResourceManager::GetInstance().LoadTexture(filename);
+		m_texture = dae::ServiceLocator<dae::ResourceManager>::Get().LoadTexture(filename);
 	}
 	void RenderComponent::SetTexture(std::shared_ptr<dae::Texture2D> texture)
 	{

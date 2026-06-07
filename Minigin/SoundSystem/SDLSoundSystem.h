@@ -14,7 +14,7 @@
 namespace dae
 {
 
-	class SDLSoundSystem final : public ISoundSystem {
+	class SDLSoundSystem : public ISoundSystem {
 	private:
 		MIX_Mixer* m_pMixer = NULL;
 		MIX_Track* m_pTrack = NULL;
@@ -27,12 +27,18 @@ namespace dae
 
 
 		std::atomic_bool threadIsRunning = true;
-	public:
+	private:
 		void ThreadProcess();
-		void LoadAudio(const std::string& path , const std::string& name) override;
-		void UnloadAudio(const std::string& name) override;
-		void Play(const std::string& name, const float volume)  override;
+
+	protected:
+		friend class Minigin;
 		SDLSoundSystem();
-		~SDLSoundSystem();
+
+	public:
+		virtual void LoadAudio(const std::string& path , const std::string& name) override;
+		virtual void UnloadAudio(const std::string& name) override;
+		virtual void Play(const std::string& name, const float volume)  override;
+
+		virtual ~SDLSoundSystem();
 	};
 }

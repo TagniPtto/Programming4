@@ -9,21 +9,21 @@
 #include "Events/Event.h"
 
 namespace dae {
-
-	
 //synchronous eventManager
-	class EventManager final {
+	class EventQueue {
 	private:
-		std::queue<std::unique_ptr<Event>> EventQueue;
-		std::unordered_map<EventId,std::vector<IObserver*>> Subscribers;
-
+		std::queue<std::unique_ptr<Event>> m_Queue;
+		std::unordered_map<EventId,std::vector<IObserver*>> m_Subscribers;
+		
 	private:
-		EventManager();
+		friend class Minigin;
+		EventQueue() = default;
+	
 	public:
-		EventManager(const EventManager& other) = delete;
-		EventManager(EventManager&& other) = delete;
-		EventManager& operator=(const EventManager& other) = delete;
-		EventManager& operator=(EventManager&& other) = delete;
+		EventQueue(const EventQueue& other) = delete;
+		EventQueue(EventQueue&& other) = delete;
+		EventQueue& operator=(const EventQueue& other) = delete;
+		EventQueue& operator=(EventQueue&& other) = delete;
 
 		void SubscribeEvent(EventId type, IObserver* subscriber);
 		void UnsubscribeEvent(EventId type,IObserver* subscriber);

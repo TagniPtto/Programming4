@@ -1,22 +1,18 @@
 #include "BlockComponent.h"
 
-Pengo::BlockComponent::BlockComponent(dae::GameObject& owner):
+pengo::BlockComponent::BlockComponent(dae::GameObject& owner):
 	ObjectComponent(owner)
 {
 }
 
-void Pengo::BlockComponent::Render() const
+void pengo::BlockComponent::RenderUI()
 {
 }
 
-void Pengo::BlockComponent::RenderUI()
+void pengo::BlockComponent::Update()
 {
 }
 
-void Pengo::BlockComponent::Update()
-{
-}
-
-void Pengo::BlockComponent::FixedUpdate(float)
+void pengo::BlockComponent::FixedUpdate(float)
 {
 }

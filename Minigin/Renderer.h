@@ -1,6 +1,5 @@
 #pragma once
 #include <SDL3/SDL.h>
-#include "Singleton.h"
 
 namespace dae
 {
@@ -8,18 +7,38 @@ namespace dae
 	/**
 	 * Simple RAII wrapper for the SDL renderer
 	 */
-	class Renderer final : public Singleton<Renderer>
+	class Renderer final
 	{
+
 		SDL_Renderer* m_renderer{};
 		SDL_Window* m_window{};
 		SDL_Color m_clearColor{};	
+
+	private:
+		friend class Minigin;
+		Renderer() = default;
+
 	public:
 		void Init(SDL_Window* window);
 		void Render() const;
 		void Destroy();
 
-		void RenderTexture(const Texture2D& texture, float x, float y, float width, float height, float angle) const;
-		void RenderTexture(const Texture2D& texture, float x, float y, float scale , float angle) const;
+		void RenderTexture(const Texture2D& texture,
+			const float srcX,
+			const float srcY,
+			const float srcWidth,
+			const float srcHeight,
+			const float dstX,
+			const float dstY,
+			const float dstWidth,
+			const float dstHeight,
+			const float angle = 0) const;
+		void RenderTexture(const Texture2D& texture,
+			const float dstX,
+			const float dstY,
+			const float dstWidth,
+			const float dstHeight,
+			const float angle = 0) const;
 
 		SDL_Renderer* GetSDLRenderer() const;
 

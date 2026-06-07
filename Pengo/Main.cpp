@@ -6,15 +6,17 @@
 #endif
 
 #include "Minigin.h"
-#include "SceneManager.h"
-#include "ResourceManager.h"
-#include "Components/BenchMarkComponent.h"
+#include <ServiceLocator.h>
+#include <SceneSystem/SceneManager.h>
+#include <ResourceSystem/ResourceManager.h>
 #include "Components/TextComponent.h"
 #include "Components/FPSComponent.h"
 #include "Components/RenderComponent.h"
 #include "Components/RotationComponent.h"
-#include "PlayerController.h"
-#include "Scene.h"
+#include "Components/AnimationComponent.h"
+
+#include "GridComponent.h"
+#include "PlayerControllerComponent.h"
 
 
 #include <filesystem>
@@ -23,42 +25,27 @@ namespace fs = std::filesystem;
 static void load()
 {
 
-	auto& scene = dae::SceneManager::GetInstance().CreateScene();
+	auto& scene = dae::ServiceLocator<dae::SceneManager>::Get().CreateScene();
+	auto font = dae::ServiceLocator<dae::ResourceManager>::Get().LoadFont("Lingua.otf", 36);
 
-	auto go = std::make_unique<dae::GameObject>();
-	go->AddComponent<dae::RenderComponent>("background.png");
-	//go->SetTexture("background.png");
-	scene.Add(std::move(go));
-
-	go = std::make_unique<dae::GameObject>();
-	go->AddComponent<dae::RenderComponent>("logo.png");
-	//go->SetTexture("logo.png");
-	go->GetTransform()->SetLocalPosition(358, 180);
-	scene.Add(std::move(go));
-
-	auto font = dae::ResourceManager::GetInstance().LoadFont("Lingua.otf", 36);
+	//auto gto = std::make_unique<dae::GameObject>();
+	//gto->GetTransform()->SetLocalPosition(10, 10);
+	//gto->AddComponent<dae::FPSComponent>("FPS", font);
+	//scene.Add(std::move(gto));
 
 	auto gto = std::make_unique<dae::GameObject>();
-	gto->GetTransform()->SetLocalPosition(292, 20);
-	gto->AddComponent<dae::TextComponent>("Programming 4 Assignment", font);
-	auto component = gto->GetComponent<dae::TextComponent>();
-	component->SetColor({ 255, 255, 0, 255 });
-	scene.Add(std::move(gto));
-
-	gto = std::make_unique<dae::GameObject>();
-	gto->GetTransform()->SetLocalPosition(10, 10);
-	gto->AddComponent<dae::FPSComponent>("FPS", font);
-	scene.Add(std::move(gto));
-
-	gto = std::make_unique<dae::GameObject>();
 	gto->GetTransform()->SetLocalPosition(350, 250);
-	gto->AddComponent<dae::RenderComponent>("PengoCharacterSprites.png", .2f);
-	gto->AddComponent<Pengo::PlayerController>();
+	gto->AddComponent<Pengo::PlayerControllerComponent>();
 
 	scene.Add(std::move(gto));
+	auto grid = std::make_unique<dae::GameObject>();
 
-
-
+	grid->AddComponent<pengo::GridComponent>(10 , 10 , 5);
+	auto comp1 = grid->AddComponent<dae::RenderComponent>();
+	comp1->SetDestinationRectangle({ 0,0, 16 * 10,16 * 10});
+	auto comp = grid->AddComponent<dae::AnimationComponent>("PengoCharacterSprites.png");
+	comp->AddAnimationSequence({ 0,0, 16 * 40,16 * 18 }, 40, 18, 0, 20, 0.2f, dae::AnimationSequence::AnimationPlayBack::Looped);
+	scene.Add(std::move(grid));
 }
 
 int main(int, char* []) {
