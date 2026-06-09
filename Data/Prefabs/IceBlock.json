@@ -1,0 +1,36 @@
+{
+  "name": "IceBlock",
+
+  "components": [
+    {
+      "type": "Block"
+    },
+    {
+      "type": "Animation",
+      "texture": "IceCube.png",
+      "destinationRect": [ 0, 0, 16, 16 ],
+
+      "animationSequences": [
+        {
+          "name": "Idle",
+          "sequenceStart": 0,
+          "sequenceLength": 1,
+          "frameTime": 0.2,
+          "columns": 10,
+          "rows": 1,
+          "sourceRect": [ 0, 0, 150, 16 ]
+        },
+        {
+          "name": "Break",
+          "sequenceStart": 1,
+          "sequenceLength": 9,
+          "frameTime": 0.2,
+          "columns": 10,
+          "rows": 1,
+          "sourceRect": [ 0, 0, 150, 16 ]
+        }
+      ]
+
+    }
+  ]
+}

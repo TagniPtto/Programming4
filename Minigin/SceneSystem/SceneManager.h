@@ -2,22 +2,28 @@
 #include <vector>
 #include <string>
 #include <memory>
-#include "Scene.h"
 
 namespace dae
 {
 	class Scene;
+	class PrefabFactory;
 	class SceneManager final
 	{
 	public:
+		~SceneManager();
+
+		Scene& LoadScene(const std::string& path);
 		Scene& CreateScene();
 		Scene* GetScene(int index) const;
 
 		void Update();
 		void Render();
+
 	private:
 		friend class Minigin;
-		SceneManager() = default;
+		SceneManager();
+
 		std::vector<std::unique_ptr<Scene>> m_scenes{};
+		std::unique_ptr<PrefabFactory> m_PrefabFactory;
 	};
 }

@@ -8,6 +8,7 @@
 #include "Minigin.h"
 #include <ServiceLocator.h>
 #include <SceneSystem/SceneManager.h>
+#include <SceneSystem/Scene.h>
 #include <ResourceSystem/ResourceManager.h>
 #include "Components/TextComponent.h"
 #include "Components/FPSComponent.h"
@@ -24,28 +25,25 @@ namespace fs = std::filesystem;
 
 static void load()
 {
+	auto& sceneManager =  dae::ServiceLocator<dae::SceneManager>::Get();
+	auto& loadedScene = sceneManager.LoadScene("Scenes/Level1.json");
+	loadedScene;
+	auto& scene = sceneManager.CreateScene();
 
-	auto& scene = dae::ServiceLocator<dae::SceneManager>::Get().CreateScene();
-	auto font = dae::ServiceLocator<dae::ResourceManager>::Get().LoadFont("Lingua.otf", 36);
 
-	//auto gto = std::make_unique<dae::GameObject>();
-	//gto->GetTransform()->SetLocalPosition(10, 10);
-	//gto->AddComponent<dae::FPSComponent>("FPS", font);
-	//scene.Add(std::move(gto));
 
-	auto gto = std::make_unique<dae::GameObject>();
-	gto->GetTransform()->SetLocalPosition(350, 250);
-	gto->AddComponent<Pengo::PlayerControllerComponent>();
-
-	scene.Add(std::move(gto));
-	auto grid = std::make_unique<dae::GameObject>();
-
-	grid->AddComponent<pengo::GridComponent>(10 , 10 , 5);
-	auto comp1 = grid->AddComponent<dae::RenderComponent>();
-	comp1->SetDestinationRectangle({ 0,0, 16 * 10,16 * 10});
-	auto comp = grid->AddComponent<dae::AnimationComponent>("PengoCharacterSprites.png");
+	dae::GameObject* grid = scene.CreateGameObject();
+	grid->GetTransform()->SetLocalPosition(150, 150);
+	grid->AddComponent<pengo::GridComponent>("Data/Prefabs/Map.json");
+	
+	dae::GameObject* player = scene.CreateGameObject();
+	player->GetTransform()->SetLocalPosition(150, 150);
+	player->AddComponent<Pengo::PlayerControllerComponent>();
+	auto comp1 = player->AddComponent<dae::RenderComponent>();
+	comp1->SetDestinationRectangle({ 0,0, 25, 25 });
+	auto comp = player->AddComponent<dae::AnimationComponent>("Textures/PengoCharacterSprites.png");
 	comp->AddAnimationSequence({ 0,0, 16 * 40,16 * 18 }, 40, 18, 0, 20, 0.2f, dae::AnimationSequence::AnimationPlayBack::Looped);
-	scene.Add(std::move(grid));
+
 }
 
 int main(int, char* []) {

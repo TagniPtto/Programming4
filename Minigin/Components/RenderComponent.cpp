@@ -59,6 +59,8 @@ namespace dae {
 		auto transform = m_owner->GetTransform();
 
 		if (m_texture != nullptr) {
+			auto worldPos = transform->GetWorldPosition();
+			auto worldRot = transform->GetWorldRotation();
 			ServiceLocator<Renderer>::Get().RenderTexture(
 				*m_texture, 
 				m_srcRectangle.x,
@@ -66,12 +68,12 @@ namespace dae {
 				m_srcRectangle.width,
 				m_srcRectangle.height,
 
-				m_dstRectangle.x + transform->GetWorldPosition().x,
-				m_dstRectangle.y + transform->GetWorldPosition().y,
+				m_dstRectangle.x + worldPos.x,
+				m_dstRectangle.y + worldPos.y,
 				m_dstRectangle.width,
 				m_dstRectangle.height,
 
-				transform->GetWorldRotation());
+				worldRot);
 		}
 	}
 

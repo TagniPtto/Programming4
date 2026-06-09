@@ -40,6 +40,15 @@ namespace dae
 			const float dstHeight,
 			const float angle = 0) const;
 
+		void RenderLine(
+			const float x1,
+			const float y1,
+			const float x2,
+			const float y2,
+			int r = 0,
+			int g = 0, 
+			int b = 0) const;
+
 		SDL_Renderer* GetSDLRenderer() const;
 
 		const SDL_Color& GetBackgroundColor() const { return m_clearColor; }

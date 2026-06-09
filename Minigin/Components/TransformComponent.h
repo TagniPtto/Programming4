@@ -11,7 +11,7 @@ namespace dae
 		glm::vec3 GetLocalPosition() const;
 		glm::vec3 GetWorldPosition() const;
 		void SetLocalPosition(float x, float y, float z = 0);
-		void SetLocalPosition(const glm::vec3& position);
+		void SetLocalPosition(glm::vec3 position);
 
 
 		void SetLocalRotation(float newRotation);

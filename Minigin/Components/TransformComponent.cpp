@@ -4,10 +4,10 @@
 
 void dae::TransformComponent::SetLocalPosition(float x, float y, float z)
 {
-	SetLocalPosition(glm::vec3(x, y, z));
+	SetLocalPosition(glm::vec3(x,y,z));
 }	
 
-void dae::TransformComponent::SetLocalPosition(const glm::vec3& newPosition)
+void dae::TransformComponent::SetLocalPosition(glm::vec3 newPosition)
 {
 	m_localPosition = newPosition;
 	SetTransformDirty();
@@ -60,20 +60,21 @@ void dae::TransformComponent::UpdateWorldTransform() const
 	}
 	else {
 
-		float parentRotation = parent->GetTransform()->GetWorldRotation();
-		glm::vec3 localPosition = parent->GetTransform()->GetLocalPosition();
-		float radians = glm::radians(parentRotation);
+		float parentWorldRotation = parent->GetTransform()->GetWorldRotation();
+		auto parentWorldPosition = parent->GetTransform()->GetWorldPosition();
+		
+		float radians = glm::radians(parentWorldRotation);
 
 		float cosA = cosf(radians);
 		float sinA = sinf(radians);
 		glm::vec2 right(cosA, sinA);
 		glm::vec2 up(-sinA, cosA);
 
-		glm::vec2 rotated = right * localPosition.x + up * localPosition.y;
+		glm::vec2 rotated = right * m_localPosition.x + up * m_localPosition.y;
 		
 
-		m_worldPosition = parent->GetTransform()->GetWorldPosition() + glm::vec3(rotated, localPosition.z);
-		m_worldRotation = parentRotation + m_localRotation;
+		m_worldPosition = parentWorldPosition + glm::vec3(rotated, m_localPosition.z);
+		m_worldRotation = parentWorldRotation + m_localRotation;
 	}
 
 

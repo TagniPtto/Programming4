@@ -10,13 +10,14 @@
 dae::AnimationComponent::AnimationComponent(dae::GameObject& owner, const std::string& fPath):
 	dae::ObjectComponent(owner), m_currentSequence(0)
 {
-	m_pRenderComponent = owner.GetComponent<RenderComponent>();
-	if (m_pRenderComponent) {
-		m_pRenderComponent->SetTexture(fPath);
-	}
-	else {
-		m_pRenderComponent = owner.AddComponent<RenderComponent>(fPath);
-	}
+	m_pRenderComponent = owner.AddComponent<RenderComponent>(fPath);
+	//m_pRenderComponent = owner.GetComponent<RenderComponent>();
+	//if (m_pRenderComponent) {
+	//	m_pRenderComponent->SetTexture(fPath);
+	//}
+	//else {
+	//	
+	//}
 }
 
 dae::AnimationComponent::~AnimationComponent() = default;
@@ -24,9 +25,7 @@ dae::AnimationComponent::~AnimationComponent() = default;
 void dae::AnimationComponent::Update()
 {
 	float deltaTime = Time::GetInstance().GetDeltaTime();
-	for (auto& sequence : m_sequences) {
-		sequence.Update(deltaTime);
-	}
+	m_sequences[m_currentSequence].Update(deltaTime);
 }
 
 void dae::AnimationComponent::Render() const
@@ -48,6 +47,9 @@ void dae::AnimationComponent::AddAnimationSequence(AnimationSequence animSeq)
 
 void dae::AnimationSequence::Update(float deltaTime)
 {
+	if (m_sequenceLength <= 1) {
+		return;
+	}
 	m_timer += deltaTime;
 	if (m_timer >= m_timePerFrame) {
 		m_timer = 0.f;

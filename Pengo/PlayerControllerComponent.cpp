@@ -11,7 +11,7 @@ namespace Pengo {
 
 	class PlaySoundCommand : public dae::ICommand {
 	public:
-		~PlaySoundCommand() = default;
+		virtual ~PlaySoundCommand() = default;
 		void Execute(glm::vec2) override
 		{
 			dae::ServiceLocator<dae::ISoundSystem>::Get().Play("PushIce", .1f);
@@ -19,7 +19,7 @@ namespace Pengo {
 	};
 
 	class MoveUnitCommand : public dae::ICommand {
-		~MoveUnitCommand() = default;
+		virtual ~MoveUnitCommand() = default;
 		void Execute(glm::vec2) override
 		{
 			//Moving a unit

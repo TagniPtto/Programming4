@@ -1,0 +1,11 @@
+{
+  "objects": [
+    {
+      "prefab": "Player",
+      "position": [ 350, 250 ]
+    },
+    {
+      "prefab": "Map0"
+    }
+  ]
+}

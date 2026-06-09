@@ -6,9 +6,11 @@ namespace pengo {
 	public:
 		virtual ~PlayerState() {};
 
-		virtual void HandleInput();
-		virtual void Update();
+
 		virtual void OnEnter();
 		virtual void OnExit();
+
+		virtual void HandleInput();
+		virtual void Update();
 	};
 }

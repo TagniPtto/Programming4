@@ -78,7 +78,11 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath) :
 	m_pResourceManager(new dae::ResourceManager()),
 	m_pSceneManager(new dae::SceneManager()),
 	m_pInputManager(new dae::InputManager()),
+#if DEBUG
 	m_pSoundSystem(new dae::SDLLoggingSoundSystem()),
+#else
+	m_pSoundSystem(new dae::SDLSoundSystem()),
+#endif
 	m_pEventQueue(new dae::EventQueue()),
 	m_pRenderer(new dae::Renderer()),
 	m_pLogger(std::make_unique<Logger>())

@@ -5,7 +5,7 @@
 
 namespace dae
 {
-	class SDLLoggingSoundSystem;
+	class ISoundSystem;
 	class EventQueue;
 	class ResourceManager;
 	class SceneManager;
@@ -19,7 +19,7 @@ namespace dae
 		std::unique_ptr<ResourceManager> m_pResourceManager;
 		std::unique_ptr<SceneManager> m_pSceneManager;
 		std::unique_ptr<InputManager> m_pInputManager;
-		std::unique_ptr<SDLLoggingSoundSystem> m_pSoundSystem;
+		std::unique_ptr<ISoundSystem> m_pSoundSystem;
 		std::unique_ptr<EventQueue> m_pEventQueue;
 		std::unique_ptr<Renderer> m_pRenderer;
 		std::unique_ptr<Logger> m_pLogger;

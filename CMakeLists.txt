@@ -16,7 +16,15 @@ endif()
 #=======================DEPENDENCIES======================
 include(FetchContent)
 
-
+find_package(nlohmann_json 3.12.0 CONFIG QUIET)
+if(NOT nlohmann_json_FOUND)
+    FetchContent_Declare(
+        nlohmann_json
+        URL https://github.com/nlohmann/json/archive/refs/tags/v3.11.3.tar.gz
+        GIT_SHALLOW TRUE
+        )
+    FetchContent_MakeAvailable(nlohmann_json)
+endif()
 
 
 FetchContent_Declare(
@@ -52,6 +60,7 @@ target_compile_features(imgui PUBLIC cxx_std_20)
 target_link_libraries(imgui_plot PUBLIC imgui)
 target_include_directories(imgui_plot PUBLIC ${imgui_SOURCE_DIR})
 target_compile_definitions(imgui_plot PUBLIC IMGUI_DEFINE_MATH_OPERATORS)
+
 
 
 # add glm
@@ -154,6 +163,10 @@ if(NOT SDL3_ttf_FOUND)
   endif()
 endif()
 
+
+
+
+
 if (WIN32)
   # Add VLD (Visual Leak Detector) for memory leak detection on Windows
   find_package(VLD CONFIG)
@@ -203,7 +216,7 @@ add_library(${ENGINE_NAME} STATIC
   "Minigin/LoggingSystem/Logger.cpp"
   "Minigin/LoggingSystem/FileSink.cpp"
   "Minigin/LoggingSystem/UISink.cpp"
-)
+ "Minigin/SceneSystem/PrefabFactory.cpp" "Minigin/SceneSystem/ComponentFactory.cpp")
 
 
 target_include_directories("${ENGINE_NAME}" PUBLIC
@@ -217,6 +230,7 @@ target_link_libraries("${ENGINE_NAME}" PUBLIC
   glm::glm
   imgui
   imgui_plot 
+  nlohmann_json::nlohmann_json
   ${VLD_LIBRARIES}
 )
 #________________________________________________________
