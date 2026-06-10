@@ -4,7 +4,7 @@
 
 namespace dae
 {
-	class TransformComponent : public ObjectComponent
+	class TransformComponent final : public ObjectComponent
 	{
 	public:
 		explicit TransformComponent(dae::GameObject& owner);

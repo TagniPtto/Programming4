@@ -5,8 +5,10 @@
 #include <SceneSystem/SceneManager.h>
 #include <SceneSystem/Scene.h>
 #include <Components/RenderComponent.h>
+#include <Components/AnimationComponent.h>
 #include <Renderer.h>
 #include <LoggingSystem/Logger.h>
+#include <SceneSystem/PrefabFactory.h>
 
 #include "imgui.h"
 
@@ -55,17 +57,17 @@ pengo::GridComponent::GridComponent(dae::GameObject& owner, const std::string& p
 	m_cellSize(),
 	m_cells()
 {
-	LoadMap(path);
+	std::ifstream file(path);
+	if (file.is_open()) {
+		auto data = nlohmann::json::parse(file);
+		LoadMap(path);
+	}
 }
 
-void pengo::GridComponent::LoadMap(const std::string& path)
+void pengo::GridComponent::LoadMap(const nlohmann::json& data)
 {
 	dae::Scene* currentScene = dae::ServiceLocator<dae::SceneManager>::Get().GetScene(0);
-	dae::Logger& logger = dae::ServiceLocator<dae::Logger>::Get();
 	if (!currentScene) return;
-
-	std::ifstream file(path);
-	auto data = nlohmann::json::parse(file);
 
 	m_cellSize = data["tileSize"];
 	m_cellXCount = data["width"];
@@ -81,16 +83,21 @@ void pengo::GridComponent::LoadMap(const std::string& path)
 
 			if (tile == 1)
 			{
-				auto obj = currentScene->CreateGameObject();
-				obj->SetParent(m_owner);
 				float xPos{ float(x * m_cellSize) };
 				float yPos{ float(y * m_cellSize) };
-				obj->GetTransform()->SetLocalPosition(xPos, yPos);
-				obj->AddComponent<pengo::BlockComponent>();
-				auto renderComp = obj->AddComponent<dae::RenderComponent>("IceCube.png");
-				dae::RenderComponent::Rect rect{ float(0) , float(0) , float(m_cellSize),float(m_cellSize) };
-				renderComp->SetDestinationRectangle(rect);
-				logger.Write("[" + std::to_string(xPos)  + "," + std::to_string(yPos) + "]");
+				dae::GameObject* obj = dae::PrefabFactory::Get().Instantiate(currentScene,"IceBlock",glm::vec3(xPos,yPos,0));
+				obj->SetParent(m_owner);
+				if (auto animComp = obj->GetComponent<dae::AnimationComponent>(); animComp) {
+					animComp->SetAnimation("Idle");
+				}
+				//auto obj = currentScene->CreateGameObject();
+				//obj->SetParent(m_owner);
+
+				//obj->GetTransform()->SetLocalPosition(xPos, yPos);
+				//obj->AddComponent<pengo::BlockComponent>();
+				//auto renderComp = obj->AddComponent<dae::RenderComponent>("IceCube.png");
+				//dae::RenderComponent::Rect rect{ float(0) , float(0) , float(m_cellSize),float(m_cellSize) };
+				//renderComp->SetDestinationRectangle(rect);
 			}
 			else
 			{
@@ -99,3 +106,11 @@ void pengo::GridComponent::LoadMap(const std::string& path)
 		}
 	}
 }
+
+void pengo::GridComponent::Deserialize(const nlohmann::json& data)
+{
+	LoadMap(data);
+}
+
+void pengo::GridComponent::Serialize(nlohmann::json&)
+{}

@@ -1,5 +1,6 @@
 {
   "name": "Map1",
+
   "components": [
     {
       "type": "Grid",

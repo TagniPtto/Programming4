@@ -19,7 +19,7 @@ void dae::ResourceManager::Init(const std::filesystem::path& dataPath)
 
 std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::string& file)
 {
-	const auto fullPath = m_dataPath/file;
+	const auto fullPath = m_dataPath/"Textures"/file;
 	const auto filename = fs::path(fullPath).filename().string();
 	if(m_loadedTextures.find(filename) == m_loadedTextures.end())
 		m_loadedTextures.insert(std::pair(filename,std::make_shared<Texture2D>(fullPath.string())));
@@ -28,7 +28,7 @@ std::shared_ptr<dae::Texture2D> dae::ResourceManager::LoadTexture(const std::str
 
 std::shared_ptr<dae::Font> dae::ResourceManager::LoadFont(const std::string& file, uint8_t size)
 {
-	const auto fullPath = m_dataPath/file;
+	const auto fullPath = m_dataPath/"Textures"/ file;
 	const auto filename = fs::path(fullPath).filename().string();
 	const auto key = std::pair<std::string, uint8_t>(filename, size);
 	if(m_loadedFonts.find(key) == m_loadedFonts.end())

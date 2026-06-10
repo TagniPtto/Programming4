@@ -9,14 +9,7 @@ namespace dae {
     class FPSComponent : public ObjectComponent
     {
     public:
-        FPSComponent(GameObject& owner, const std::string& text, std::shared_ptr<Font> font);
-
-
-        FPSComponent(FPSComponent&& other) = delete;
-        FPSComponent(const FPSComponent& other) = delete;
-
-        FPSComponent operator=(FPSComponent&& other) = delete;
-        FPSComponent operator=(const FPSComponent& other) = delete;
+        FPSComponent(GameObject& owner, const std::string& text = "", std::shared_ptr<Font> font = {});
 
         void Update() override;
         void Render()const override;

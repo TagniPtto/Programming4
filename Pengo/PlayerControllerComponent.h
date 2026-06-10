@@ -2,7 +2,7 @@
 #include "Components/ObjectComponent.h"
 
 
-namespace Pengo {
+namespace pengo {
 
 	class GameObject;
 	

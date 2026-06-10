@@ -7,6 +7,7 @@
 dae::RotationComponent::RotationComponent(GameObject& owner, float frequency):
 	ObjectComponent(owner), m_frequency(frequency)
 {
+	
 }
 
 void dae::RotationComponent::Update()

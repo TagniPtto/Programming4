@@ -36,16 +36,13 @@ namespace pengo {
 		
 		int GetClosestCellId(glm::vec2);
 		
-		explicit GridComponent(dae::GameObject& owner , const std::string& path);
+		explicit GridComponent(dae::GameObject& owner , const std::string& path = "");
 
-		void LoadMap(const std::string& path);
+		void LoadMap(const nlohmann::json& data);
 
 		~GridComponent() = default;
 
-		GridComponent(const GridComponent& other) = delete;
-		GridComponent(GridComponent&& other) = delete;
-		GridComponent& operator=(const GridComponent& other) = delete;
-		GridComponent& operator=(GridComponent&& other) = delete;
-
+		void Deserialize(const nlohmann::json& data) override;
+		void Serialize(nlohmann::json& data) override;
 	};
 }

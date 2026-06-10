@@ -1,13 +1,19 @@
 #include "HealthComponent.h"
 #include "GameObject.h"
 
-Pengo::HealthComponent::HealthComponent(dae::GameObject& owner, int health) :
+pengo::HealthComponent::HealthComponent(dae::GameObject& owner, int health) :
 	dae::ObjectComponent(owner),
 	m_health(health)
 {
 }
 
-void Pengo::HealthComponent::TakeDamage(int damage)
+void pengo::HealthComponent::Deserialize(const nlohmann::json&)
+{}
+
+void pengo::HealthComponent::Serialize(nlohmann::json&)
+{}
+
+void pengo::HealthComponent::TakeDamage(int damage)
 {
 	m_health -= damage;
 	if (m_health <= 0) {

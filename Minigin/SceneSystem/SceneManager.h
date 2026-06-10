@@ -6,7 +6,6 @@
 namespace dae
 {
 	class Scene;
-	class PrefabFactory;
 	class SceneManager final
 	{
 	public:
@@ -24,6 +23,5 @@ namespace dae
 		SceneManager();
 
 		std::vector<std::unique_ptr<Scene>> m_scenes{};
-		std::unique_ptr<PrefabFactory> m_PrefabFactory;
 	};
 }

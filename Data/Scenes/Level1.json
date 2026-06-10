@@ -2,11 +2,12 @@
   "objects":
   [
     {
-      "prefab" : "Player",
-      "position": [350 , 250]
+      "prefab": "Player",
+      "position": [ 350, 250 ],
     },
     {
-      "prefab": "Map1"
+      "prefab": "Maps/Map1",
+      "position": [ 50,50 ]
     }
   ]
 }

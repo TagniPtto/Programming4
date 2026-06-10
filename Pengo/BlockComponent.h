@@ -13,5 +13,9 @@ namespace pengo
 		virtual void RenderUI();
 		virtual void Update();
 		virtual void FixedUpdate(float);
+
+
+		virtual void Deserialize(const nlohmann::json& data) override;
+		virtual void Serialize(nlohmann::json& data) override;
 	};
 }

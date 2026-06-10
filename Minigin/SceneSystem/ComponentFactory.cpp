@@ -1,12 +1,14 @@
 #include "ComponentFactory.h"
 
-void dae::ComponentFactory::Register(std::string name, BuilderFn func)
+void dae::ComponentFactory::CreateComponent(const std::string& name, GameObject& owner,const nlohmann::json& instanceData)
 {
-	m_Builders[name] = func;
+	if (auto it = m_Builders.find(name); it != m_Builders.end()) {
+		auto fn = it->second;
+		fn(owner, instanceData);
+	}
 }
 
-void dae::ComponentFactory::CreateComponent(std::string name, const nlohmann::json& data)
+void dae::ComponentFactory::Register(const std::string& name, BuilderFn builder)
 {
-{
-	m_Builders[name](data);
+	m_Builders[name] = builder;
 }

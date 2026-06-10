@@ -1,14 +1,17 @@
 {
   "name": "SnowBee",
-
   "components": [
     {
-      "type": "Render",
-      "destinationRect": [ 0, 0, 16, 16 ]
+      "type": "Animation",
+      "texture": "PengoCharacterSprites.png",
+      "destinationRect": [ 0, 0, 25, 25 ],
+      "startingAnimation": null,
+
+      "animationSequences": [
+      ]
     },
     {
-      "type": "Animation",
-      "texture": "PengoCharacterSprites.png"
+
     }
   ]
 }

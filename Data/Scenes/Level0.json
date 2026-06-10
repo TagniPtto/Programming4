@@ -5,7 +5,12 @@
       "position": [ 350, 250 ]
     },
     {
-      "prefab": "Map0"
+      "prefab": "FPSObject",
+      "position": [ 50, 50]
+    },
+    {
+      "prefab": "Maps/Map0",
+      "position": [ 250, 100 ]
     }
   ]
 }

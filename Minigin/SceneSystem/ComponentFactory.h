@@ -3,25 +3,27 @@
 #include <map>
 
 #include <nlohmann/json.hpp>
+#include "../GameObject.h"
 
 namespace dae {
-	class ComponentFactory {
-		using BuilderFn = std::function<void(const nlohmann::json&)>;
-	private:
+	class ComponentFactory final {
+		using BuilderFn = std::function<void(GameObject& owner, const nlohmann::json&)>;
 		std::unordered_map<std::string, BuilderFn> m_Builders;
-	
-	public:
-		//static ComponentFactory& Get() {
-		//	static ComponentFactory instance;
-		//	return instance;
-		//}
-
-
-		void Register(std::string name, BuilderFn func);
-		void CreateComponent(std::string name, const nlohmann::json&);
-
+		
 	private:
-		friend class PrefabFactory;
 		ComponentFactory() = default;
+	public:
+
+		ComponentFactory(ComponentFactory&&) = delete;
+		ComponentFactory(const ComponentFactory&) = delete;
+		ComponentFactory& operator=(const ComponentFactory&) = delete;
+		ComponentFactory& operator=(ComponentFactory&&) = delete;
+		
+		static ComponentFactory& Get() {
+			static ComponentFactory instance;
+			return instance;
+		}
+		void CreateComponent(const std::string& name, GameObject& owner, const nlohmann::json& instanceData);
+		void Register(const std::string& name , BuilderFn builder);
 	};
 }

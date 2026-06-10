@@ -216,7 +216,8 @@ add_library(${ENGINE_NAME} STATIC
   "Minigin/LoggingSystem/Logger.cpp"
   "Minigin/LoggingSystem/FileSink.cpp"
   "Minigin/LoggingSystem/UISink.cpp"
- "Minigin/SceneSystem/PrefabFactory.cpp" "Minigin/SceneSystem/ComponentFactory.cpp")
+  "Minigin/SceneSystem/PrefabFactory.cpp"  
+  "Minigin/SceneSystem/ComponentFactory.cpp")
 
 
 target_include_directories("${ENGINE_NAME}" PUBLIC

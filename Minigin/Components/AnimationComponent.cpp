@@ -8,41 +8,80 @@
 
 
 dae::AnimationComponent::AnimationComponent(dae::GameObject& owner, const std::string& fPath):
-	dae::ObjectComponent(owner), m_currentSequence(0)
+	dae::ObjectComponent(owner), m_currentSequence(nullptr)
 {
-	m_pRenderComponent = owner.AddComponent<RenderComponent>(fPath);
-	//m_pRenderComponent = owner.GetComponent<RenderComponent>();
-	//if (m_pRenderComponent) {
-	//	m_pRenderComponent->SetTexture(fPath);
-	//}
-	//else {
-	//	
-	//}
+	m_pRenderComponent = owner.GetComponent<RenderComponent>();
+	if (m_pRenderComponent) {
+		m_pRenderComponent->SetTexture(fPath);
+	}
+	else {	
+		m_pRenderComponent = owner.AddComponent<RenderComponent>(fPath);
+	}
 }
 
 dae::AnimationComponent::~AnimationComponent() = default;
 
 void dae::AnimationComponent::Update()
 {
-	float deltaTime = Time::GetInstance().GetDeltaTime();
-	m_sequences[m_currentSequence].Update(deltaTime);
+	if (m_currentSequence) {
+		float deltaTime = Time::GetInstance().GetDeltaTime();
+		m_currentSequence->Update(deltaTime);
+	}
 }
 
 void dae::AnimationComponent::Render() const
 {
-	if (!m_sequences.size()) return;
-	Rect srcRect = m_sequences[m_currentSequence].Get();
-	m_pRenderComponent->SetSourceRectangle(srcRect.left,srcRect.top , srcRect.width, srcRect.height);
+	if (m_currentSequence && m_sequences.size()) {
+		Rect srcRect = m_currentSequence->Get();
+		m_pRenderComponent->SetSourceRectangle(srcRect.left, srcRect.top, srcRect.width, srcRect.height);
+	}
 }
 
-void dae::AnimationComponent::AddAnimationSequence(const Rect& sourceRect, int rows, int columns, int sequenceStart, int sequenceLength, float timePerFrame, AnimationSequence::AnimationPlayBack playback)
+void dae::AnimationComponent::SetAnimation(const std::string& name)
 {
-	m_sequences.push_back(AnimationSequence( sourceRect, rows, columns, sequenceStart, sequenceLength,timePerFrame, playback ));
+	if (auto it = m_sequences.find(name); it != m_sequences.end()) {
+		m_currentSequence = &(it->second);
+	}
 }
 
-void dae::AnimationComponent::AddAnimationSequence(AnimationSequence animSeq)
+
+
+
+void dae::AnimationComponent::Deserialize(const nlohmann::json& data)
 {
-	m_sequences.push_back(animSeq);
+	if (auto it = data.find("texture"); it != data.end()) {
+		std::string tx = *it;
+		m_pRenderComponent->SetTexture(tx);
+	}
+	if (auto it = data.find("destinationRect"); it != data.end()) {
+		auto dstR = *it;
+		m_pRenderComponent->SetDestinationRectangle({ dstR[0],dstR[1],dstR[2],dstR[3] });
+	}
+	if (auto it = data.find("animationSequences"); it != data.end()) {
+
+		for (auto& animationSeq : *it) {
+			AnimationSequence seq;
+			seq.Deserialize(animationSeq);
+			std::string name = animationSeq["name"];
+			AddAnimationSequence(name,seq);
+		}
+	}
+	if (auto it = data.find("startingAnimation"); it != data.end()) {
+		SetAnimation(*it);
+	}
+}
+
+void dae::AnimationComponent::Serialize(nlohmann::json &)
+{}
+
+void dae::AnimationComponent::AddAnimationSequence(std::string name,const Rect& sourceRect, int rows, int columns, int sequenceStart, int sequenceLength, float timePerFrame, AnimationSequence::AnimationPlayBack playback)
+{
+	m_sequences[name] = AnimationSequence( sourceRect, rows, columns, sequenceStart, sequenceLength,timePerFrame, playback );
+}
+
+void dae::AnimationComponent::AddAnimationSequence(std::string name,AnimationSequence animSeq)
+{
+	m_sequences[name] = animSeq;
 }
 
 void dae::AnimationSequence::Update(float deltaTime)
@@ -78,14 +117,14 @@ dae::Rect dae::AnimationSequence::Get() const
 	}
 	index += m_sequenceStart;
 
-	auto rWidth = m_SourceRectangle.width / m_columns;
-	auto rHeight = m_SourceRectangle.height / m_rows;
+	float rWidth = m_SourceRectangle.width / m_columns;
+	float rHeight = m_SourceRectangle.height / m_rows;
 
 	int indexX =  index % m_columns;
 	int indexY =  index / m_columns;
 
-	auto rLeft = m_SourceRectangle.left + indexX * rWidth;
-	auto rTop = m_SourceRectangle.top + indexY * rHeight;
+	float rLeft = m_SourceRectangle.left + indexX * rWidth;
+	float rTop = m_SourceRectangle.top + indexY * rHeight;
  
 	Rect result{ 
 		.left = rLeft,
@@ -104,6 +143,60 @@ dae::AnimationSequence::AnimationSequence(int columns, int rows, int sequenceSta
 	m_SourceRectangle({ 0,0,0,0 }), m_rows(rows), m_columns(columns), m_sequenceStart(sequenceStart), m_sequenceLength(sequenceLength), m_timePerFrame(timePerFrame), m_playback(playback), m_timer(0.f), m_currentIndex(0)
 {
 }
+
+void dae::AnimationSequence::Deserialize(const nlohmann::json& data)
+{
+	if (auto it = data.find("sequenceStart"); it != data.end())
+	{
+		m_sequenceStart = *it;
+	}
+	if (auto it = data.find("sequenceLength"); it != data.end())
+	{
+		m_sequenceLength = *it;
+	}
+	if (auto it = data.find("frameTime"); it != data.end())
+	{
+		m_timePerFrame = *it;
+	}
+	if (auto it = data.find("playBack"); it != data.end())
+	{
+		std::string playBackString = *it;
+		if (playBackString == "Looped") {
+			m_playback = AnimationPlayBack::Looped;
+		}
+		if (playBackString == "Normal") {
+			m_playback = AnimationPlayBack::Normal;
+		}
+		if (playBackString == "Reversed") {
+			m_playback = AnimationPlayBack::Reversed;
+		}
+		if (playBackString == "ReversedLooped") {
+			m_playback = AnimationPlayBack::ReverseLooped;
+		}
+
+	}
+	if (auto it = data.find("columns"); it != data.end())
+	{
+		m_columns = *it;
+	}
+	if (auto it = data.find("rows"); it != data.end())
+	{
+		m_rows = *it;
+	}
+	if (auto it = data.find("sourceRect"); it != data.end())
+	{
+		auto sourceR= *it;
+		m_SourceRectangle = {
+			.left	= sourceR[0],
+			.top	= sourceR[1],
+			.width	= sourceR[2],
+			.height = sourceR[3],
+		};
+	}
+}
+
+void dae::AnimationSequence::Serialize(nlohmann::json &)
+{}
 
 
 void dae::AnimationSequence::Reset()

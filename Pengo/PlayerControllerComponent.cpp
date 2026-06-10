@@ -7,7 +7,7 @@
 #include <InputSystem/InputTypes.h>
 #include <Commands.h>
 
-namespace Pengo {
+namespace pengo {
 
 	class PlaySoundCommand : public dae::ICommand {
 	public:
@@ -27,7 +27,7 @@ namespace Pengo {
 	};
 }	
 
-Pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& pawn):
+pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& pawn):
 	ObjectComponent(pawn)
 {
 	dae::ServiceLocator<dae::ISoundSystem>::Get().LoadAudio("Data/SFX/Push_Ice_Block.mp3", "PushIce");
@@ -42,7 +42,7 @@ Pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& paw
 		dae::GamepadInput::LeftThumb,
 		dae::InputTriggerType::Held);
 
-	auto command2 = std::make_unique<Pengo::PlaySoundCommand>();
+	auto command2 = std::make_unique<pengo::PlaySoundCommand>();
 	dae::ServiceLocator<dae::InputManager>::Get().BindCommand(
 		std::move(command2),
 		dae::InputValueType::Boolean,
@@ -53,11 +53,11 @@ Pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& paw
 	
 }
 
-Pengo::PlayerControllerComponent::~PlayerControllerComponent()
+pengo::PlayerControllerComponent::~PlayerControllerComponent()
 {
 
 }
 
-void Pengo::PlayerControllerComponent::Update()
+void pengo::PlayerControllerComponent::Update()
 {
 }

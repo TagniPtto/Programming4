@@ -1,0 +1,8 @@
+{
+  "name": "FPSObject",
+  "Components": [
+    {
+      "type" : "FPS"
+    }
+  ]
+}

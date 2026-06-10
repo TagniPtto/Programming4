@@ -1,14 +1,16 @@
 #pragma once
 
 #include <Components/ObjectComponent.h>
-#include <vector>
+#include <map>
 #include <string>
 
 namespace dae {
-
+	
 	struct Rect {
-		float left,top;
-		float width, height;
+		float left;
+		float top;
+		float width;
+		float height;
 	};
 	class AnimationSequence final{
 	public:
@@ -20,42 +22,53 @@ namespace dae {
 		};
 
 	private:
-		Rect m_SourceRectangle;
-		int m_rows;
-		int m_columns;
+		Rect m_SourceRectangle = {};
+		int m_rows = 0;
+		int m_columns = 0;
 
-		int m_sequenceStart;
-		int m_sequenceLength;
+		int m_sequenceStart = 0;
+		int m_sequenceLength = 0;
 
-		AnimationPlayBack m_playback;
+		AnimationPlayBack m_playback = AnimationPlayBack::Normal;
 		
-		float m_timer;
-		float m_timePerFrame;
+		float m_timer = 0;
+		float m_timePerFrame = 0;
 		
-		int m_currentIndex;
+		int m_currentIndex = 0;
+	public:
+		AnimationSequence() = default;
+		explicit AnimationSequence(const Rect& sourceRect, int columns, int rows, int sequenceStart, int sequenceLength, float timePerFrame, AnimationPlayBack playback = AnimationPlayBack::Normal);
+		explicit AnimationSequence(int columns, int rows, int sequenceStart, int sequenceLength, float timePerFrame, AnimationPlayBack playback = AnimationPlayBack::Normal);
 	public:
 		void Update(float deltaTime);
 		void Reset();
 
 		Rect Get() const;
-		AnimationSequence(const Rect& sourceRect, int columns, int rows, int sequenceStart, int sequenceLength, float timePerFrame, AnimationPlayBack playback = AnimationPlayBack::Normal);
-		AnimationSequence(int columns, int rows, int sequenceStart, int sequenceLength, float timePerFrame, AnimationPlayBack playback = AnimationPlayBack::Normal);
+		void Deserialize(const nlohmann::json& data);
+		void Serialize(nlohmann::json& data);
+	
 	};
 
 	class RenderComponent;
-	class AnimationComponent : public ObjectComponent {
+	class AnimationComponent final : public ObjectComponent {
 
 	public:
-		explicit AnimationComponent(dae::GameObject& owner , const std::string& fPath);
+		explicit AnimationComponent(dae::GameObject& owner , const std::string& fPath = "");
 		~AnimationComponent();
-		virtual void Update() override;
-		virtual void Render() const override;
+	public:
+		void Update() override;
+		void Render() const override;
 
-		virtual void AddAnimationSequence(const Rect& sourceRect, int rows, int columns, int sequenceStart, int sequenceLength, float timePerFrame, AnimationSequence::AnimationPlayBack playback = AnimationSequence::AnimationPlayBack::Normal);
-		virtual void AddAnimationSequence(AnimationSequence animSeq);
+		void SetAnimation(const std::string& name);
+		
+		void Deserialize(const nlohmann::json& data) override;
+		void Serialize(nlohmann::json& data) override;
+
+		void AddAnimationSequence(std::string name,const Rect& sourceRect, int rows, int columns, int sequenceStart, int sequenceLength, float timePerFrame, AnimationSequence::AnimationPlayBack playback = AnimationSequence::AnimationPlayBack::Normal);
+		void AddAnimationSequence(std::string name,AnimationSequence animSeq);
 	private:
-		int m_currentSequence;
-		std::vector<AnimationSequence> m_sequences;
+		AnimationSequence* m_currentSequence;
+		std::unordered_map<std::string,AnimationSequence> m_sequences;
 		RenderComponent* m_pRenderComponent{};
 	};
 

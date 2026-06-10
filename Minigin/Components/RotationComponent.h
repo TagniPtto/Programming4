@@ -6,16 +6,14 @@
 
 namespace dae {
 	class RotationComponent : public ObjectComponent {
-
 	private:
 		float m_frequency{};
 		float m_currentAngle{};
 
 	public:
 
-		RotationComponent(GameObject& owner, float frequency);
+		RotationComponent(GameObject& owner, float frequency = 0);
 		void Update();
-
 
 	};
 }

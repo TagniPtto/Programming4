@@ -27,7 +27,27 @@
 #include "EventSystem/EventQueue.h"
 #include "LoggingSystem/Logger.h"
 
+#include "SceneSystem/ComponentFactory.h"
+
+#include "Components/AnimationComponent.h"
+#include "Components/RenderComponent.h"
+#include "Components/TransformComponent.h"
+#include "Components/RotationComponent.h"
+#include "Components/TextComponent.h"
+#include "Components/FPSComponent.h"
+
+
 SDL_Window* g_window{};
+void RegisterComponents() {
+	using namespace dae;
+	REGISTER_COMPONENT(AnimationComponent);
+	REGISTER_COMPONENT(RenderComponent);
+	REGISTER_COMPONENT(TransformComponent);
+	REGISTER_COMPONENT(RotationComponent);
+	REGISTER_COMPONENT(TextComponent);
+	REGISTER_COMPONENT(FPSComponent);
+}
+
 
 void LogSDLVersion(const std::string& message, int major, int minor, int patch)
 {
@@ -87,6 +107,8 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath) :
 	m_pRenderer(new dae::Renderer()),
 	m_pLogger(std::make_unique<Logger>())
 {
+	RegisterComponents();
+
 	PrintSDLVersion();
 	
 	if (!SDL_InitSubSystem(SDL_INIT_VIDEO | SDL_INIT_GAMEPAD))

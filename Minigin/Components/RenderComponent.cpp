@@ -38,8 +38,11 @@ namespace dae {
 
 	RenderComponent::RenderComponent(dae::GameObject& owner, const std::string& filename) :
 		ObjectComponent(owner), 
-		m_texture(ServiceLocator<ResourceManager>::Get().LoadTexture(filename))
+		m_texture(nullptr)
 	{
+		if (filename.empty()) return;
+
+		m_texture = ServiceLocator<ResourceManager>::Get().LoadTexture(filename);
 		if (m_texture) {
 			float width, height;
 			SDL_GetTextureSize(m_texture->GetSDLTexture(), &width, &height);
@@ -49,10 +52,6 @@ namespace dae {
 
 	}
 
-	RenderComponent::RenderComponent(dae::GameObject& owner):
-		ObjectComponent(owner), m_texture(nullptr)
-	{
-	}
 
 	void RenderComponent::Render() const
 	{
@@ -85,5 +84,19 @@ namespace dae {
 	{
 		m_texture = std::move(texture);
 	}
+
+	void RenderComponent::Deserialize(const nlohmann::json& data)
+	{
+		if (auto it = data.find("texture"); it != data.end()) {
+			SetTexture(*it);
+		}
+		if (auto it = data.find("destinationRect"); it != data.end()) {
+			auto dstR = *it;
+			SetDestinationRectangle({ dstR[0],dstR[1],dstR[2],dstR[3] });
+		}
+	}
+
+	void RenderComponent::Serialize(nlohmann::json&)
+	{}
 
 }

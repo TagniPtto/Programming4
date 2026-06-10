@@ -25,8 +25,7 @@ void dae::SceneManager::Render()
 	}
 }
 
-dae::SceneManager::SceneManager():
-	m_PrefabFactory(std::make_unique<dae::PrefabFactory>())
+dae::SceneManager::SceneManager()
 {
 }
 
@@ -36,20 +35,23 @@ dae::SceneManager::~SceneManager()
 dae::Scene& dae::SceneManager::LoadScene(const std::string& path)
 {
 	auto& scene = CreateScene();
+	auto& factory = PrefabFactory::Get();
 
-	std::fstream file(path);
+	std::fstream file("Data/Scenes/" + path);
 	
 	if (file.is_open()) {
 		const nlohmann::json data = nlohmann::json::parse(file);
 		for (const auto& object : data["objects"])
 		{
-
-			m_PrefabFactory->CreatePrefab(object);
+			if (object.contains("prefab")) {
+				auto& prefabJsonData = object["prefab"];
+				factory.Instantiate(&scene, prefabJsonData,object);
+			}
 		}
 
 	}
 	else {
-		ServiceLocator<Logger>::Get().Write("Failed to Open File : " + path);
+		//ServiceLocator<Logger>::Get().Write("Failed to Open File : " + path);
 	}
 
 	return scene;

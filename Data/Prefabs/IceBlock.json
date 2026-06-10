@@ -8,7 +8,8 @@
     {
       "type": "Animation",
       "texture": "IceCube.png",
-      "destinationRect": [ 0, 0, 16, 16 ],
+      "destinationRect": [ 0, 0, 25, 25 ],
+      "startingAnimation": "Idle",
 
       "animationSequences": [
         {
@@ -16,6 +17,7 @@
           "sequenceStart": 0,
           "sequenceLength": 1,
           "frameTime": 0.2,
+          "playBack": "Normal",
           "columns": 10,
           "rows": 1,
           "sourceRect": [ 0, 0, 150, 16 ]
@@ -25,6 +27,7 @@
           "sequenceStart": 1,
           "sequenceLength": 9,
           "frameTime": 0.2,
+          "playBack": "Normal",
           "columns": 10,
           "rows": 1,
           "sourceRect": [ 0, 0, 150, 16 ]
