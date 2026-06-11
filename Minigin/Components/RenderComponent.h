@@ -23,10 +23,16 @@ namespace dae {
 
 	public:
 
+		
+		Rect GetSourceRectangle()const;
+		Rect GetDesitionationRectangle()const;
+		
 		void SetSourceRectangle(float x , float y , float width, float height);
 		void SetDestinationRectangle(float x , float y , float width, float height);
 		void SetSourceRectangle(Rect src);
 		void SetDestinationRectangle(Rect dst);
+
+
 
 		RenderComponent(dae::GameObject& owner, const std::string& filename = "");
 
@@ -35,7 +41,7 @@ namespace dae {
 		void SetTexture(std::shared_ptr<dae::Texture2D> texture);
 
 		virtual void Deserialize(const nlohmann::json& data)override;
-		virtual void Serialize(nlohmann::json& data)override;
+		virtual void Serialize(nlohmann::json& data) const override;
 
 	};
 

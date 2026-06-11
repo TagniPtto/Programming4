@@ -1,5 +1,7 @@
 #include "SDLSoundSystem.h"
+#include <SDL3_mixer/SDL_mixer.h>
 
+#include <cassert>
 
 void dae::SDLSoundSystem::Play(const std::string& name, const float volume)
 {
@@ -15,8 +17,7 @@ void dae::SDLSoundSystem::ThreadProcess()
     while (true)
     {
         std::unique_lock<std::mutex> lock(m_mutex);
-        m_conditional_variable.wait(lock, [&]() { return !threadIsRunning.load() || !m_eventQueue.empty(); });
-
+        m_conditional_variable.wait(lock, [&]() { return !threadIsRunning || !m_eventQueue.empty(); });
 
         if (!threadIsRunning.load() && m_eventQueue.empty())
         {
@@ -40,8 +41,7 @@ void dae::SDLSoundSystem::ThreadProcess()
 void dae::SDLSoundSystem::LoadAudio(const std::string& fname, const std::string& name)
 {
     std::scoped_lock lock(m_mutex);
-
-    char* path = NULL;
+    char* path = nullptr;
     MIX_Audio* audio;
     SDL_asprintf(&path, "%s%s", SDL_GetBasePath(), fname.c_str());
     audio = MIX_LoadAudio(m_pMixer, path, false);
@@ -85,28 +85,31 @@ dae::SDLSoundSystem::SDLSoundSystem()
 
 dae::SDLSoundSystem::~SDLSoundSystem()
 {
-    threadIsRunning.store(false);
+    threadIsRunning = false;
     m_conditional_variable.notify_all();
-    m_worker.join();
+    if (m_worker.joinable()) {
+        m_worker.join();
+    }
 
-    //for (auto& [name, audio] : m_loadedAudio)
-    //{
-    //    if (audio) MIX_DestroyAudio(audio);
-    //}
+    if (m_pTrack)
+    {
+        MIX_StopTrack(m_pTrack, 0);
+        MIX_DestroyTrack(m_pTrack);
+        m_pTrack = nullptr;
+    }
 
-    //m_loadedAudio.clear();
+    for (auto& [name, audio] : m_loadedAudio)
+    {
+        if (audio) MIX_DestroyAudio(audio);
+    }
 
-    //if (m_pTrack)
-    //{
-    //    MIX_DestroyTrack(m_pTrack);
-    //}
+    m_loadedAudio.clear();
 
+    if (m_pMixer)
+    {
+        MIX_DestroyMixer(m_pMixer);
+        m_pMixer = nullptr;
+    }
 
-    //if (m_pMixer)
-    //{
-    //    MIX_DestroyMixer(m_pMixer);
-    //}
-
-    
     MIX_Quit();
 }

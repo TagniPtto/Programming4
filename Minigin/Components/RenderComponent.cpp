@@ -10,6 +10,14 @@
 
 #include <chrono>
 namespace dae {
+	RenderComponent::Rect RenderComponent::GetSourceRectangle() const
+	{
+		return m_srcRectangle;
+	}
+	RenderComponent::Rect RenderComponent::GetDesitionationRectangle() const
+	{
+		return m_dstRectangle;
+	}
 	void RenderComponent::SetSourceRectangle(float x, float y, float width, float height)
 	{
 		m_srcRectangle.x = x;
@@ -94,9 +102,13 @@ namespace dae {
 			auto dstR = *it;
 			SetDestinationRectangle({ dstR[0],dstR[1],dstR[2],dstR[3] });
 		}
+		if (auto it = data.find("sourceRect"); it != data.end()) {
+			auto srcR = *it;
+			SetSourceRectangle({ srcR[0],srcR[1],srcR[2],srcR[3] });
+		}
 	}
 
-	void RenderComponent::Serialize(nlohmann::json&)
+	void RenderComponent::Serialize(nlohmann::json&) const
 	{}
 
 }

@@ -3,9 +3,14 @@
 
   "components": [
     {
+      "type": "Render",
+      "texture": "Scene.png",
+      "sourceRect": [ 0, 0, 223, 255 ]
+    },
+    {
       "type": "Grid",
 
-      "tileSize": 25,
+      "tileSize": 36,
       "width": 13,
       "height": 15,
       "tiles": [
@@ -25,12 +30,8 @@
         [ 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0 ],
         [ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ]
       ]
-    },
-    {
-      "type": "Render",
-      "texture": "Scene.png",
-      "destinationRect": [ 0, 0, 16, 16 ]
     }
+
   ]
 
 }

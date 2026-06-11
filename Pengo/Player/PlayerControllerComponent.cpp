@@ -5,27 +5,10 @@
 
 #include <InputSystem/InputManager.h>
 #include <InputSystem/InputTypes.h>
-#include <Commands.h>
 
-namespace pengo {
 
-	class PlaySoundCommand : public dae::ICommand {
-	public:
-		virtual ~PlaySoundCommand() = default;
-		void Execute(glm::vec2) override
-		{
-			dae::ServiceLocator<dae::ISoundSystem>::Get().Play("PushIce", .1f);
-		}
-	};
+#include "PlayerCommands.h"
 
-	class MoveUnitCommand : public dae::ICommand {
-		virtual ~MoveUnitCommand() = default;
-		void Execute(glm::vec2) override
-		{
-			//Moving a unit
-		}
-	};
-}	
 
 pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& pawn):
 	ObjectComponent(pawn)
@@ -45,18 +28,22 @@ pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& paw
 	auto command2 = std::make_unique<pengo::PlaySoundCommand>();
 	dae::ServiceLocator<dae::InputManager>::Get().BindCommand(
 		std::move(command2),
+		0,
 		dae::InputValueType::Boolean,
-		dae::KeyboardInput::KeyA,
+		dae::GamepadInput::ButtonA,
 		dae::InputTriggerType::Pressed);
-
-
-	
 }
 
 pengo::PlayerControllerComponent::~PlayerControllerComponent()
 {
 
 }
+
+void pengo::PlayerControllerComponent::Deserialize(const nlohmann::json&)
+{}
+
+void pengo::PlayerControllerComponent::Serialize(nlohmann::json &) const
+{}
 
 void pengo::PlayerControllerComponent::Update()
 {

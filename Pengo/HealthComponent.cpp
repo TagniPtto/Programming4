@@ -10,7 +10,7 @@ pengo::HealthComponent::HealthComponent(dae::GameObject& owner, int health) :
 void pengo::HealthComponent::Deserialize(const nlohmann::json&)
 {}
 
-void pengo::HealthComponent::Serialize(nlohmann::json&)
+void pengo::HealthComponent::Serialize(nlohmann::json&) const
 {}
 
 void pengo::HealthComponent::TakeDamage(int damage)

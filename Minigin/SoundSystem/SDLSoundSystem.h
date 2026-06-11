@@ -9,22 +9,22 @@
 #include <condition_variable>
 #include <mutex>
 
-#include <SDL3_mixer/SDL_mixer.h>
+struct MIX_Mixer;
+struct MIX_Track;
+struct MIX_Audio;
 
 namespace dae
 {
-
 	class SDLSoundSystem : public ISoundSystem {
 	private:
-		MIX_Mixer* m_pMixer = NULL;
-		MIX_Track* m_pTrack = NULL;
+		MIX_Mixer* m_pMixer = nullptr;
+		MIX_Track* m_pTrack = nullptr;
 
 		std::thread m_worker;
 		std::mutex m_mutex;
 		std::condition_variable m_conditional_variable;
 		std::unordered_map<std::string,MIX_Audio*> m_loadedAudio;
 		std::queue<SoundEvent> m_eventQueue;
-
 
 		std::atomic_bool threadIsRunning = true;
 	private:
@@ -33,12 +33,19 @@ namespace dae
 	protected:
 		friend class Minigin;
 		SDLSoundSystem();
+	public:
+		virtual ~SDLSoundSystem();
+		SDLSoundSystem(const SDLSoundSystem&) = delete;
+		SDLSoundSystem(SDLSoundSystem&&) = delete;
+		SDLSoundSystem& operator=(const SDLSoundSystem&) = delete;
+		SDLSoundSystem& operator=(SDLSoundSystem&&) = delete;
+
 
 	public:
 		virtual void LoadAudio(const std::string& path , const std::string& name) override;
 		virtual void UnloadAudio(const std::string& name) override;
 		virtual void Play(const std::string& name, const float volume)  override;
 
-		virtual ~SDLSoundSystem();
+
 	};
 }

@@ -3,7 +3,7 @@
   [
     {
       "prefab": "Player",
-      "position": [ 350, 250 ],
+      "position": [ 350, 250 ]
     },
     {
       "prefab": "Maps/Map1",

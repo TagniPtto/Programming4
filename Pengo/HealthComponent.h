@@ -11,7 +11,7 @@ namespace pengo {
 		~HealthComponent() = default;
 
 		virtual void Deserialize(const nlohmann::json& data) override;
-		virtual void Serialize(nlohmann::json& data) override;
+		virtual void Serialize(nlohmann::json& data) const override;
 	
 	public:
 		void TakeDamage(int damage);

@@ -28,11 +28,14 @@ dae::GameObject* dae::PrefabFactory::Instantiate(dae::Scene* scene, std::string 
 	transform->SetLocalRotation(rotation);
 	
 	auto& compFactory = ComponentFactory::Get();
-	for (const auto& componentJson : prefab["components"])
-	{
-		auto componentTypeName = std::string(componentJson["type"]) + "Component";
-		compFactory.CreateComponent(componentTypeName, *object, componentJson);
+	if (auto it = prefab.find("components"); it != prefab.end()) {
+		for (const auto& componentJson : *it)
+		{
+			auto componentTypeName = std::string(componentJson["type"]) + "Component";
+			compFactory.CreateComponent(componentTypeName, *object, componentJson);
+		}
 	}
+
 	return object;
 }
 

@@ -39,7 +39,7 @@ namespace dae {
 		virtual void FixedUpdate(float);
 
 		virtual void Deserialize(const nlohmann::json& data);
-		virtual void Serialize(nlohmann::json& data);
+		virtual void Serialize(nlohmann::json& data) const;
 	};
 }
 

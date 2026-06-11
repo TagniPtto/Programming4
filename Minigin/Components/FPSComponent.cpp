@@ -16,23 +16,28 @@ dae::FPSComponent::FPSComponent(GameObject& owner, const std::string& text, std:
 	}
 
 }
+void dae::FPSComponent::Deserialize(const nlohmann::json& data)
+{
+	textComponent->Deserialize(data);
+}
+void dae::FPSComponent::Serialize(nlohmann::json &) const
+{}
+
 void dae::FPSComponent::Update()
 {
 	timeCounter += Time::GetInstance().GetDeltaTime();
 	frameCount++;
 	if (timeCounter > 1.0f) {
-		float fps = (float(frameCount) / timeCounter) * 1.0f;
-		std::ostringstream oss;
-		oss << std::fixed << std::setprecision(1) << "FPS: " << fps;
-		// Get the formatted string
-		std::string formatted_fps = oss.str();
+		float fps = float(frameCount) / timeCounter;
+		//std::ostringstream oss;
+		//oss << std::fixed << std::setprecision(1) << "FPS: " << fps;
+		//// Get the formatted string
+		//std::string formatted_fps = oss.str();
+
+		std::string formatted_fps = std::format("FPS : {:.0f}", fps);
 		
 		textComponent->SetText(formatted_fps);
-		timeCounter -= 1;
+		timeCounter = 0;
 		frameCount = 0;
 	}
-	textComponent->Update();
-}
-void dae::FPSComponent::Render() const
-{
 }

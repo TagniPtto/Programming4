@@ -43,6 +43,6 @@ namespace pengo {
 		~GridComponent() = default;
 
 		void Deserialize(const nlohmann::json& data) override;
-		void Serialize(nlohmann::json& data) override;
+		void Serialize(nlohmann::json& data) const override;
 	};
 }

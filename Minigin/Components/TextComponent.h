@@ -19,7 +19,11 @@ namespace dae
 		void SetText(const std::string& text);
 		void SetColor(const SDL_Color& color);
 		void SetFont(std::shared_ptr<Font> font);
+		
+		void Deserialize(const nlohmann::json& data)override;
+		void Serialize(nlohmann::json& data) const override;
 
+	public:
 		TextComponent(GameObject& owner, const std::string& text = "", std::shared_ptr<Font> font = {}, const SDL_Color& color = { 255, 255, 255, 255 });
 		virtual ~TextComponent() = default;
 

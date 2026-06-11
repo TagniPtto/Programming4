@@ -40,6 +40,7 @@ namespace dae{
 		explicit MoveCommand(GameObject* object) : GameObjectCommand(object), m_speed() {}
 		void SetMovementSpeed(float speed) { m_speed = speed; }
 		virtual void Execute(glm::vec2 direction) override {
+			direction.y *= -1.0f;
 			GetGameObject()->GetTransform()->SetLocalPosition(GetGameObject()->GetTransform()->GetLocalPosition() + m_speed * glm::normalize(glm::vec3(direction, 0.0f)) * dae::Time::GetInstance().GetDeltaTime());
 		};
 	};

@@ -20,5 +20,5 @@ void pengo::BlockComponent::FixedUpdate(float)
 void pengo::BlockComponent::Deserialize(const nlohmann::json&)
 {}
 
-void pengo::BlockComponent::Serialize(nlohmann::json&)
+void pengo::BlockComponent::Serialize(nlohmann::json&) const
 {}

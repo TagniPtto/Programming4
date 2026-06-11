@@ -16,6 +16,8 @@
 #include <nlohmann/json.hpp>
 #include <fstream>
 
+#define ORIGINAL_PIXEL_COUNT_BORDER 8
+#define ORIGINAL_PIXEL_COUNT_BlOCK 16
 
 void pengo::GridComponent::Update()
 {
@@ -79,9 +81,7 @@ void pengo::GridComponent::LoadMap(const nlohmann::json& data)
 	{
 		for (int x = 0; x < m_cellXCount; x++)
 		{
-			int tile = tiles[y][x];
-
-			if (tile == 1)
+			if (tiles[y][x] == 1)
 			{
 				float xPos{ float(x * m_cellSize) };
 				float yPos{ float(y * m_cellSize) };
@@ -90,20 +90,29 @@ void pengo::GridComponent::LoadMap(const nlohmann::json& data)
 				if (auto animComp = obj->GetComponent<dae::AnimationComponent>(); animComp) {
 					animComp->SetAnimation("Idle");
 				}
-				//auto obj = currentScene->CreateGameObject();
-				//obj->SetParent(m_owner);
-
-				//obj->GetTransform()->SetLocalPosition(xPos, yPos);
-				//obj->AddComponent<pengo::BlockComponent>();
-				//auto renderComp = obj->AddComponent<dae::RenderComponent>("IceCube.png");
-				//dae::RenderComponent::Rect rect{ float(0) , float(0) , float(m_cellSize),float(m_cellSize) };
-				//renderComp->SetDestinationRectangle(rect);
+				if (auto renderComp = obj->GetComponent<dae::RenderComponent>(); renderComp) {
+					renderComp->SetDestinationRectangle(0.0f,0.0f,float(m_cellSize),float(m_cellSize));
+				}
 			}
 			else
 			{
 				// empty
 			}
 		}
+	}
+
+	const float scale{ m_cellSize / float(ORIGINAL_PIXEL_COUNT_BlOCK) };
+	const float offset{ float(ORIGINAL_PIXEL_COUNT_BORDER) * scale };
+
+	if (auto renderComp = m_owner->GetComponent<dae::RenderComponent>(); renderComp) {
+
+		auto srcRect = renderComp->GetSourceRectangle();
+		renderComp->SetDestinationRectangle({
+			srcRect.x - offset,
+			srcRect.y - offset,
+			srcRect.width * scale,
+			srcRect.height * scale,
+			});
 	}
 }
 
@@ -112,5 +121,5 @@ void pengo::GridComponent::Deserialize(const nlohmann::json& data)
 	LoadMap(data);
 }
 
-void pengo::GridComponent::Serialize(nlohmann::json&)
+void pengo::GridComponent::Serialize(nlohmann::json&) const
 {}

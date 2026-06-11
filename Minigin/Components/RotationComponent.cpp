@@ -10,6 +10,12 @@ dae::RotationComponent::RotationComponent(GameObject& owner, float frequency):
 	
 }
 
+void dae::RotationComponent::Deserialize(const nlohmann::json&)
+{}
+
+void dae::RotationComponent::Serialize(nlohmann::json &) const
+{}
+
 void dae::RotationComponent::Update()
 {
 	m_currentAngle += m_frequency * Time::GetInstance().GetDeltaTime();

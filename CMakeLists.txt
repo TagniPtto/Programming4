@@ -243,10 +243,12 @@ target_link_libraries("${ENGINE_NAME}" PUBLIC
 add_executable(${APP_NAME} ${APP_PARAM}
     "Pengo/Main.cpp"
     "Pengo/GridComponent.cpp"
-    "Pengo/PlayerControllerComponent.cpp"
+    "Pengo/Player/PlayerControllerComponent.cpp"
+    "Pengo/Player/PlayerStateComponent.cpp"
     "Pengo/HealthComponent.cpp"
     "Pengo/BlockComponent.cpp"
-     "Pengo/PengoStates/PlayerStates/PlayerState.cpp")
+    "Pengo/Player/PlayerState.cpp"
+    "Pengo/GridMovementComponent.cpp")
 target_link_libraries(${APP_NAME} PRIVATE ${ENGINE_NAME})
 #________________________________________________________
 

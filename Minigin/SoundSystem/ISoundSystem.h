@@ -17,12 +17,5 @@ namespace dae
 		virtual void Play(const std::string& name, const float volume) = 0;
 
 		virtual ~ISoundSystem() = default;
-
-		ISoundSystem(const ISoundSystem& other) = delete;
-		ISoundSystem(ISoundSystem&& other) = delete;
-
-		ISoundSystem& operator=(const ISoundSystem& other) = delete;
-		ISoundSystem& operator=(ISoundSystem&& other) = delete;
-
 	};
 }

@@ -71,7 +71,7 @@ void dae::AnimationComponent::Deserialize(const nlohmann::json& data)
 	}
 }
 
-void dae::AnimationComponent::Serialize(nlohmann::json &)
+void dae::AnimationComponent::Serialize(nlohmann::json &) const
 {}
 
 void dae::AnimationComponent::AddAnimationSequence(std::string name,const Rect& sourceRect, int rows, int columns, int sequenceStart, int sequenceLength, float timePerFrame, AnimationSequence::AnimationPlayBack playback)
@@ -195,7 +195,7 @@ void dae::AnimationSequence::Deserialize(const nlohmann::json& data)
 	}
 }
 
-void dae::AnimationSequence::Serialize(nlohmann::json &)
+void dae::AnimationSequence::Serialize(nlohmann::json &) const
 {}
 
 

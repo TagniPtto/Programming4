@@ -18,12 +18,9 @@ namespace dae {
 	{}
 
 	void ObjectComponent::Deserialize(const nlohmann::json&)
-	{
-		
-	}
+	{}
 
-	void ObjectComponent::Serialize(nlohmann::json&)
-	{
-	}
+	void ObjectComponent::Serialize(nlohmann::json&) const
+	{}
 
 }

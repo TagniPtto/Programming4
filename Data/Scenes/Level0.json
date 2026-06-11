@@ -1,16 +1,17 @@
 {
   "objects": [
     {
+      "prefab": "Maps/Map0",
+      "position": [ 250, 100 ]
+    },
+    {
       "prefab": "Player",
       "position": [ 350, 250 ]
     },
     {
       "prefab": "FPSObject",
-      "position": [ 50, 50]
-    },
-    {
-      "prefab": "Maps/Map0",
-      "position": [ 250, 100 ]
+      "position": [ 50, 50 ]
     }
+
   ]
 }

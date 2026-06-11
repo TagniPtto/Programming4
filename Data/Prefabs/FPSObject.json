@@ -1,8 +1,11 @@
 {
   "name": "FPSObject",
-  "Components": [
+  "components": [
     {
-      "type" : "FPS"
+      "type"  : "FPS",
+      "font": "Lingua.otf",
+      "fontSize": 36,
+      "fontColor": [255,0,0 , 255]
     }
   ]
 }

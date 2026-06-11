@@ -13,7 +13,7 @@
 #include <ResourceSystem/ResourceManager.h>
 
 #include "GridComponent.h"
-#include "PlayerControllerComponent.h"
+#include "Player/PlayerControllerComponent.h"
 #include "HealthComponent.h"
 #include "GridComponent.h"
 #include "BlockComponent.h"

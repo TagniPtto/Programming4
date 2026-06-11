@@ -45,7 +45,7 @@ namespace dae {
 
 		Rect Get() const;
 		void Deserialize(const nlohmann::json& data);
-		void Serialize(nlohmann::json& data);
+		void Serialize(nlohmann::json& data) const;
 	
 	};
 
@@ -62,7 +62,7 @@ namespace dae {
 		void SetAnimation(const std::string& name);
 		
 		void Deserialize(const nlohmann::json& data) override;
-		void Serialize(nlohmann::json& data) override;
+		void Serialize(nlohmann::json& data) const override;
 
 		void AddAnimationSequence(std::string name,const Rect& sourceRect, int rows, int columns, int sequenceStart, int sequenceLength, float timePerFrame, AnimationSequence::AnimationPlayBack playback = AnimationSequence::AnimationPlayBack::Normal);
 		void AddAnimationSequence(std::string name,AnimationSequence animSeq);
