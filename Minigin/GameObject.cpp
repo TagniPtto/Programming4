@@ -13,8 +13,12 @@ dae::GameObject::GameObject():m_transform(std::make_unique<dae::TransformCompone
 dae::GameObject::~GameObject()
 {
 	SetParent(nullptr); //remove yourself from parent so they dont try to access you after destruction
-	for (auto& child : m_children) {
-		child->SetParent(nullptr);
+	//for (auto& child : m_children) {
+	//	child->SetParent(nullptr); // carefull your removing your children from your list while looping over list
+	//}
+	while (!m_children.empty())
+	{
+		m_children.back()->SetParent(nullptr);
 	}
 }
 
