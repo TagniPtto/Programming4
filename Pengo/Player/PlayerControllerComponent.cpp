@@ -16,7 +16,7 @@ pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& paw
 	dae::ServiceLocator<dae::ISoundSystem>::Get().LoadAudio("Data/SFX/Push_Ice_Block.mp3", "PushIce");
 
 
-	std::unique_ptr<dae::MoveCommand> command = std::make_unique<dae::MoveCommand>(&pawn);
+	std::unique_ptr<pengo::MoveCommand> command = std::make_unique<pengo::MoveCommand>(&pawn);
 	command->SetMovementSpeed(250.f);
 	dae::ServiceLocator<dae::InputManager>::Get().BindCommand(
 		std::move(command),

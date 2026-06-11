@@ -5,34 +5,6 @@
 
 namespace dae
 {
-	enum class InputType
-	{
-		Keyboard,
-		Mouse,
-		Gamepad
-	};
-	enum class InputValueType
-	{
-		Boolean,
-		Float,
-		Vector2,
-	};
-	enum class InputTriggerType {
-		Released,
-		Pressed,
-		Held,
-	};
-	struct InputBinding {
-		uint32_t code;
-
-		uint32_t deviceIndex;
-		InputType deviceType;
-
-		InputValueType deviceValue;
- 		InputTriggerType trigger;
-	};
-
-
 	class ICommand;
 	class InputManagerImpl;
 	class InputManager final

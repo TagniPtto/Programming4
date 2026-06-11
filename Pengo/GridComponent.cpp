@@ -116,6 +116,13 @@ void pengo::GridComponent::LoadMap(const nlohmann::json& data)
 	}
 }
 
+pengo::MoveResult pengo::GridComponent::TryMove(glm::ivec2 currentTile, glm::ivec2 direction)
+{
+	currentTile;
+	direction;
+	return MoveResult();
+}
+
 void pengo::GridComponent::Deserialize(const nlohmann::json& data)
 {
 	LoadMap(data);

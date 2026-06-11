@@ -1,7 +1,42 @@
 #pragma once
+#include <variant>
+#include <glm/vec2.hpp>
 
 namespace dae
 {
+	enum class InputType
+	{
+		Keyboard,
+		Mouse,
+		Gamepad
+	};
+	enum class InputValueType
+	{
+		Boolean,
+		Float,
+		Vector2,
+	};
+	enum class InputTriggerType {
+		Released,
+		Pressed,
+		Held,
+	};
+	struct InputBinding {
+		uint32_t code;
+
+		uint32_t deviceIndex;
+		InputType deviceType;
+
+		InputValueType deviceValue;
+		InputTriggerType trigger;
+	};
+
+	struct InputContext
+	{
+		InputBinding binding;
+		std::variant<bool, float, glm::vec2> value;
+	};
+
 	enum class GamepadInput : uint32_t {
 		ButtonA = 0x1000,
 		ButtonB = 0x2000,

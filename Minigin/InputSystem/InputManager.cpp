@@ -106,7 +106,7 @@ namespace dae {
 				break;
 			}
 			if (triggered) {
-				command->Execute(glm::vec2());
+				command->Execute(InputContext{.binding = binding,.value = true });
 			}
 		}
 		break;
@@ -115,7 +115,7 @@ namespace dae {
 			float value = device->GetAxis1D(binding.code);
 			if (value != 0)
 			{
-				command->Execute(glm::vec2(value, 0));
+				command->Execute(InputContext{ .binding = binding,.value = value });
 			}
 		}
 		break;
@@ -124,7 +124,7 @@ namespace dae {
 			glm::vec2 value = device->GetAxis2D(binding.code);
 			if (value.x != 0.0f || value.y != 0.0f)
 			{
-				command->Execute(value);
+				command->Execute(InputContext{ .binding = binding,.value = value });
 			}
 		}
 		break;

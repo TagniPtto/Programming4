@@ -16,7 +16,11 @@ namespace pengo {
 		CellType type;
 		dae::GameObject* occupant;
 	};
-
+	struct MoveResult
+	{
+		bool success;
+		glm::ivec2 destination;
+	};
 	class GridComponent final : public dae::ObjectComponent
 	{
 	private:
@@ -27,20 +31,19 @@ namespace pengo {
 		std::vector<GridCell> m_cells;
 
 		bool m_debugWindowOpen{true};
-
 	public:
-
+		~GridComponent() = default;
+		explicit GridComponent(dae::GameObject& owner, const std::string& path = "");
+	public: 
 		void Update() override;
 		void RenderUI() override;
 		void Render() const override;
 		
 		int GetClosestCellId(glm::vec2);
-		
-		explicit GridComponent(dae::GameObject& owner , const std::string& path = "");
+
 
 		void LoadMap(const nlohmann::json& data);
-
-		~GridComponent() = default;
+		MoveResult TryMove(glm::ivec2 currentTile, glm::ivec2 direction);
 
 		void Deserialize(const nlohmann::json& data) override;
 		void Serialize(nlohmann::json& data) const override;

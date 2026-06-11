@@ -91,25 +91,5 @@ dae::SDLSoundSystem::~SDLSoundSystem()
         m_worker.join();
     }
 
-    if (m_pTrack)
-    {
-        MIX_StopTrack(m_pTrack, 0);
-        MIX_DestroyTrack(m_pTrack);
-        m_pTrack = nullptr;
-    }
-
-    for (auto& [name, audio] : m_loadedAudio)
-    {
-        if (audio) MIX_DestroyAudio(audio);
-    }
-
-    m_loadedAudio.clear();
-
-    if (m_pMixer)
-    {
-        MIX_DestroyMixer(m_pMixer);
-        m_pMixer = nullptr;
-    }
-
     MIX_Quit();
 }

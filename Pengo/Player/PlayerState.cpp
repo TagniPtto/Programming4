@@ -18,35 +18,24 @@ namespace pengo
 
 	std::unique_ptr<PlayerState> IdleState::HandleRequest(
 		PlayerStateComponent& ,
-		PlayerStateRequest , 
-		glm::vec2 )
+		dae::InputContext)
 	{
 		return std::unique_ptr<PlayerState>();
 	}
 
 	std::unique_ptr<PlayerState> MoveState::HandleRequest(
-		PlayerStateComponent& stateComponent,
-		PlayerStateRequest request, 
-		glm::vec2 value)
+		PlayerStateComponent&,
+		dae::InputContext)
 	{
-		value;
-		request;
-		stateComponent;
-		//stateComponent.
-		switch (request) {
-			case PlayerStateRequest::Interact:
-				
-				break;
-			case PlayerStateRequest::Move:
-				break;
-			case PlayerStateRequest::Dead:
-				break;
-		}
-		return std::unique_ptr<PlayerState>();
+
+		//TODO can get hit by other iceblock from other player.
+		return nullptr;
 	}
 	
-	std::unique_ptr<PlayerState> MoveState::Update(PlayerStateComponent& )
+	std::unique_ptr<PlayerState> MoveState::Update(PlayerStateComponent&)
 	{
+		//If reached the tile return to idle.
+		// or if new input 
 		return nullptr;
 	}
 

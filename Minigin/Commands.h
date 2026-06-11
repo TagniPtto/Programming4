@@ -1,16 +1,16 @@
 #pragma once
 
-#include "GameObject.h"
 #include "TimeManager.h"
-#include <glm/vec2.hpp>
+#include "InputSystem/InputTypes.h"
 
 namespace dae{
 	class ICommand {
 	public:
 		virtual ~ICommand() = default;
-		virtual void Execute(glm::vec2 input) = 0;
+		virtual void Execute(dae::InputContext context) = 0;
 	};
 
+	class GameObject;
 	class GameObjectCommand : public ICommand{
 	private:
 		GameObject* m_pObject;
@@ -30,18 +30,5 @@ namespace dae{
 		virtual void Undo() = 0;
 		virtual void Redo() = 0;
 
-	};
-
-	class MoveCommand : public GameObjectCommand {
-	private:
-		float m_speed;
-	public:
-		virtual ~MoveCommand() = default;
-		explicit MoveCommand(GameObject* object) : GameObjectCommand(object), m_speed() {}
-		void SetMovementSpeed(float speed) { m_speed = speed; }
-		virtual void Execute(glm::vec2 direction) override {
-			direction.y *= -1.0f;
-			GetGameObject()->GetTransform()->SetLocalPosition(GetGameObject()->GetTransform()->GetLocalPosition() + m_speed * glm::normalize(glm::vec3(direction, 0.0f)) * dae::Time::GetInstance().GetDeltaTime());
-		};
 	};
 }

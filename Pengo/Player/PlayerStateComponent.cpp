@@ -1,22 +1,41 @@
 #include "PlayerStateComponent.h"
+#include <GameObject.h>
+#include <Components/AnimationComponent.h>
+#include <Components/TransformComponent.h>
+#include "../GridComponent.h"
+
+pengo::PlayerStateComponent::PlayerStateComponent(dae::GameObject& owner, dae::AnimationComponent* anim, dae::TransformComponent* trans) :
+	ObjectComponent(owner),
+	m_pAnimComp(anim),
+	m_pTransformComp(trans)
+{
+}
 
 void pengo::PlayerStateComponent::ChangState(std::unique_ptr<PlayerState> newState)
 {
-	if (newState) {
+	if (currentState) 
+	{
 		currentState->OnExit(*this);
-		currentState = std::move(newState);
+	}
+	currentState = std::move(newState);
+	if (currentState)
+	{
 		currentState->OnEnter(*this);
 	}
 }
 
-void pengo::PlayerStateComponent::HandleRequest(PlayerStateRequest request , glm::vec2 value)
+void pengo::PlayerStateComponent::HandleRequest(dae::InputContext context)
 {
-	auto nextState = currentState->HandleRequest(*this,request, value);
-	ChangState(std::move(nextState));
+	if (currentState) {
+		auto nextState = currentState->HandleRequest(*this,context);
+		if (nextState) ChangState(std::move(nextState));
+	}
 }
 
 void pengo::PlayerStateComponent::Update()
 {
-	auto nextState = currentState->Update(*this);
-	ChangState(std::move(nextState));
+	if (currentState) {
+		auto nextState = currentState->Update(*this);
+		if (nextState) ChangState(std::move(nextState));
+	}
 }

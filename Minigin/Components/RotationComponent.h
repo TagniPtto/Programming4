@@ -16,7 +16,7 @@ namespace dae {
 		void Deserialize(const nlohmann::json& data)override;
 		void Serialize(nlohmann::json& data)const override;
 
-		void Update();
+		void Update() override;
 
 	};
 }

@@ -1,14 +1,9 @@
 #pragma once
 #include <memory>
-#include <glm/glm.hpp>
+#include <InputSystem/InputTypes.h>
 
-namespace pengo {
-
-	enum class PlayerStateRequest {
-		Interact,
-		Move,
-		Dead,
-	};
+namespace pengo
+{
 	class AnimationComponent;
 	class PlayerStateComponent;
 	
@@ -24,8 +19,7 @@ namespace pengo {
 		virtual std::unique_ptr<PlayerState> Update(PlayerStateComponent& stateComponent);
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent,
-			PlayerStateRequest request, 
-			glm::vec2 value) = 0;
+			dae::InputContext context) = 0;
 	};
 
 	class IdleState : public PlayerState {
@@ -33,8 +27,7 @@ namespace pengo {
 		virtual ~IdleState() = default;
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent, 
-			PlayerStateRequest request, 
-			glm::vec2 value);
+			dae::InputContext context);
 	};
 
 	class MoveState : public PlayerState {
@@ -44,8 +37,7 @@ namespace pengo {
 		virtual std::unique_ptr<PlayerState> Update(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent, 
-			PlayerStateRequest request, 
-			glm::vec2 value);
+			dae::InputContext context);
 	};
 
 	class DeadState : public PlayerState {
