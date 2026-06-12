@@ -5,7 +5,7 @@
 
 namespace dae
 {
-	class ICommand;
+	class IInputCommand;
 	class InputManagerImpl;
 	class InputManager final
 	{
@@ -23,12 +23,12 @@ namespace dae
 
 		bool ProcessInput();
 
-		void BindCommand(std::unique_ptr<ICommand> command, InputBinding binding);
-		void BindCommand(std::unique_ptr<ICommand> command, InputType inputType, uint32_t deviceId, InputValueType valueType, uint32_t code, InputTriggerType triggerType);
+		void BindCommand(std::unique_ptr<IInputCommand> command, InputBinding binding);
+		void BindCommand(std::unique_ptr<IInputCommand> command, InputType inputType, uint32_t deviceId, InputValueType valueType, uint32_t code, InputTriggerType triggerType);
 		
-		void BindCommand(std::unique_ptr<ICommand> command, uint32_t deviceId,	InputValueType valueType, GamepadInput code, InputTriggerType triggerType);
-		void BindCommand(std::unique_ptr<ICommand> command,						InputValueType valueType, KeyboardInput code, InputTriggerType triggerType);
-		void BindCommand(std::unique_ptr<ICommand> command,						InputValueType valueType, MouseInput code, InputTriggerType triggerType);
+		void BindCommand(std::unique_ptr<IInputCommand> command, uint32_t deviceId,	InputValueType valueType, GamepadInput code, InputTriggerType triggerType);
+		void BindCommand(std::unique_ptr<IInputCommand> command,						InputValueType valueType, KeyboardInput code, InputTriggerType triggerType);
+		void BindCommand(std::unique_ptr<IInputCommand> command,						InputValueType valueType, MouseInput code, InputTriggerType triggerType);
 
 	private:
 		std::unique_ptr<InputManagerImpl> m_pImpl;

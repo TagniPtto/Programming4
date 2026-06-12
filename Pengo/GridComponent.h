@@ -1,50 +1,50 @@
 #pragma once
 #include "Components/ObjectComponent.h"
-#include <glm/glm.hpp>
+#include <glm/vec2.hpp>
+#include <glm/vec3.hpp>
 #include <vector>
 #include <cinttypes>
 #include <string>
 
 namespace pengo {
-	enum class CellType : uint32_t {
-		Empty,
-		IceBlock,
-		StandardBlock
-	};
-	
-	struct GridCell {
-		CellType type;
+	struct Tile {
 		dae::GameObject* occupant;
-	};
-	struct MoveResult
-	{
-		bool success;
-		glm::ivec2 destination;
+		glm::ivec2 posId;
 	};
 	class GridComponent final : public dae::ObjectComponent
 	{
 	private:
-		int m_cellXCount{};
-		int m_cellYCount{};
+		int m_tileXCount{};
+		int m_tileYCount{};
 
-		int m_cellSize{};
-		std::vector<GridCell> m_cells;
+		int m_tileSize{};
+
+		std::vector<std::vector<Tile>> m_tiles;
+		std::vector<std::vector<Tile>> m_blocks;
 
 		bool m_debugWindowOpen{true};
 	public:
 		~GridComponent() = default;
 		explicit GridComponent(dae::GameObject& owner, const std::string& path = "");
+
+	private:
+		bool IsValidTileIndex(glm::ivec2 index);
+
+
 	public: 
 		void Update() override;
 		void RenderUI() override;
 		void Render() const override;
 		
-		int GetClosestCellId(glm::vec2);
+		glm::ivec2 GetClosestAvailableTile(glm::vec3);
+		glm::vec3 GetTilePosition(glm::vec2) const;
+		bool IsTileOccupiedByBlock(glm::ivec2);
+		void ReserveTile(glm::ivec2);
+
+
 
 
 		void LoadMap(const nlohmann::json& data);
-		MoveResult TryMove(glm::ivec2 currentTile, glm::ivec2 direction);
-
 		void Deserialize(const nlohmann::json& data) override;
 		void Serialize(nlohmann::json& data) const override;
 	};

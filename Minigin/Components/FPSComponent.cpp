@@ -25,7 +25,7 @@ void dae::FPSComponent::Serialize(nlohmann::json &) const
 
 void dae::FPSComponent::Update()
 {
-	timeCounter += Time::GetInstance().GetDeltaTime();
+	timeCounter += Time::Get().GetDeltaTime();
 	frameCount++;
 	if (timeCounter > 1.0f) {
 		float fps = float(frameCount) / timeCounter;

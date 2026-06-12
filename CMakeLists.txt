@@ -248,7 +248,10 @@ add_executable(${APP_NAME} ${APP_PARAM}
     "Pengo/HealthComponent.cpp"
     "Pengo/BlockComponent.cpp"
     "Pengo/Player/PlayerState.cpp"
-    "Pengo/GridMovementComponent.cpp" "Pengo/Menu/MenuStateComponent.cpp")
+    "Pengo/GridMovementComponent.cpp"
+    "Pengo/Menu/MenuStateComponent.cpp" 
+    "Pengo/Levels/Level01.cpp" 
+    "Pengo/Levels/LevelManager.cpp" "Pengo/GridInteractionComponent.cpp")
 target_link_libraries(${APP_NAME} PRIVATE ${ENGINE_NAME})
 #________________________________________________________
 

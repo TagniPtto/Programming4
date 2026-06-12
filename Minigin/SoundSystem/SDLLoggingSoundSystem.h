@@ -9,8 +9,8 @@ namespace dae {
 	public:
 		void LoadAudio(const std::string& path, const std::string& name) override;
 		void UnloadAudio(const std::string& name) override;
-		void Play(const std::string& name, const float volume)  override;
-
+		void PlayAudio(const std::string& name, const float volume)  override;
+		void PlayMusic(const std::string& name, const float volume) override;
 
 	};
 }

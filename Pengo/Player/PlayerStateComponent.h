@@ -6,28 +6,41 @@
 
 namespace dae {
 	class AnimationComponent;
-	class TransformComponent;
 }
+
 namespace pengo
 {
+	class GridMovementComponent;
+	class GridInteractionComponent;
+	class PlayerActionCommand;
 
 	class PlayerStateComponent : public dae::ObjectComponent {
 	private:
 		std::unique_ptr<PlayerState> currentState;
 	private:
 		dae::AnimationComponent* m_pAnimComp{};
-		dae::TransformComponent* m_pTransformComp{};
+		GridMovementComponent* m_pMovementComp{};
+		GridInteractionComponent* m_pInteractionComp{};
+		
 	public:
 		~PlayerStateComponent() = default;
 		explicit PlayerStateComponent(
 			dae::GameObject& owner,
-			dae::AnimationComponent* anim,
-			dae::TransformComponent* trans);
+			dae::AnimationComponent* anim = nullptr,
+			pengo::GridMovementComponent* mov = nullptr,
+			pengo::GridInteractionComponent* in = nullptr);
 	private:
 		void ChangState(std::unique_ptr<PlayerState> newState);
 	public:
 		void HandleRequest(dae::InputContext context);
+		void HandleCommand(pengo::PlayerActionCommand* command);
 		void Update() override;
+		void Deserialize(const nlohmann::json& data) override;
+		void Serialize(nlohmann::json&) const override;
+
+		void RequestMove(glm::ivec2) const;
+		void RequestPush() const;
+		void RequestAnimation(std::string)const;
 
 	};
 }

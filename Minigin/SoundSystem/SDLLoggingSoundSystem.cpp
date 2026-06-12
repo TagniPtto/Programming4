@@ -10,7 +10,12 @@ void dae::SDLLoggingSoundSystem::UnloadAudio(const std::string& name)
 	SDLSoundSystem::UnloadAudio(name);
 }
 
-void dae::SDLLoggingSoundSystem::Play(const std::string & name, const float volume)
+void dae::SDLLoggingSoundSystem::PlayAudio(const std::string & name, const float volume)
 {
-	SDLSoundSystem::Play(name , volume);
+	SDLSoundSystem::PlayAudio(name , volume);
+}
+
+void dae::SDLLoggingSoundSystem::PlayMusic(const std::string& name, const float volume)
+{
+	SDLSoundSystem::PlayMusic(name, volume);
 }

@@ -18,6 +18,6 @@ void dae::RotationComponent::Serialize(nlohmann::json &) const
 
 void dae::RotationComponent::Update()
 {
-	m_currentAngle += m_frequency * Time::GetInstance().GetDeltaTime();
+	m_currentAngle += m_frequency * Time::Get().GetDeltaTime();
 	m_owner->GetTransform()->SetLocalRotation(m_currentAngle);
 }

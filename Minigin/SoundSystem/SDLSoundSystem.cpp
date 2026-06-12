@@ -3,11 +3,20 @@
 
 #include <cassert>
 
-void dae::SDLSoundSystem::Play(const std::string& name, const float volume)
+void dae::SDLSoundSystem::PlayAudio(const std::string& name, const float volume)
 {
     {
     std::scoped_lock lock(m_mutex);
     m_eventQueue.push(SoundEvent(name, volume));
+    }
+    m_conditional_variable.notify_one();
+}
+
+void dae::SDLSoundSystem::PlayMusic(const std::string& name, const float volume)
+{
+    {
+        std::scoped_lock lock(m_mutex);
+        m_eventQueue.push(SoundEvent(name, volume,AudioType::Music));
     }
     m_conditional_variable.notify_one();
 }
@@ -26,15 +35,28 @@ void dae::SDLSoundSystem::ThreadProcess()
 
         const dae::SoundEvent event = m_eventQueue.front();
         m_eventQueue.pop();
+
+
         MIX_Audio* audio = m_loadedAudio[event.name];
+        MIX_Track* track = nullptr;
+        SDL_PropertiesID options = SDL_CreateProperties();
 
-        if (audio) {
-            MIX_StopTrack(m_pTrack, 0);
-            MIX_SetTrackAudio(m_pTrack, audio);
-            MIX_SetTrackGain(m_pTrack, event.volume);
-            MIX_PlayTrack(m_pTrack, 0);
+
+        if (!audio) continue;
+
+        if (event.type == AudioType::Music) {
+            track = m_pMusicTrack;
+            SDL_SetNumberProperty(options, MIX_PROP_PLAY_LOOPS_NUMBER, -1);
         }
-
+        if (event.type == AudioType::SFX) {
+            track = m_pSfxTrack;
+        }
+        if (!track)continue;
+       
+        MIX_StopTrack(track, 0);
+        MIX_SetTrackAudio(track, audio);
+        MIX_SetTrackGain(track, event.volume);
+        MIX_PlayTrack(track, options);
     }
 }
 
@@ -75,8 +97,12 @@ dae::SDLSoundSystem::SDLSoundSystem()
         SDL_Log("Couldn't create mixer on default device: %s", SDL_GetError());
     }
 
-    m_pTrack = MIX_CreateTrack(m_pMixer);
-    if (!m_pTrack) {
+    m_pSfxTrack = MIX_CreateTrack(m_pMixer);
+    if (!m_pSfxTrack) {
+        SDL_Log("Couldn't create a mixer track: %s", SDL_GetError());
+    }
+    m_pMusicTrack = MIX_CreateTrack(m_pMixer);
+    if (!m_pMusicTrack) {
         SDL_Log("Couldn't create a mixer track: %s", SDL_GetError());
     }
     

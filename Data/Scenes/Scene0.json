@@ -5,10 +5,6 @@
       "position": [ 250, 100 ]
     },
     {
-      "prefab": "Player",
-      "position": [ 350, 250 ]
-    },
-    {
       "prefab": "FPSObject",
       "position": [ 50, 50 ]
     }

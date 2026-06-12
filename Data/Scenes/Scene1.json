@@ -1,0 +1,13 @@
+{
+  "objects":
+  [
+    {
+      "prefab": "Maps/Map1",
+      "position": [ 50, 50 ]
+    },
+    {
+      "prefab": "FPSObject",
+      "position": [ 50, 50 ]
+    }
+  ]
+}

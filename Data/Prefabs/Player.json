@@ -5,6 +5,12 @@
       "type": "PlayerController"
     },
     {
+      "type": "GridMovement"
+    },
+    {
+      "type": "GridInteraction"
+    },
+    {
       "type": "Animation",
       "texture": "PengoCharacterSprites.png",
       "destinationRect": [ 0, 0, 36, 36 ],
@@ -63,6 +69,9 @@
         }
       ]
 
+    },
+    {
+      "type": "PlayerState"
     }
   ]
 }

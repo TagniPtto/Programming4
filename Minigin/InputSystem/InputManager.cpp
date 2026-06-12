@@ -27,15 +27,15 @@ namespace dae {
 		std::vector<std::unique_ptr<Gamepad>> m_gamepads;
 
 
-		std::vector< std::pair<InputBinding, std::unique_ptr<ICommand>>> m_bindings;
+		std::vector< std::pair<InputBinding, std::unique_ptr<IInputCommand>>> m_bindings;
 
 	public:
 		InputManagerImpl();
 
-		void BindCommand(std::unique_ptr<ICommand>  command, InputBinding binding);
+		void BindCommand(std::unique_ptr<IInputCommand>  command, InputBinding binding);
 		bool ProcessInput();
 	private:
-		void ProcessBinding(const InputBinding& binding, ICommand* command);
+		void ProcessBinding(const InputBinding& binding, IInputCommand* command);
 		IInputDevice* GetDevice(InputType deviceType, uint32_t deviceIndex) const;
 	};
 
@@ -52,7 +52,7 @@ namespace dae {
 		}
 	}
 
-	void InputManagerImpl::BindCommand(std::unique_ptr<ICommand>  command, InputBinding binding)
+	void InputManagerImpl::BindCommand(std::unique_ptr<IInputCommand>  command, InputBinding binding)
 	{
 		m_bindings.emplace_back(binding, std::move(command));
 	}
@@ -83,7 +83,7 @@ namespace dae {
 		return true;
 	}
 
-	void InputManagerImpl::ProcessBinding(const InputBinding& binding, ICommand* command)
+	void InputManagerImpl::ProcessBinding(const InputBinding& binding, IInputCommand* command)
 	{
 		IInputDevice* device = GetDevice(binding.deviceType, binding.deviceIndex);
 
@@ -159,25 +159,25 @@ bool dae::InputManager::ProcessInput()
 	return m_pImpl->ProcessInput();
 }
 
-void dae::InputManager::BindCommand(std::unique_ptr<ICommand> command, InputBinding binding)
+void dae::InputManager::BindCommand(std::unique_ptr<IInputCommand> command, InputBinding binding)
 {
 	return m_pImpl->BindCommand(std::move(command), binding);
 }
 
-void dae::InputManager::BindCommand(std::unique_ptr<ICommand> command, InputType inputType, uint32_t deviceId, InputValueType valueType, uint32_t code, InputTriggerType triggerType)
+void dae::InputManager::BindCommand(std::unique_ptr<IInputCommand> command, InputType inputType, uint32_t deviceId, InputValueType valueType, uint32_t code, InputTriggerType triggerType)
 {
 	InputBinding binding{ .code = code, .deviceIndex = deviceId,.deviceType = inputType, .deviceValue = valueType , .trigger = triggerType };
 	return BindCommand(std::move(command), binding);
 }
-void dae::InputManager::BindCommand(std::unique_ptr<ICommand> command, uint32_t deviceId, InputValueType valueType, GamepadInput code, InputTriggerType triggerType)
+void dae::InputManager::BindCommand(std::unique_ptr<IInputCommand> command, uint32_t deviceId, InputValueType valueType, GamepadInput code, InputTriggerType triggerType)
 {
 	BindCommand(std::move(command), InputType::Gamepad, deviceId, valueType, uint32_t(code), triggerType);
 }
-void dae::InputManager::BindCommand(std::unique_ptr<ICommand> command, InputValueType valueType, KeyboardInput code, InputTriggerType triggerType)
+void dae::InputManager::BindCommand(std::unique_ptr<IInputCommand> command, InputValueType valueType, KeyboardInput code, InputTriggerType triggerType)
 {
 	BindCommand(std::move(command), InputType::Keyboard, 0, valueType, uint32_t(code), triggerType);
 }
-void dae::InputManager::BindCommand(std::unique_ptr<ICommand> command, InputValueType valueType, MouseInput code, InputTriggerType triggerType)
+void dae::InputManager::BindCommand(std::unique_ptr<IInputCommand> command, InputValueType valueType, MouseInput code, InputTriggerType triggerType)
 {
 	BindCommand(std::move(command), InputType::Mouse, 0, valueType, uint32_t(code), triggerType);
 }

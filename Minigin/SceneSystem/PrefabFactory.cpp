@@ -4,7 +4,7 @@
 #include <fstream>
 
 
-dae::GameObject* dae::PrefabFactory::Instantiate(dae::Scene* scene,std::string name, const nlohmann::json& instanceData)
+dae::GameObject* dae::PrefabFactory::Instantiate(dae::Scene& scene,std::string name, const nlohmann::json& instanceData)
 {
 	dae::GameObject* object = Instantiate(scene, name);
 
@@ -13,7 +13,7 @@ dae::GameObject* dae::PrefabFactory::Instantiate(dae::Scene* scene,std::string n
 	return object;
 }
 
-dae::GameObject* dae::PrefabFactory::Instantiate(dae::Scene* scene, std::string name, glm::vec3 position, float rotation)
+dae::GameObject* dae::PrefabFactory::Instantiate(dae::Scene& scene, std::string name, glm::vec3 position, float rotation)
 {
 	if (!GetPrefab(name))
 	{
@@ -21,7 +21,7 @@ dae::GameObject* dae::PrefabFactory::Instantiate(dae::Scene* scene, std::string 
 	}
 
 	const auto& prefab = m_Prefabs[name];
-	GameObject* object = scene->CreateGameObject();
+	GameObject* object = scene.CreateGameObject();
 	
 	auto transform = object->GetTransform();
 	transform->SetLocalPosition(position);

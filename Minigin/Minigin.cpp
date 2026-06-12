@@ -170,7 +170,7 @@ void dae::Minigin::Run(const std::function<void()>& load)
 		const float deltaTime = std::chrono::duration<float>(thisTime - lastTime).count();
 		lastTime = thisTime;
 
-		dae::Time::GetInstance().Update(deltaTime);
+		dae::Time::Get().Update(deltaTime);
 		RunOneFrame();
 
 		const auto sleeptime = thisTime + std::chrono::milliseconds(msPerFrame) - std::chrono::high_resolution_clock::now();

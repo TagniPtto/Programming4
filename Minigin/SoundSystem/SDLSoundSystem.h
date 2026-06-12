@@ -18,7 +18,8 @@ namespace dae
 	class SDLSoundSystem : public ISoundSystem {
 	private:
 		MIX_Mixer* m_pMixer = nullptr;
-		MIX_Track* m_pTrack = nullptr;
+		MIX_Track* m_pSfxTrack = nullptr;
+		MIX_Track* m_pMusicTrack = nullptr;
 
 		std::thread m_worker;
 		std::mutex m_mutex;
@@ -44,7 +45,8 @@ namespace dae
 	public:
 		virtual void LoadAudio(const std::string& path , const std::string& name) override;
 		virtual void UnloadAudio(const std::string& name) override;
-		virtual void Play(const std::string& name, const float volume)  override;
+		virtual void PlayAudio(const std::string& name, const float volume)  override;
+		virtual void PlayMusic(const std::string& name, const float volume)  override;
 
 
 	};

@@ -1,7 +1,7 @@
 #include "PlayerState.h"
 #include "PlayerStateComponent.h"
 
-#include <Commands.h>
+#include "PlayerCommands.h"
 
 
 namespace pengo 
@@ -20,7 +20,23 @@ namespace pengo
 		PlayerStateComponent& ,
 		dae::InputContext)
 	{
+		//if (context.binding.) {
+
+		//}
 		return std::unique_ptr<PlayerState>();
+	}
+
+	std::unique_ptr<PlayerState> IdleState::HandleCommand(pengo::PlayerActionCommand* command)
+	{
+		//if (pengo::PlayerMoveCommand* com = dynamic_cast<pengo::PlayerMoveCommand*>(command); com) {
+		//	//(*com).Execute();
+		//}
+		return std::unique_ptr<PlayerState>();
+	}
+
+	void IdleState::OnEnter(PlayerStateComponent& stateComponent)
+	{
+		stateComponent.RequestAnimation("Idle");
 	}
 
 	std::unique_ptr<PlayerState> MoveState::HandleRequest(
@@ -30,6 +46,11 @@ namespace pengo
 
 		//TODO can get hit by other iceblock from other player.
 		return nullptr;
+	}
+
+	void MoveState::OnEnter(PlayerStateComponent& stateComponent)
+	{
+		stateComponent.RequestAnimation("Move");
 	}
 	
 	std::unique_ptr<PlayerState> MoveState::Update(PlayerStateComponent&)

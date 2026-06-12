@@ -3,7 +3,7 @@ namespace dae {
 	protected:
 		float m_deltaTime{};
 	public:
-		static Time& GetInstance() {
+		static Time& Get() {
 			static Time instance;
 			return instance;
 		}

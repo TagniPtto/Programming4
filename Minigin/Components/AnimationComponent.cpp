@@ -24,7 +24,7 @@ dae::AnimationComponent::~AnimationComponent() = default;
 void dae::AnimationComponent::Update()
 {
 	if (m_currentSequence) {
-		float deltaTime = Time::GetInstance().GetDeltaTime();
+		float deltaTime = Time::Get().GetDeltaTime();
 		m_currentSequence->Update(deltaTime);
 	}
 }

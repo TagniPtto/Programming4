@@ -4,7 +4,6 @@
 
 namespace dae 
 {
-
 	class ISoundSystem 
 	{
 	protected:
@@ -14,7 +13,8 @@ namespace dae
 	public:
 		virtual void LoadAudio(const std::string& fname, const std::string& name) = 0;
 		virtual void UnloadAudio(const std::string& name) = 0;
-		virtual void Play(const std::string& name, const float volume) = 0;
+		virtual void PlayAudio(const std::string& name, const float volume) = 0;
+		virtual void PlayMusic(const std::string& name, const float volume) = 0;
 
 		virtual ~ISoundSystem() = default;
 	};

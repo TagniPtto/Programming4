@@ -13,7 +13,9 @@ namespace dae
 
 		Scene& LoadScene(const std::string& path);
 		Scene& CreateScene();
+
 		Scene* GetScene(int index) const;
+		Scene* GetActiveScene() const;
 
 		void Update();
 		void Render();
@@ -22,6 +24,7 @@ namespace dae
 		friend class Minigin;
 		SceneManager();
 
+		int activeSceneIndex{};
 		std::vector<std::unique_ptr<Scene>> m_scenes{};
 	};
 }

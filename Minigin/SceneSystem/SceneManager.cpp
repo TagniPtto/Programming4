@@ -45,7 +45,7 @@ dae::Scene& dae::SceneManager::LoadScene(const std::string& path)
 		{
 			if (object.contains("prefab")) {
 				auto& prefabJsonData = object["prefab"];
-				factory.Instantiate(&scene, prefabJsonData,object);
+				factory.Instantiate(scene, prefabJsonData,object);
 			}
 		}
 
@@ -65,9 +65,14 @@ dae::Scene& dae::SceneManager::CreateScene()
 
 dae::Scene* dae::SceneManager::GetScene(int index) const
 {
-	if (index < m_scenes.size())
+	if (index < (int)m_scenes.size())
 	{
 		return m_scenes[index].get();
 	}
 	return nullptr;
+}
+
+dae::Scene* dae::SceneManager::GetActiveScene() const
+{
+	return GetScene(activeSceneIndex);
 }

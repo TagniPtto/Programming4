@@ -1,15 +1,20 @@
 #pragma once
 #include <memory>
 #include <InputSystem/InputTypes.h>
+#include "PlayerCommands.h"
 
 namespace pengo
 {
-	class AnimationComponent;
 	class PlayerStateComponent;
 	
+	enum class PlayerStateChange {
+		Idle,
+		Move,
+		Push,
+		Death,
+	};
+
 	class PlayerState {
-	private:
-		AnimationComponent* animationComp;
 	public:
 		virtual ~PlayerState() = default;
 
@@ -20,7 +25,9 @@ namespace pengo
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent,
 			dae::InputContext context) = 0;
+		virtual std::unique_ptr<PlayerState> HandleCommand(pengo::PlayerActionCommand* command) = 0;
 	};
+
 
 	class IdleState : public PlayerState {
 	public:
@@ -28,7 +35,10 @@ namespace pengo
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent, 
 			dae::InputContext context);
+		virtual std::unique_ptr<PlayerState> HandleCommand(pengo::PlayerActionCommand* command);
+		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 	};
+
 
 	class MoveState : public PlayerState {
 		//glm::uvec2 dir;
@@ -38,7 +48,9 @@ namespace pengo
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent, 
 			dae::InputContext context);
+		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 	};
+
 
 	class DeadState : public PlayerState {
 	public:
