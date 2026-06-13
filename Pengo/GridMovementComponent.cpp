@@ -9,8 +9,8 @@
 
 pengo::GridMovementComponent::GridMovementComponent(dae::GameObject& owner, dae::TransformComponent* trans, GridComponent* grid):
 	dae::ObjectComponent(owner),
-    m_pTransformComp(trans), 
-    m_pGridComp(grid)
+    m_pGridComp(grid),
+    m_pTransformComp(trans) 
 {
     if (!m_pTransformComp) {
         m_pTransformComp = m_owner->GetTransform();
