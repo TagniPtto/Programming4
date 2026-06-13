@@ -5,6 +5,7 @@
 #include "../GridMovementComponent.h"
 #include "../GridInteractionComponent.h"
 
+
 pengo::PlayerStateComponent::PlayerStateComponent(
 	dae::GameObject& owner, 
 	dae::AnimationComponent* anim, 
@@ -25,33 +26,34 @@ pengo::PlayerStateComponent::PlayerStateComponent(
 	if (!m_pInteractionComp) {
 		m_pInteractionComp = m_owner->GetComponent<GridInteractionComponent>();
 	}
+	m_pCurrentState = std::make_unique<pengo::IdleState>();
 }
 
 void pengo::PlayerStateComponent::ChangeState(std::unique_ptr<PlayerState> newState)
 {
-	if (currentState) 
+	if (m_pCurrentState) 
 	{
-		currentState->OnExit(*this);
+		m_pCurrentState->OnExit(*this);
 	}
-	currentState = std::move(newState);
-	if (currentState)
+	m_pCurrentState = std::move(newState);
+	if (m_pCurrentState)
 	{
-		currentState->OnEnter(*this);
+		m_pCurrentState->OnEnter(*this);
 	}
 }
 
 void pengo::PlayerStateComponent::HandleRequest(dae::InputContext context, PlayerStateChange change)
 {
-	if (currentState) {
-		auto nextState = currentState->HandleRequest(*this, change,context);
+	if (m_pCurrentState) {
+		auto nextState = m_pCurrentState->HandleRequest(*this, change,context);
 		if (nextState) ChangeState(std::move(nextState));
 	}
 }
 
 void pengo::PlayerStateComponent::Update()
 {
-	if (currentState) {
-		auto nextState = currentState->Update(*this);
+	if (m_pCurrentState) {
+		auto nextState = m_pCurrentState->Update(*this);
 		if (nextState) ChangeState(std::move(nextState));
 	}
 }

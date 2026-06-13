@@ -80,7 +80,7 @@ void dae::TextComponent::Deserialize(const nlohmann::json& data)
 	}
 	if (auto it = data.find("fontColor"); it != data.end()) {
 		auto FC = *it;
-		SDL_Color color{ FC[0],FC[1],FC[2],1.0f };
+		SDL_Color color{ FC[0],FC[1],FC[2], 1 };
 		SetColor(color);
 	}
 }

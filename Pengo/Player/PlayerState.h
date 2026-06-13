@@ -44,9 +44,9 @@ namespace pengo
 
 
 	class MoveState : public PlayerState {
-		glm::vec2 dir;
+		PlayerStateChange changeDirection;
 	public:
-		explicit MoveState(glm::vec2);
+		explicit MoveState(PlayerStateChange direction);
 		virtual ~MoveState() = default;
 		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> Update(PlayerStateComponent& stateComponent) override;
@@ -69,5 +69,9 @@ namespace pengo
 	public:
 		virtual ~DeadState() = default;
 		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
+		virtual std::unique_ptr<PlayerState> HandleRequest(
+			PlayerStateComponent& stateComponent,
+			pengo::PlayerStateChange change,
+			dae::InputContext context);
 	};
 }

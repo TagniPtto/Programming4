@@ -38,7 +38,7 @@ bool pengo::GridMovementComponent::RequestMove( glm::ivec2 direction)
 
     glm::ivec2 target = m_CurrentTile + direction;
 
-    if (!m_pGridComp->IsTileOccupiedByBlock(target))
+    if (m_pGridComp->IsTileOccupiedByBlock(target))
         return false;
 
     m_FromTile= m_CurrentTile;
@@ -52,25 +52,24 @@ bool pengo::GridMovementComponent::RequestMove( glm::ivec2 direction)
 
 void pengo::GridMovementComponent::Update()
 {
-    if (!m_IsMoving)return;
+    if (!m_IsMoving)
+        return;
+
+    m_Progress += m_Speed * dae::Time::Get().GetDeltaTime();
 
     auto fromPosition = m_pGridComp->GetTilePosition(m_FromTile);
     auto toPosition = m_pGridComp->GetTilePosition(m_ToTile);
-    auto direction = toPosition - fromPosition;
 
- 
-    auto position = m_pTransformComp->GetLocalPosition();
-    auto newPosition = position + direction * dae::Time::Get().GetDeltaTime();
-    if ((position - toPosition).length() < 1.0f) {
-        m_IsMoving = false;
-        m_pTransformComp->SetLocalPosition(toPosition);
-    }
-    else
+    if (m_Progress >= 1.0f)
     {
-        m_pTransformComp->SetLocalPosition(newPosition);
+        m_Progress = 1.0f;
+        m_IsMoving = false;
+        m_CurrentTile = m_ToTile;
     }
-}
 
+    auto position = glm::mix(fromPosition, toPosition, m_Progress);
+    m_pTransformComp->SetLocalPosition(position);
+}
 void pengo::GridMovementComponent::Deserialize(const nlohmann::json &)
 {}
 

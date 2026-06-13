@@ -16,7 +16,7 @@ namespace pengo
 
 	class PlayerStateComponent : public dae::ObjectComponent {
 	private:
-		std::unique_ptr<PlayerState> currentState;
+		std::unique_ptr<PlayerState> m_pCurrentState;
 	private:
 		dae::AnimationComponent* m_pAnimComp{};
 		GridMovementComponent* m_pMovementComp{};

@@ -32,37 +32,54 @@ namespace pengo
 	std::unique_ptr<PlayerState> IdleState::HandleRequest(
 		PlayerStateComponent&,
 		PlayerStateChange change,
-		dae::InputContext context)
+		dae::InputContext)
 	{
+
 		if (change == PlayerStateChange::MoveUp||
 			change == PlayerStateChange::MoveDown || 
 			change == PlayerStateChange::MoveLeft || 
 			change == PlayerStateChange::MoveRight ) {
-
-			auto val = std::get<glm::vec2>(context.value);
-			return std::make_unique<MoveState>(val);
+			return std::make_unique<MoveState>(change);
 		}
 		if (change == PlayerStateChange::Death) {
-			return std::unique_ptr<DeadState>();
+			return std::make_unique<DeadState>();
 		}
 		return nullptr;
 	}
 
 
 
-	MoveState::MoveState(glm::vec2 d):
-		dir(d)
+	MoveState::MoveState(PlayerStateChange direction):
+		changeDirection(direction)
 	{}
 
 	void MoveState::OnEnter(PlayerStateComponent& stateComponent)
 	{
-		stateComponent.GetAnimationComponent()->SetAnimation("Move");
+		if (changeDirection == PlayerStateChange::MoveUp)
+		{
+			stateComponent.GetAnimationComponent()->SetAnimation("MoveUp");
+			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(0,-1));
+		}
+		if (changeDirection == PlayerStateChange::MoveDown) {
+			stateComponent.GetAnimationComponent()->SetAnimation("MoveDown");
+			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(0, 1));
+		}
+		if (changeDirection == PlayerStateChange::MoveLeft) {
+			stateComponent.GetAnimationComponent()->SetAnimation("MoveLeft");
+			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(-1, 0));
+		}
+
+		if (changeDirection == PlayerStateChange::MoveRight) {
+			stateComponent.GetAnimationComponent()->SetAnimation("MoveRight");
+			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(-1, 0));
+		}
+
 	}
 	
 	std::unique_ptr<PlayerState> MoveState::Update(PlayerStateComponent& stateComp)
 	{
-		if (stateComp.GetGridMovementComponent()->IsMoving()) {
-			return std::unique_ptr<IdleState>();
+		if (!stateComp.GetGridMovementComponent()->IsMoving()) {
+			return std::make_unique<IdleState>();
 		}
 		return nullptr;
 	}
@@ -73,16 +90,12 @@ namespace pengo
 		dae::InputContext)
 	{
 		if (change == PlayerStateChange::Death) {
-			return std::unique_ptr<DeadState>();
+			return std::make_unique<DeadState>();
 		}
 		return nullptr;
 	}
 
 
-	void DeadState::OnEnter(PlayerStateComponent& stateComponent)
-	{
-		stateComponent.GetAnimationComponent()->SetAnimation("Death");
-	}
 
 	void PushState::OnEnter(PlayerStateComponent& stateComponent)
 	{
@@ -98,4 +111,16 @@ namespace pengo
 		return nullptr;
 	}
 
+	void DeadState::OnEnter(PlayerStateComponent& stateComponent)
+	{
+		stateComponent.GetAnimationComponent()->SetAnimation("Death");
+	}
+
+	std::unique_ptr<PlayerState> DeadState::HandleRequest(
+		PlayerStateComponent& , 
+		pengo::PlayerStateChange ,
+		dae::InputContext )
+	{
+		return nullptr;
+	}
 }

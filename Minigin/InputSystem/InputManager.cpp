@@ -122,7 +122,7 @@ namespace dae {
 		case InputValueType::Vector2:
 		{
 			glm::vec2 value = device->GetAxis2D(binding.code);
-			if (value.x != 0.0f || value.y != 0.0f)
+			if (std::abs(value.x) > 0.0f || std::abs(value.y) > 0.0f)
 			{
 				command->Execute(InputContext{ .binding = binding,.value = value });
 			}

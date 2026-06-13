@@ -20,7 +20,7 @@
 
 bool pengo::GridComponent::IsValidTileIndex(glm::ivec2 index)
 {
-	return index.x > m_tileXCount || index.x < 0 || index.y > m_tileYCount || index.y < 0;
+	return !(index.x > m_tileXCount || index.x < 0 || index.y > m_tileYCount || index.y < 0);
 }
 
 void pengo::GridComponent::Update()
@@ -79,7 +79,7 @@ glm::vec3 pengo::GridComponent::GetTilePosition(glm::vec2 posId) const
 bool pengo::GridComponent::IsTileOccupiedByBlock(glm::ivec2 posId)
 {
 	if (!IsValidTileIndex(posId)) return true;
-	return m_blocks[posId.x][posId.y].occupant;
+	return m_blocks[posId.y][posId.x].occupant;
 }
 
 void pengo::GridComponent::ReserveTile(glm::ivec2)
