@@ -20,7 +20,7 @@ namespace dae {
 			Reversed,
 			ReverseLooped,
 		};
-
+		bool m_playing = true;
 	private:
 		Rect m_SourceRectangle = {};
 		int m_rows = 0;
@@ -35,6 +35,8 @@ namespace dae {
 		float m_timePerFrame = 0;
 		
 		int m_currentIndex = 0;
+
+
 	public:
 		AnimationSequence() = default;
 		explicit AnimationSequence(const Rect& sourceRect, int columns, int rows, int sequenceStart, int sequenceLength, float timePerFrame, AnimationPlayBack playback = AnimationPlayBack::Normal);
@@ -59,7 +61,9 @@ namespace dae {
 		void Update() override;
 		void Render() const override;
 
-		void SetAnimation(const std::string& name);
+		void PlayAnimation(const std::string& name);
+		void PauseCurrentAnimation();
+		void ResumeCurrentAnimation();
 		
 		void Deserialize(const nlohmann::json& data) override;
 		void Serialize(nlohmann::json& data) const override;

@@ -25,7 +25,7 @@ namespace pengo
 
 	void IdleState::OnEnter(PlayerStateComponent& stateComponent)
 	{
-		stateComponent.GetAnimationComponent()->SetAnimation("Idle");
+		stateComponent.GetAnimationComponent()->PauseCurrentAnimation();
 	}
 
 
@@ -57,21 +57,21 @@ namespace pengo
 	{
 		if (changeDirection == PlayerStateChange::MoveUp)
 		{
-			stateComponent.GetAnimationComponent()->SetAnimation("MoveUp");
+			stateComponent.GetAnimationComponent()->PlayAnimation("MoveUp");
 			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(0,-1));
 		}
 		if (changeDirection == PlayerStateChange::MoveDown) {
-			stateComponent.GetAnimationComponent()->SetAnimation("MoveDown");
+			stateComponent.GetAnimationComponent()->PlayAnimation("MoveDown");
 			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(0, 1));
 		}
 		if (changeDirection == PlayerStateChange::MoveLeft) {
-			stateComponent.GetAnimationComponent()->SetAnimation("MoveLeft");
+			stateComponent.GetAnimationComponent()->PlayAnimation("MoveLeft");
 			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(-1, 0));
 		}
 
 		if (changeDirection == PlayerStateChange::MoveRight) {
-			stateComponent.GetAnimationComponent()->SetAnimation("MoveRight");
-			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(-1, 0));
+			stateComponent.GetAnimationComponent()->PlayAnimation("MoveRight");
+			stateComponent.GetGridMovementComponent()->RequestMove(glm::ivec2(1, 0));
 		}
 
 	}
@@ -113,7 +113,7 @@ namespace pengo
 
 	void DeadState::OnEnter(PlayerStateComponent& stateComponent)
 	{
-		stateComponent.GetAnimationComponent()->SetAnimation("Death");
+		stateComponent.GetAnimationComponent()->PlayAnimation("Death");
 	}
 
 	std::unique_ptr<PlayerState> DeadState::HandleRequest(

@@ -20,7 +20,7 @@
 
 bool pengo::GridComponent::IsValidTileIndex(glm::ivec2 index)
 {
-	return !(index.x > m_tileXCount || index.x < 0 || index.y > m_tileYCount || index.y < 0);
+	return !(index.x >= m_tileXCount || index.x < 0 || index.y >= m_tileYCount || index.y < 0);
 }
 
 void pengo::GridComponent::Update()
@@ -126,7 +126,7 @@ void pengo::GridComponent::LoadMap(const nlohmann::json& data)
 				dae::GameObject* obj = dae::PrefabFactory::Get().Instantiate(*currentScene,"IceBlock",glm::vec3(xPos,yPos,0));
 				obj->SetParent(m_owner);
 				if (auto animComp = obj->GetComponent<dae::AnimationComponent>(); animComp) {
-					animComp->SetAnimation("Idle");
+					animComp->PlayAnimation("Idle");
 				}
 				if (auto renderComp = obj->GetComponent<dae::RenderComponent>(); renderComp) {
 					renderComp->SetDestinationRectangle(0.0f,0.0f,float(m_tileSize),float(m_tileSize));

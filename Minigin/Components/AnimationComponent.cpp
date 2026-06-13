@@ -37,11 +37,22 @@ void dae::AnimationComponent::Render() const
 	}
 }
 
-void dae::AnimationComponent::SetAnimation(const std::string& name)
+void dae::AnimationComponent::PlayAnimation(const std::string& name)
 {
 	if (auto it = m_sequences.find(name); it != m_sequences.end()) {
 		m_currentSequence = &(it->second);
+		ResumeCurrentAnimation();
 	}
+}
+
+void dae::AnimationComponent::PauseCurrentAnimation()
+{
+	m_currentSequence->m_playing = false;
+}
+
+void dae::AnimationComponent::ResumeCurrentAnimation()
+{
+	m_currentSequence->m_playing = true;
 }
 
 
@@ -67,7 +78,7 @@ void dae::AnimationComponent::Deserialize(const nlohmann::json& data)
 		}
 	}
 	if (auto it = data.find("startingAnimation"); it != data.end()) {
-		SetAnimation(*it);
+		PlayAnimation(*it);
 	}
 }
 
@@ -86,7 +97,7 @@ void dae::AnimationComponent::AddAnimationSequence(std::string name,AnimationSeq
 
 void dae::AnimationSequence::Update(float deltaTime)
 {
-	if (m_sequenceLength <= 1) {
+	if (m_sequenceLength <= 1 || !m_playing) {
 		return;
 	}
 	m_timer += deltaTime;
@@ -135,12 +146,28 @@ dae::Rect dae::AnimationSequence::Get() const
 }
 
 dae::AnimationSequence::AnimationSequence(const Rect& sourceRect, int columns, int rows, int sequenceStart, int sequenceLength, float timePerFrame, AnimationPlayBack playback):
-	m_SourceRectangle(sourceRect), m_rows(rows), m_columns(columns), m_sequenceStart(sequenceStart), m_sequenceLength(sequenceLength), m_timePerFrame(timePerFrame), m_playback(playback), m_timer(0.f), m_currentIndex(0)
+	m_SourceRectangle(sourceRect),
+	m_rows(rows), 
+	m_columns(columns),
+	m_sequenceStart(sequenceStart),
+	m_sequenceLength(sequenceLength),
+	m_playback(playback), 
+	m_timer(), 
+	m_timePerFrame(timePerFrame), 
+	m_currentIndex()
 {
 }
 
 dae::AnimationSequence::AnimationSequence(int columns, int rows, int sequenceStart, int sequenceLength, float timePerFrame, AnimationPlayBack playback):
-	m_SourceRectangle({ 0,0,0,0 }), m_rows(rows), m_columns(columns), m_sequenceStart(sequenceStart), m_sequenceLength(sequenceLength), m_timePerFrame(timePerFrame), m_playback(playback), m_timer(0.f), m_currentIndex(0)
+	m_SourceRectangle({ 0,0,0,0 }),
+	m_rows(rows), 
+	m_columns(columns),
+	m_sequenceStart(sequenceStart), 
+	m_sequenceLength(sequenceLength), 
+	m_playback(playback), 
+	m_timer(),
+	m_timePerFrame(timePerFrame), 
+	m_currentIndex()
 {
 }
 

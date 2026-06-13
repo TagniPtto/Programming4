@@ -15,26 +15,6 @@
 
       "animationSequences": [
         {
-          "name": "Idle",
-          "sequenceStart": 0,
-          "sequenceLength": 2,
-          "frameTime": 0.2,
-          "playBack": "Looped",
-          "columns": 8,
-          "rows": 4,
-          "sourceRect": [ 0, 0, 128, 64 ]
-        },
-        {
-          "name": "MoveUp",
-          "sequenceStart": 0,
-          "sequenceLength": 2,
-          "frameTime": 0.2,
-          "playBack": "Looped",
-          "columns": 8,
-          "rows": 4,
-          "sourceRect": [ 0, 0, 128, 64 ]
-        },
-        {
           "name": "MoveDown",
           "sequenceStart": 0,
           "sequenceLength": 2,
@@ -46,7 +26,17 @@
         },
         {
           "name": "MoveLeft",
-          "sequenceStart": 0,
+          "sequenceStart": 2,
+          "sequenceLength": 2,
+          "frameTime": 0.2,
+          "playBack": "Looped",
+          "columns": 8,
+          "rows": 4,
+          "sourceRect": [ 0, 0, 128, 64 ]
+        },
+        {
+          "name": "MoveUp",
+          "sequenceStart": 4,
           "sequenceLength": 2,
           "frameTime": 0.2,
           "playBack": "Looped",
@@ -56,7 +46,7 @@
         },
         {
           "name": "MoveRight",
-          "sequenceStart": 0,
+          "sequenceStart": 6,
           "sequenceLength": 2,
           "frameTime": 0.2,
           "playBack": "Looped",

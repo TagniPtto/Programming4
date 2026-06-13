@@ -28,7 +28,7 @@ namespace pengo {
 				auto v = std::get<glm::vec2>(context.value);
 				if (std::abs(v.x) < std::abs(v.y))
 				{
-					m_change = (v.x > 0.0f) ? PlayerStateChange::MoveDown : PlayerStateChange::MoveUp;
+					m_change = (v.y > 0.0f) ? PlayerStateChange::MoveUp : PlayerStateChange::MoveDown;
 				}
 				else
 				{
