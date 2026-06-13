@@ -21,7 +21,6 @@ namespace dae
 		{
 		}
 
-
 		AudioType type;
 		std::string name;
 		float volume;
