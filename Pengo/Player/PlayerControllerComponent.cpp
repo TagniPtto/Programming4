@@ -1,4 +1,4 @@
-#include "playercontrollerComponent.h"
+#include "PlayerControllerComponent.h"
 #include "PlayerStateComponent.h"
 
 #include <ServiceLocator.h>

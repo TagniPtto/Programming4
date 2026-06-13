@@ -246,7 +246,7 @@ add_executable(${APP_NAME} ${APP_PARAM}
     "Pengo/Player/PlayerControllerComponent.cpp"
     "Pengo/Player/PlayerStateComponent.cpp"
     "Pengo/HealthComponent.cpp"
-    "Pengo/BlockComponent.cpp"
+    
     "Pengo/Player/PlayerState.cpp"
     "Pengo/GridMovementComponent.cpp"
     "Pengo/Menu/MenuStateComponent.cpp" 

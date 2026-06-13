@@ -45,7 +45,7 @@ void pengo::PlayerStateComponent::ChangeState(std::unique_ptr<PlayerState> newSt
 void pengo::PlayerStateComponent::HandleRequest(dae::InputContext context, PlayerStateChange change)
 {
 	if (m_pCurrentState) {
-		auto nextState = m_pCurrentState->HandleRequest(*this, change,context);
+		auto nextState = m_pCurrentState->HandleRequest(*this, change);
 		if (nextState) ChangeState(std::move(nextState));
 	}
 }

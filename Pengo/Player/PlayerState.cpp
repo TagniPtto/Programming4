@@ -31,8 +31,7 @@ namespace pengo
 
 	std::unique_ptr<PlayerState> IdleState::HandleRequest(
 		PlayerStateComponent&,
-		PlayerStateChange change,
-		dae::InputContext)
+		PlayerStateChange change)
 	{
 
 		if (change == PlayerStateChange::MoveUp||
@@ -86,8 +85,7 @@ namespace pengo
 
 	std::unique_ptr<PlayerState> MoveState::HandleRequest(
 		PlayerStateComponent&,
-		PlayerStateChange change,
-		dae::InputContext)
+		PlayerStateChange change)
 	{
 		if (change == PlayerStateChange::Death) {
 			return std::make_unique<DeadState>();

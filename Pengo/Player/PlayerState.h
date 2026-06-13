@@ -27,8 +27,7 @@ namespace pengo
 		virtual std::unique_ptr<PlayerState> Update(PlayerStateComponent& stateComponent);
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent,
-			pengo::PlayerStateChange change,
-			dae::InputContext context) = 0;
+			pengo::PlayerStateChange change) = 0;
 	};
 
 
@@ -38,8 +37,7 @@ namespace pengo
 		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent, 
-			pengo::PlayerStateChange change,
-			dae::InputContext context)override;
+			pengo::PlayerStateChange change)override;
 	};
 
 
@@ -52,8 +50,7 @@ namespace pengo
 		virtual std::unique_ptr<PlayerState> Update(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent, 
-			PlayerStateChange change,
-			dae::InputContext context) override;
+			PlayerStateChange change) override;
 	};
 	class PushState : public PlayerState {
 	public:
@@ -61,8 +58,7 @@ namespace pengo
 		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent,
-			pengo::PlayerStateChange change,
-			dae::InputContext context)override;
+			pengo::PlayerStateChange change)override;
 	};
 
 	class DeadState : public PlayerState {
@@ -71,7 +67,6 @@ namespace pengo
 		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent,
-			pengo::PlayerStateChange change,
-			dae::InputContext context)override;
+			pengo::PlayerStateChange change)override;
 	};
 }
