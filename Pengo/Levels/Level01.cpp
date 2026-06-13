@@ -12,7 +12,7 @@ void pengo::Level01::Load(dae::Scene&, GameMode mode)
 
 	if (mode == GameMode::SinglePlayer) {
 		
-		dae::GameObject* player = dae::PrefabFactory::Get().Instantiate(scene,"Player");
+		dae::PrefabFactory::Get().Instantiate(scene,"Player");
 	}
 
 

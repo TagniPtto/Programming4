@@ -31,7 +31,7 @@ pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& paw
 }
 
 
-void pengo::PlayerControllerComponent::Deserialize(const nlohmann::json& data)
+void pengo::PlayerControllerComponent::Deserialize(const nlohmann::json&)
 {
 	//auto commandBindings = data["CommandBindings"];
 

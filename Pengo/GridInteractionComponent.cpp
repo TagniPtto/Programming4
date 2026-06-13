@@ -9,3 +9,6 @@ void pengo::GridInteractionComponent::Deserialize(const nlohmann::json &)
 
 void pengo::GridInteractionComponent::Serialize(nlohmann::json&) const
 {}
+
+void pengo::GridInteractionComponent::RequestPush()
+{}
