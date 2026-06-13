@@ -2,19 +2,15 @@
 #include <vector>
 #include <memory>
 #include "Level.h"
+#include <Singleton.h>
 
 namespace pengo {
-	class LevelManager final {
-	private:
-		LevelManager() = default;
+	class LevelManager final : public dae::Singleton<LevelManager>
+	{
 	public:
-		LevelManager(LevelManager&&) = delete;
-		LevelManager(const LevelManager&) = delete;
-		LevelManager& operator=(const LevelManager&) = delete;
-		LevelManager& operator=(LevelManager&&) = delete;
-
-		Load
-
+		~LevelManager() = default;
+		void AddLevel(std::unique_ptr<Level> level); 
+		void Load(int index);
 	private:
 		std::vector<std::unique_ptr<Level>> m_levels;
 	};

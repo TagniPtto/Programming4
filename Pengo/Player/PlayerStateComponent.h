@@ -29,18 +29,18 @@ namespace pengo
 			dae::AnimationComponent* anim = nullptr,
 			pengo::GridMovementComponent* mov = nullptr,
 			pengo::GridInteractionComponent* in = nullptr);
-	private:
-		void ChangState(std::unique_ptr<PlayerState> newState);
-	public:
-		void HandleRequest(dae::InputContext context);
-		void HandleCommand(pengo::PlayerActionCommand* command);
-		void Update() override;
 		void Deserialize(const nlohmann::json& data) override;
 		void Serialize(nlohmann::json&) const override;
 
-		void RequestMove(glm::ivec2) const;
-		void RequestPush() const;
-		void RequestAnimation(std::string)const;
+	private:
+		void ChangeState(std::unique_ptr<PlayerState> newState);
+	public:
+		void HandleRequest(dae::InputContext context, PlayerStateChange change);
+		void Update() override;
+
+		dae::AnimationComponent* GetAnimationComponent()const;
+		pengo::GridMovementComponent* GetGridMovementComponent()const;
+		pengo::GridInteractionComponent* GetGridInterationComponent()const;
 
 	};
 }

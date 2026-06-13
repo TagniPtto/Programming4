@@ -34,7 +34,7 @@ namespace pengo {
 			dae::TransformComponent* trans = nullptr, 
 			GridComponent* grid = nullptr);
 	public:
-
+		bool IsMoving();
 		bool RequestMove(glm::ivec2 direction);
 		void Update() override;
 

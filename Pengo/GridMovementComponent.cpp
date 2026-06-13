@@ -26,6 +26,11 @@ pengo::GridMovementComponent::GridMovementComponent(dae::GameObject& owner, dae:
     }
 }
 
+bool pengo::GridMovementComponent::IsMoving()
+{
+    return m_IsMoving;
+}
+
 bool pengo::GridMovementComponent::RequestMove( glm::ivec2 direction)
 {
     if (m_IsMoving)

@@ -7,6 +7,7 @@
 
 #include "Minigin.h"
 #include "Levels/LevelManager.h"
+#include "Levels/Level01.h"
 
 #include <SceneSystem/ComponentFactory.h>
 #include "Player/PlayerControllerComponent.h"
@@ -17,11 +18,14 @@
 #include "HealthComponent.h"
 #include "BlockComponent.h"
 
+
 #include <filesystem>
 namespace fs = std::filesystem;
 
 static void load()
 {
+	pengo::LevelManager::Get().AddLevel(std::make_unique<pengo::Level01>());
+	pengo::LevelManager::Get().Load(0);
 
 }
 

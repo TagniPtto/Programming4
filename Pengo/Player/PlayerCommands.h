@@ -5,50 +5,21 @@
 
 namespace pengo {
 
-	class PlayerActionCommand{
-	public:
-		virtual ~PlayerActionCommand() = default;
-		virtual void Execute(PlayerStateComponent*) = 0;
-	};
-	class PlayerMoveCommand: public PlayerActionCommand {
-		glm::ivec2 direction;
-	public:
-		virtual ~PlayerMoveCommand() = default;
-		virtual void SetDirection(glm::ivec2 d) {
-			direction = d;
-		}
-		virtual void Execute(PlayerStateComponent* comp) {
-			comp->RequestMove(glm::ivec2{});
-		}
-	};
-	class PlayerPushCommand : public PlayerActionCommand {
-	public:
-		virtual ~PlayerPushCommand() = default;
-		virtual void Execute(PlayerStateComponent* comp) {
-			comp->RequestPush();
-		}
-	};
-
-
-	enum class PlayerStateChange {
-		Idle,
-		Move,
-		Push,
-		Death,
-	};
-
-
 	class PlayerStateRequestCommand : public dae::IInputCommand {
 	protected:
+		PlayerStateChange m_change;
 		PlayerStateComponent* m_StateComponent;
 	public:
 		virtual ~PlayerStateRequestCommand() = default;
 		PlayerStateRequestCommand(
 			PlayerStateComponent* stateComponent,
-			PlayerActionCommand* command):
+			PlayerStateChange change):
+			m_change(change),
 			m_StateComponent(stateComponent)
+
 		{}
-		void Execute(dae::InputContext) {
+		void Execute(dae::InputContext context) override {
+			m_StateComponent->HandleRequest(context, m_change);
 		}
 	};
 }

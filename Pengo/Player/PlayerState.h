@@ -1,18 +1,21 @@
 #pragma once
 #include <memory>
 #include <InputSystem/InputTypes.h>
-#include "PlayerCommands.h"
-
 namespace pengo
 {
 	class PlayerStateComponent;
-	
+
+
 	enum class PlayerStateChange {
 		Idle,
-		Move,
+		MoveUp,
+		MoveDown,
+		MoveLeft,
+		MoveRight,
 		Push,
 		Death,
 	};
+
 
 	class PlayerState {
 	public:
@@ -24,33 +27,43 @@ namespace pengo
 		virtual std::unique_ptr<PlayerState> Update(PlayerStateComponent& stateComponent);
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent,
+			pengo::PlayerStateChange change,
 			dae::InputContext context) = 0;
-		virtual std::unique_ptr<PlayerState> HandleCommand(pengo::PlayerActionCommand* command) = 0;
 	};
 
 
 	class IdleState : public PlayerState {
 	public:
 		virtual ~IdleState() = default;
+		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent, 
+			pengo::PlayerStateChange change,
 			dae::InputContext context);
-		virtual std::unique_ptr<PlayerState> HandleCommand(pengo::PlayerActionCommand* command);
-		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 	};
 
 
 	class MoveState : public PlayerState {
-		//glm::uvec2 dir;
+		glm::vec2 dir;
 	public:
+		explicit MoveState(glm::vec2);
 		virtual ~MoveState() = default;
+		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> Update(PlayerStateComponent& stateComponent) override;
 		virtual std::unique_ptr<PlayerState> HandleRequest(
 			PlayerStateComponent& stateComponent, 
+			PlayerStateChange change,
 			dae::InputContext context);
-		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
 	};
-
+	class PushState : public PlayerState {
+	public:
+		virtual ~PushState() = default;
+		virtual void OnEnter(PlayerStateComponent& stateComponent) override;
+		virtual std::unique_ptr<PlayerState> HandleRequest(
+			PlayerStateComponent& stateComponent,
+			pengo::PlayerStateChange change,
+			dae::InputContext context);
+	};
 
 	class DeadState : public PlayerState {
 	public:

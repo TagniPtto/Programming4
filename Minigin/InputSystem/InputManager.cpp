@@ -12,7 +12,7 @@
 #include "Gamepad/Gamepad.h"
 #include "Mouse/Mouse.h"
 #include "Keyboard/Keyboard.h"
-#include "Commands.h"
+#include "IInputCommand.h"
 
 
 #define MAX_CONTROLLERS 4

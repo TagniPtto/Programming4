@@ -2,9 +2,6 @@
   "name ": "Player",
   "components": [
     {
-      "type": "PlayerController"
-    },
-    {
       "type": "GridMovement"
     },
     {
@@ -72,6 +69,51 @@
     },
     {
       "type": "PlayerState"
+    },
+    {
+      "type": "PlayerController",
+      "CommandBindings": [
+        {
+          "Command": "StateRequest",
+          "Binding": {
+            "Keyboard": "w",
+            "trigger": "held",
+            "value": "Boolean"
+          }
+        },
+        {
+          "Command": "StateRequest",
+          "Binding": {
+            "Keyboard": "s",
+            "trigger": "held",
+            "value": "Boolean"
+          }
+        },
+        {
+          "Command": "StateRequest",
+          "Binding": {
+            "Keyboard": "a",
+            "trigger": "held",
+            "value": "Boolean"
+          }
+        },
+        {
+          "Command": "StateRequest",
+          "Binding": {
+            "Keyboard": "d",
+            "trigger": "held",
+            "value": "Boolean"
+          }
+        },
+        {
+          "Command": "StateRequest",
+          "Binding": {
+            "Gamepad": "LThumb",
+            "trigger": "held",
+            "value": "Vector2"
+          }
+        }
+      ]
     }
   ]
 }

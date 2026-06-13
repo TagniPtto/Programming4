@@ -1,6 +1,7 @@
 #include "Level01.h"
 #include <SceneSystem/PrefabFactory.h>
 
+
 void pengo::Level01::Load(dae::Scene&, GameMode mode)
 {
 	auto& factory = dae::PrefabFactory::Get();
@@ -10,9 +11,8 @@ void pengo::Level01::Load(dae::Scene&, GameMode mode)
 	if (!foundPlayerPrefab) return;
 
 	if (mode == GameMode::SinglePlayer) {
+		
 		dae::GameObject* player = dae::PrefabFactory::Get().Instantiate(scene,"Player");
-		player;
-		//Spawn other enemies
 	}
 
 

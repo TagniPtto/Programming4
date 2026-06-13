@@ -1,7 +1,9 @@
 #include "PlayerStateComponent.h"
 #include <GameObject.h>
 #include <Components/AnimationComponent.h>
+
 #include "../GridMovementComponent.h"
+#include "../GridInteractionComponent.h"
 
 pengo::PlayerStateComponent::PlayerStateComponent(
 	dae::GameObject& owner, 
@@ -20,9 +22,12 @@ pengo::PlayerStateComponent::PlayerStateComponent(
 	if (!m_pMovementComp) {
 		m_pMovementComp = m_owner->GetComponent<GridMovementComponent>();
 	}
+	if (!m_pInteractionComp) {
+		m_pInteractionComp = m_owner->GetComponent<GridInteractionComponent>();
+	}
 }
 
-void pengo::PlayerStateComponent::ChangState(std::unique_ptr<PlayerState> newState)
+void pengo::PlayerStateComponent::ChangeState(std::unique_ptr<PlayerState> newState)
 {
 	if (currentState) 
 	{
@@ -35,19 +40,11 @@ void pengo::PlayerStateComponent::ChangState(std::unique_ptr<PlayerState> newSta
 	}
 }
 
-void pengo::PlayerStateComponent::HandleRequest(dae::InputContext context)
+void pengo::PlayerStateComponent::HandleRequest(dae::InputContext context, PlayerStateChange change)
 {
 	if (currentState) {
-		auto nextState = currentState->HandleRequest(*this,context);
-		if (nextState) ChangState(std::move(nextState));
-	}
-}
-
-void pengo::PlayerStateComponent::HandleCommand(pengo::PlayerActionCommand* command)
-{
-	if (currentState) {
-		auto nextState = currentState->HandleCommand(command);
-		if (nextState) ChangState(std::move(nextState));
+		auto nextState = currentState->HandleRequest(*this, change,context);
+		if (nextState) ChangeState(std::move(nextState));
 	}
 }
 
@@ -55,34 +52,29 @@ void pengo::PlayerStateComponent::Update()
 {
 	if (currentState) {
 		auto nextState = currentState->Update(*this);
-		if (nextState) ChangState(std::move(nextState));
+		if (nextState) ChangeState(std::move(nextState));
 	}
 }
+
+dae::AnimationComponent* pengo::PlayerStateComponent::GetAnimationComponent() const
+{
+	return m_pAnimComp;
+}
+
+pengo::GridMovementComponent* pengo::PlayerStateComponent::GetGridMovementComponent() const
+{
+	return m_pMovementComp;
+}
+
+pengo::GridInteractionComponent* pengo::PlayerStateComponent::GetGridInterationComponent() const
+{
+	return m_pInteractionComp;
+}
+
+
 
 void pengo::PlayerStateComponent::Deserialize(const nlohmann::json&)
-{
-
-}
-
-void pengo::PlayerStateComponent::Serialize(nlohmann::json &) const
 {}
 
-
-void pengo::PlayerStateComponent::RequestPush() const
-{
-
-}
-
-void pengo::PlayerStateComponent::RequestAnimation(std::string name) const
-{
-	if (m_pAnimComp) {
-		m_pAnimComp->SetAnimation(name);
-	}
-}
-
-void pengo::PlayerStateComponent::RequestMove(glm::ivec2 dir) const
-{
-	if (m_pMovementComp) {
-		m_pMovementComp->RequestMove(dir);
-	}
-}
+void pengo::PlayerStateComponent::Serialize(nlohmann::json&) const
+{}

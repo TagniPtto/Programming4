@@ -1,8 +1,5 @@
 #include "playercontrollerComponent.h"
 
-#include "ServiceLocator.h"
-#include <SoundSystem/ISoundSystem.h>
-
 #include <InputSystem/InputManager.h>
 #include <InputSystem/InputTypes.h>
 
@@ -13,7 +10,6 @@
 pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& pawn):
 	ObjectComponent(pawn)
 {
-	dae::ServiceLocator<dae::ISoundSystem>::Get().LoadAudio("Data/SFX/Push_Ice_Block.mp3", "PushIce");
 
 
 	//std::unique_ptr<pengo::MoveCommand> command = std::make_unique<pengo::MoveCommand>(&pawn);
@@ -34,17 +30,17 @@ pengo::PlayerControllerComponent::PlayerControllerComponent(dae::GameObject& paw
 	//	dae::InputTriggerType::Pressed);
 }
 
-pengo::PlayerControllerComponent::~PlayerControllerComponent()
+
+void pengo::PlayerControllerComponent::Deserialize(const nlohmann::json& data)
 {
+	//auto commandBindings = data["CommandBindings"];
 
+	//for (auto& commandBinding : commandBindings) {
+	//	auto& binding = commandBinding["Binding"];
+	//	auto& command = commandBinding["Command"];
+	//	
+	//}
 }
-
-void pengo::PlayerControllerComponent::Deserialize(const nlohmann::json&)
-{}
 
 void pengo::PlayerControllerComponent::Serialize(nlohmann::json &) const
 {}
-
-void pengo::PlayerControllerComponent::Update()
-{
-}
