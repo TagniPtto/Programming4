@@ -1,6 +1,9 @@
 #include "Level01.h"
 #include <SceneSystem/PrefabFactory.h>
 
+#include <ServiceLocator.h>
+#include <SoundSystem/ISoundSystem.h>
+
 
 void pengo::Level01::Load(dae::Scene&, GameMode mode)
 {
@@ -14,6 +17,7 @@ void pengo::Level01::Load(dae::Scene&, GameMode mode)
 		
 		dae::PrefabFactory::Get().Instantiate(scene,"Player");
 	}
-
+	dae::ServiceLocator<dae::ISoundSystem>::Get().LoadAudio("Data/Audio/Music/MainTheme.mp3" , "theme");
+	dae::ServiceLocator<dae::ISoundSystem>::Get().PlayMusic("theme",0.5f);
 
 }

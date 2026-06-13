@@ -15,9 +15,9 @@ namespace dae
 
 		virtual ~SoundEvent() = default;
 		SoundEvent(std::string n,float v , AudioType t = AudioType::SFX):
+			type(t),
 			name(n),
-			volume(v),
-			type(t)
+			volume(v)
 		{
 		}
 
