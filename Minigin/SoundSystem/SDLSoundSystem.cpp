@@ -5,20 +5,52 @@
 
 void dae::SDLSoundSystem::PlayAudio(const std::string& name, const float volume)
 {
+#ifdef __EMSCRIPTEN__
+
+    MIX_Audio* audio = m_loadedAudio[name];
+    if (!audio) return;
+
+    MIX_StopTrack(m_pSfxTrack, 0);
+    MIX_SetTrackAudio(m_pSfxTrack, audio);
+    MIX_SetTrackGain(m_pSfxTrack, volume);
+
+    SDL_PropertiesID options = SDL_CreateProperties();
+    MIX_PlayTrack(m_pSfxTrack, options);
+
+#else
+
     {
-    std::scoped_lock lock(m_mutex);
-    m_eventQueue.push(SoundEvent(name, volume));
+        std::scoped_lock lock(m_mutex);
+        m_eventQueue.push(SoundEvent(name, volume, AudioType::SFX));
     }
     m_conditional_variable.notify_one();
+
+#endif
 }
 
 void dae::SDLSoundSystem::PlayMusic(const std::string& name, const float volume)
 {
+#ifdef __EMSCRIPTEN__
+
+    MIX_Audio* audio = m_loadedAudio[name];
+    if (!audio) return;
+
+    MIX_StopTrack(m_pMusicTrack, 0);
+    MIX_SetTrackAudio(m_pMusicTrack, audio);
+    MIX_SetTrackGain(m_pMusicTrack, volume);
+
+    SDL_PropertiesID options = SDL_CreateProperties();
+    MIX_PlayTrack(m_pMusicTrack, options);
+
+#else
+
     {
         std::scoped_lock lock(m_mutex);
-        m_eventQueue.push(SoundEvent(name, volume,AudioType::Music));
+        m_eventQueue.push(SoundEvent(name, volume, AudioType::Music));
     }
     m_conditional_variable.notify_one();
+
+#endif
 }
 
 void dae::SDLSoundSystem::ThreadProcess()
@@ -51,12 +83,14 @@ void dae::SDLSoundSystem::ThreadProcess()
         if (event.type == AudioType::SFX) {
             track = m_pSfxTrack;
         }
+
         if (!track)continue;
        
         MIX_StopTrack(track, 0);
         MIX_SetTrackAudio(track, audio);
         MIX_SetTrackGain(track, event.volume);
         MIX_PlayTrack(track, options);
+        SDL_DestroyProperties(options);
     }
 }
 
@@ -105,17 +139,20 @@ dae::SDLSoundSystem::SDLSoundSystem()
     if (!m_pMusicTrack) {
         SDL_Log("Couldn't create a mixer track: %s", SDL_GetError());
     }
-    
+#ifndef __EMSCRIPTEN__
     m_worker = std::thread(&SDLSoundSystem::ThreadProcess,this);
+#endif
 }
 
 dae::SDLSoundSystem::~SDLSoundSystem()
 {
+#ifndef __EMSCRIPTEN__
     threadIsRunning = false;
     m_conditional_variable.notify_all();
     if (m_worker.joinable()) {
         m_worker.join();
     }
+#endif
 
     MIX_Quit();
 }
