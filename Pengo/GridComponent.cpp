@@ -1,5 +1,4 @@
 #include "GridComponent.h"
-#include "BlockComponent.h"
 
 #include <ServiceLocator.h>
 #include <SceneSystem/SceneManager.h>

@@ -35,7 +35,7 @@ namespace pengo {
 					m_change = (v.x > 0.0f) ? PlayerStateChange::MoveRight: PlayerStateChange::MoveLeft;
 				}
 			}
-			m_StateComponent->HandleRequest(context, m_change);
+			m_StateComponent->HandleRequest(m_change);
 		}
 	};
 }

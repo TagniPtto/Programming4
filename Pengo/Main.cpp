@@ -16,7 +16,6 @@
 #include "GridInteractionComponent.h"
 #include "GridComponent.h"
 #include "HealthComponent.h"
-#include "BlockComponent.h"
 
 
 #include <filesystem>
@@ -36,7 +35,6 @@ static void registerComponents() {
 	REGISTER_COMPONENT(GridMovementComponent);
 	REGISTER_COMPONENT(GridInteractionComponent);
 	REGISTER_COMPONENT(GridComponent);
-	REGISTER_COMPONENT(BlockComponent);
 	REGISTER_COMPONENT(HealthComponent);
 
 }

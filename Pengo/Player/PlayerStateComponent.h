@@ -35,7 +35,7 @@ namespace pengo
 	private:
 		void ChangeState(std::unique_ptr<PlayerState> newState);
 	public:
-		void HandleRequest(dae::InputContext context, PlayerStateChange change);
+		void HandleRequest(PlayerStateChange change);
 		void Update() override;
 
 		dae::AnimationComponent* GetAnimationComponent()const;
