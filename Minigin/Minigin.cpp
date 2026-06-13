@@ -98,11 +98,7 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath) :
 	m_pResourceManager(new dae::ResourceManager()),
 	m_pSceneManager(new dae::SceneManager()),
 	m_pInputManager(new dae::InputManager()),
-#if DEBUG
-	m_pSoundSystem(new dae::SDLLoggingSoundSystem()),
-#else
-	m_pSoundSystem(new dae::SDLSoundSystem()),
-#endif
+	m_pSoundSystem(nullptr),
 	m_pEventQueue(new dae::EventQueue()),
 	m_pRenderer(new dae::Renderer()),
 	m_pLogger(std::make_unique<Logger>())
@@ -133,6 +129,13 @@ dae::Minigin::Minigin(const std::filesystem::path& dataPath) :
 	m_pRenderer->Init(g_window);
 	
 	m_pResourceManager->Init(dataPath);
+
+
+#if DEBUG
+	m_pSoundSystem = std::unique_ptr<SDLLoggingSoundSystem>(new SDLLoggingSoundSystem());
+#else
+	m_pSoundSystem = std::unique_ptr<SDLSoundSystem>(new dae::SDLSoundSystem());
+#endif
 
 	ServiceLocator<dae::ISoundSystem>	::Register(m_pSoundSystem.get());
 	ServiceLocator<dae::EventQueue>		::Register(m_pEventQueue.get());
