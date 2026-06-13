@@ -73,7 +73,7 @@ void LoopCallback(void* arg)
 	const float deltaTime = std::chrono::duration<float>(thisTime - lastTime).count();
 	lastTime = thisTime;
 
-	dae::Time::GetInstance().Update(deltaTime);
+	dae::Time::Get().Update(deltaTime);
 
 }
 #endif
