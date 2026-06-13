@@ -10,9 +10,9 @@ namespace pengo
 	{
 	public:
 		explicit BlockComponent(dae::GameObject& owner);
-		virtual void RenderUI();
-		virtual void Update();
-		virtual void FixedUpdate(float);
+		virtual void RenderUI()override;
+		virtual void Update()override;
+		virtual void FixedUpdate(float)override;
 
 
 		virtual void Deserialize(const nlohmann::json& data) override;

@@ -100,7 +100,7 @@ namespace pengo
 	void PushState::OnEnter(PlayerStateComponent& stateComponent)
 	{
 		dae::ServiceLocator<dae::ISoundSystem>::Get().LoadAudio("Data/SFX/Push_Ice_Block.mp3", "PushIce");
-		stateComponent.GetGridInterationComponent()->RequestPush();
+		stateComponent.GetGridInterationComponent()->RequestPush(glm::ivec2{});
 	}
 
 	std::unique_ptr<PlayerState> PushState::HandleRequest(PlayerStateComponent&, pengo::PlayerStateChange change, dae::InputContext)
