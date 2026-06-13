@@ -101,7 +101,7 @@ namespace pengo
 		stateComponent.GetGridInterationComponent()->RequestPush(glm::ivec2{});
 	}
 
-	std::unique_ptr<PlayerState> PushState::HandleRequest(PlayerStateComponent&, pengo::PlayerStateChange change, dae::InputContext)
+	std::unique_ptr<PlayerState> PushState::HandleRequest(PlayerStateComponent&, pengo::PlayerStateChange change)
 	{
 		if (change == PlayerStateChange::Death) {
 			return std::unique_ptr<DeadState>();
@@ -116,8 +116,7 @@ namespace pengo
 
 	std::unique_ptr<PlayerState> DeadState::HandleRequest(
 		PlayerStateComponent& , 
-		pengo::PlayerStateChange ,
-		dae::InputContext )
+		pengo::PlayerStateChange)
 	{
 		return nullptr;
 	}
