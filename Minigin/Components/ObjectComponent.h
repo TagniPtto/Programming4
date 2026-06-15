@@ -18,7 +18,7 @@ namespace dae {
 
 	class ObjectComponent
 	{
-	protected:
+	private:
 		dae::GameObject* m_owner;
 
 	protected:
@@ -32,6 +32,9 @@ namespace dae {
 
 		ObjectComponent operator=(ObjectComponent&& other) = delete;
 		ObjectComponent operator=(const ObjectComponent& other) = delete;
+
+
+		dae::GameObject* GetOwner() const;
 
 		virtual void Render() const;
 		virtual void RenderUI();

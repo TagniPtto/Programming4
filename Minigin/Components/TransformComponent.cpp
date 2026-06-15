@@ -45,7 +45,7 @@ glm::vec3 dae::TransformComponent::GetWorldPosition() const
 void dae::TransformComponent::SetTransformDirty()
 {
 	m_transformDirty = true;
-	for (auto& child : m_owner->GetChildren()) {
+	for (auto& child : m_owner->GetChild()) {
 		child->GetTransform()->SetTransformDirty();
 	}
 }

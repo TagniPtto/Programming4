@@ -5,6 +5,11 @@ namespace dae {
 	ObjectComponent::ObjectComponent(dae::GameObject& owner) : m_owner(&owner)
 	{}
 
+	dae::GameObject* ObjectComponent::GetOwner() const
+	{
+		return m_owner;
+	}
+
 	void ObjectComponent::Render() const
 	{}
 

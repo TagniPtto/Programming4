@@ -12,10 +12,7 @@ dae::GameObject::GameObject():m_transform(std::make_unique<dae::TransformCompone
 
 dae::GameObject::~GameObject()
 {
-	SetParent(nullptr); //remove yourself from parent so they dont try to access you after destruction
-	//for (auto& child : m_children) {
-	//	child->SetParent(nullptr); // carefull your removing your children from your list while looping over list
-	//}
+	SetParent(nullptr);
 	while (!m_children.empty())
 	{
 		m_children.back()->SetParent(nullptr);
@@ -91,9 +88,13 @@ void dae::GameObject::SetParent(GameObject* newParent , bool keepWorldPosition)
 	if (newParent) newParent->AddChild(this);
 }
 
-std::vector<dae::GameObject*>& dae::GameObject::GetChildren()
+dae::GameObject* dae::GameObject::GetChild(int index)
 {
-	return m_children;
+	dae::GameObject* child = nullptr;
+	if ( 0 <= index && index < m_children.size()) {
+		child = m_children.at(index);
+	}
+	return child;
 }
 
 dae::TransformComponent* dae::GameObject::GetTransform()

@@ -34,7 +34,7 @@ namespace dae
 		GameObject* GetParent() const;
 		void SetParent(GameObject* newParent, bool keepWorldPosition = false);
 
-		std::vector<GameObject*>& GetChildren();
+		GameObject* GetChild(int index);
 
 		TransformComponent* GetTransform();
 
